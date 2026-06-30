@@ -91,7 +91,7 @@
                     </td>
                     <td align="right" class="td_derecha">
                         {{ $grado->denominacion }}<br/>
-                        {{ $grado->name }}<br/>
+                        {{ $grado->nombre2 }}<br/>
                         @php
                             $fechaEntero=strtotime($grado->fec_rvoe);
                             $anio=date('Y',$fechaEntero);

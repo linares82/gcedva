@@ -41,6 +41,7 @@
                    <label for="tpo_examen_id-field">Examen</label>
                    {!! Form::hidden("asignacion", $asignacion, array("class" => "form-control input-sm", "id" => "mail_acudiente-field")) !!}
                    {!! Form::select("tpo_examen_id", $examen, null, array("class" => "form-control select_seguridad", "id" => "tpo_examen_id-field")) !!}
+                   <div id='loading' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                    @if($errors->has("tpo_examen_id"))
                     <span class="help-block">{{ $errors->first("st_materium_id") }}</span>
                    @endif
@@ -384,8 +385,8 @@
                           "&asignacion_id=" + {{$asignacion}} + 
                           "&carga_ponderacion_id="+$('#carga_ponderacion_id-field option:selected').val(),
                     dataType: 'json',
-                    beforeSend : function(){$("#loading2").show(); },
-                    complete : function(){$("#loading2").hide(); },
+                    beforeSend : function(){$("#loading").show(); },
+                    complete : function(){$("#loading").hide(); },
                     success: function(data){
                         $('#carga_ponderacion_id-field').empty();
                         $('#carga_ponderacion_id-field').append($('<option></option>').text('Seleccionar').val('0'));

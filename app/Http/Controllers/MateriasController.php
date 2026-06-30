@@ -36,12 +36,13 @@ class MateriasController extends Controller
      */
     public function create()
     {
-        $list = Materium::where('id', '>', '0')->where('seriada_bnd', '=', '1')->pluck('name', 'id')->toArray();
-        $materiales_ls = array_merge(['0' => 'Seleccionar Opción'], $list);
+        $list = Materium::select(DB::raw('concat(id, " - ", name) as name'), 'id')->where('id', '>', '0')->where('seriada_bnd', '=', '1')->pluck('name', 'id');
+        //$materiales_ls = array_merge(['0' => 'Seleccionar Opción'], $list);
+        $materiales_ls = $list->prepend('Seleccionar Opcion', 0);
         $conceptosExtraordinarios = CajaConcepto::where('bnd_extraordinario', 1)->pluck('name', 'id');
         $conceptosExtraordinarios->prepend('Seleccionar Opción', '');
-        $materium = new Materium();
-        return view('materias.create', compact('materium', 'materiales_ls', 'conceptosExtraordinarios'))
+        //$materium = new Materium();
+        return view('materias.create', compact('materiales_ls', 'conceptosExtraordinarios'))
             ->with('list', Materium::getListFromAllRelationApps());
     }
 
@@ -92,14 +93,16 @@ class MateriasController extends Controller
     public function edit($id, Materium $materium)
     {
         $materium = $materium->with('ponderacionMaterias')->find($id);
-        $list = Materium::select(DB::raw('concat(id, " - ", name) as name'), 'id')->where('id', '>', '0')->where('seriada_bnd', '=', '1')->pluck('name', 'id')->toArray();
-        $materiales_ls = array_merge(['0' => 'Seleccionar Opción'], $list);
+        $list = Materium::select(DB::raw('concat(id, " - ", name) as name'), 'id')->where('id', '>', '0')->where('seriada_bnd', '=', '1')->pluck('name', 'id');
+        //$materiales_ls = array_merge(['0' => 'Seleccionar Opción'], $list);
+        $materiales_ls = $list->prepend('Seleccionar Opcion', 0);
         $ponderacionMaterias = Materium::where('plantel_id', $materium->plantel_id)
             ->where('bnd_ponderacion', true)
             ->pluck('name', 'id');
         //dd($materiales_ls);
         $conceptosExtraordinarios = CajaConcepto::where('bnd_extraordinario', 1)->pluck('name', 'id');
-        $conceptosExtraordinarios->prepend('Seleccionar Opción', '');
+        $conceptosExtraordinarios->prepend('Seleccionar Opcion', '');
+        //dd($materium);
         return view('materias.edit', compact('materium', 'materiales_ls', 'ponderacionMaterias', 'conceptosExtraordinarios'))
             ->with('list', Materium::getListFromAllRelationApps());
     }
@@ -243,7 +246,7 @@ class MateriasController extends Controller
                         array_push($final, array(
                             'id' => $r1->id,
                             'name' => $r1->name,
-                            'selectec' => 'Selected',
+                            'selectec' => 'selected',
                             'bnd_activo' => $r1->bnd_activo
                         ));
                     } else {

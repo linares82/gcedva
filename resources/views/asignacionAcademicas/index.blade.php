@@ -218,7 +218,23 @@
                                     <a class="btn btn-xs btn-info" href="{{ route('hacademicas.calificacionGrupo', ['asignacion'=>$asignacionAcademica->id]) }}"><i class="glyphicon glyphicon-edit"></i>Calificaciones</a>
                                     @endpermission
                                     @permission('hacademicas.calificacionIncidencia')
+                                    @php
+                                        $calendarioIncidencias=$asignacionAcademica->lectivo->calendarioIncidenciaCals;
+                                        
+                                        $dentroCalendarioIncidencias=false;
+                                        foreach($calendarioIncidencias as $calendario){
+                                            //dd($asignacionAcademica->materia->ponderacion_id);
+                                            if($calendario->v_inicio<=date('Y-m-d') and 
+                                               $calendario->v_fin>=date('Y-m-d') and
+                                               $calendario->ponderacion_id==$asignacionAcademica->materia->ponderacion_id
+                                               ){
+                                                $dentroCalendarioIncidencias=true;
+                                            }
+                                        }
+                                    @endphp
+                                    @if($dentroCalendarioIncidencias)
                                     <a class="btn btn-xs btn-warning" href="{{ route('hacademicas.calificacionIncidencia', ['asignacion'=>$asignacionAcademica->id]) }}"><i class="glyphicon glyphicon-edit"></i>Incidencia</a>
+                                    @endif
                                     @endpermission
                                     @permission('inscripcions.listaCalificaciones')
                                     <a class="btn btn-xs btn-success" href="{{ route('inscripcions.listaCalificaciones', array('asignacion'=>$asignacionAcademica->id)) }}" target='_blank'><i class="glyphicon glyphicon-edit"></i>Lista Calificaciones</a>

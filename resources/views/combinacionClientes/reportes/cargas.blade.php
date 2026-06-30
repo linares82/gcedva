@@ -207,6 +207,7 @@
             <thead>
                 <td>Id</td><th>Plantel</th><td>Id</td><th>Especialidad</th><td>Id</td><th>Nivel</th><th>Id</th><th>Grado(nombre1)</th><th>Nombre RVOE(nombre2)</th><th>RVOE</th>
                 <th>Denominación</th><th>F. RVOE</th><th>CT</th><th>Seccion</th><th>Clave Servicio (Facturacion)</th><th>Nivel Educativo Sat (Facturacion)</th>
+                <th>Duracion</th>
             </thead>
             <tbody>
             
@@ -220,6 +221,7 @@
                     <td>{{ $grado->rvoe }}</td><td>{{ $grado->denomicancion }}</td><td>{{ $grado->fec_rvoe }}</td>
                     <td>{{ $grado->cct }}</td><td>{{ $grado->seccion }}</td><td>{{ $grado->clave_servicio }}</td>
                     <td>{{ optional($grado->nivelEducativoSat)->name }}</td>
+                    <td>{{ optional($grado->duracionPeriodo)->name }}</td>
                 </tr>
                 @endforeach
                 

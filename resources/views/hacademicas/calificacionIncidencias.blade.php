@@ -41,6 +41,7 @@
                    <label for="tpo_examen_id-field">Examen</label>
                    {!! Form::hidden("asignacion", $asignacion, array("class" => "form-control input-sm", "id" => "mail_acudiente-field")) !!}
                    {!! Form::select("tpo_examen_id", $examen, null, array("class" => "form-control select_seguridad", "id" => "tpo_examen_id-field")) !!}
+                   <div id='loading' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
                    @if($errors->has("tpo_examen_id"))
                     <span class="help-block">{{ $errors->first("st_materium_id") }}</span>
                    @endif
@@ -110,7 +111,9 @@
                          </td>
                          <td>
                             @permission('incidenciasCalificacions.create')
-                            <a target="_blank" href="{{ route('incidenciasCalificacions.create', array('calificacion_ponderacion_id'=>$r->calificacion_ponderacion_id)) }}" class="btn btn-warning btn-xs" target="_blank">Incidencia</a>     
+                            @if ($dentroPeriodoIncidencias)
+                                <a target="_blank" href="{{ route('incidenciasCalificacions.create', array('calificacion_ponderacion_id'=>$r->calificacion_ponderacion_id)) }}" class="btn btn-warning btn-xs" target="_blank">Incidencia</a>         
+                            @endif
                             @endpermission
                          </td>
                          <td>
@@ -130,3 +133,110 @@
     
     
 @endsection
+
+@push('scripts')
+  
+  <script type="text/javascript">
+      $('.fecha').Zebra_DatePicker({
+        days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+        months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        readonly_element: false,
+        lang_clear_date: 'Limpiar',
+        show_select_today: 'Hoy',
+      });
+     
+     $(document).on("click", ".btn-guardar_caificacion", function (e) {
+        //alert($('#calificacion_parcial'+$(this).data('cliente_id')).val());
+        @php
+            $calificacion_prohibida=\App\Param::where('llave', 'calificacion_prohibida')->first();
+            //dd($ponderacion_seleccionada->bnd_excepcion_calificacion_prohibida);
+            if(!isset($ponderacion_seleccionada)){
+                $excepcion_calificacion_prohibida=0;
+            }else{
+                $excepcion_calificacion_prohibida=$ponderacion_seleccionada->bnd_excepcion_calificacion_prohibida;
+            }
+        @endphp 
+        
+        
+        if({{$calificacion_prohibida->valor}} && 
+            !{{$excepcion_calificacion_prohibida}} &&
+            $('#calificacion_parcial'+$(this).data('cliente_id')).val()>=1 && 
+            $('#calificacion_parcial'+$(this).data('cliente_id')).val()<=4.9){
+            alert("Calificacion invalida");
+        }else{
+            var miurl = "{{route('hacademicas.actualizarCalificacion')}}";
+        let id=$(this).data('cliente_id');
+        let calificacion_ponderacion=$(this).data('calificacion_ponderacion_id')
+        var data = new FormData();
+        data.append('calificacion_ponderacion', $(this).data('calificacion_ponderacion_id'));
+        data.append('calificacion_parcial', $('#calificacion_parcial'+$(this).data('cliente_id')+$(this).data('calificacion_ponderacion_id')).val());
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('#_token').val()
+            }
+        });
+        $.ajax({
+            url: miurl,
+            type: 'GET',
+
+            // Form data
+            //datos del formulario
+            data: "calificacion_ponderacion=" + $(this).data('calificacion_ponderacion_id') +
+                  "&calificacion_parcial=" + $('#calificacion_parcial'+$(this).data('cliente_id')+$(this).data('calificacion_ponderacion_id')).val() + "",
+            //necesario para subir archivos via ajax
+            dataType: 'json',
+            //mientras enviamos el archivo
+            beforeSend : function(){$(".btn-guardar_caificacion").prop('disabled',true);},
+            complete : function(){$(".btn-guardar_caificacion").prop('disabled',false);},
+            //una vez finalizado correctamente
+            success: function (data) {
+                //location.reload();
+                //console.log(data.calificacion);
+                $('#div_c'+id+calificacion_ponderacion).html(data.calificacion);
+                $('#div_par'+id+calificacion_ponderacion).html(data.calificacion_parcial);
+                $('#div_cp'+id+calificacion_ponderacion).html(data.calificacion_parcial_calculada);
+            },
+            //si ha ocurrido un error
+            error: function (data) {
+                
+
+            }
+        });
+        }
+        
+    })
+    
+    cmbPonderaciones();
+    
+    $('#tpo_examen_id-field').change(function(){
+        cmbPonderaciones();
+    });
+    
+    function cmbPonderaciones(){
+        $.ajax({
+            url: '{{ route("hacademicas.cmbPonderaciones") }}',
+                    type: 'GET',
+                    data: "tpo_examen_id=" + $('#tpo_examen_id-field option:selected').val() + 
+                          "&asignacion_id=" + {{$asignacion}} + 
+                          "&carga_ponderacion_id="+$('#carga_ponderacion_id-field option:selected').val(),
+                    dataType: 'json',
+                    beforeSend : function(){$("#loading").show(); },
+                    complete : function(){$("#loading").hide(); },
+                    success: function(data){
+                        $('#carga_ponderacion_id-field').empty();
+                        $('#carga_ponderacion_id-field').append($('<option></option>').text('Seleccionar').val('0'));
+                        $.each(data, function(i) {
+                            //alert(data[i].name);
+                            $('#carga_ponderacion_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                        });
+                        $('#carga_ponderacion_id-field').select2({
+                            placeholder: 'Seleccionar opción'
+                          });
+                    }
+            });
+    }
+
+    
+</script>
+@endpush
