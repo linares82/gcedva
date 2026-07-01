@@ -269,9 +269,7 @@
                                  @endpermission
                              @endif
                             @permission('incidenciasCalificacions.create')
-                            @if($dentroPeriodoIncidencias>0)
-                            <a target="_blank" href="{{ route('incidenciasCalificacions.create', array('calificacion_ponderacion_id'=>$r->calificacion_ponderacion_id)) }}" class="btn btn-warning btn-xs" target="_blank">Incidencia</a>     
-                            @endif
+                            
                             @endpermission
                             @if($calendarioExtras>0)
                                 @if($r->st_materium_id == 2)
