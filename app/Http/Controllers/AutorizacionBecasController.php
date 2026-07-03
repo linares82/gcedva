@@ -313,7 +313,7 @@ class AutorizacionBecasController extends Controller
 				->join('especialidads as e', 'e.id', '=', 'i.especialidad_id')
 				->join('nivels as n', 'n.id', '=', 'i.nivel_id')
 				->join('grados as g', 'g.id', '=', 'i.grado_id')
-				->join('lectivos as l', 'l.id', '=', 'i.lectivo_id')
+				->join('lectivos as l', 'l.id', '=', 'autorizacion_becas.lectivo_id')
 				->join('st_becas as stb', 'stb.id', '=', 'autorizacion_becas.st_beca_id')
 				//->whereColumn('autorizacion_becas.lectivo_id', 'i.lectivo_id')
 				->where('p.id', $datos['plantel_f'])
@@ -324,7 +324,7 @@ class AutorizacionBecasController extends Controller
 				//->where('autorizacion_becas.st_beca_id', 4)
 				->whereNull('i.deleted_at')
 				->whereNull('autorizacion_becas.deleted_at')
-				->where('i.lectivo_id', $datos['lectivo_f'])
+				//->where('i.lectivo_id', $datos['lectivo_f'])
 				->where('autorizacion_becas.lectivo_id', $datos['lectivo_f']);
 		}
 		$registros = $registros_aux->get();

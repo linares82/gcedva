@@ -271,6 +271,16 @@
                             @permission('incidenciasCalificacions.create')
                             
                             @endpermission
+                            @php
+                                $inscripcion = Inscripcion::find($r->inscripcion_id);
+                                if ($r->hacademica_lectivo_id <= $r->inscripcion_lectivo_id) {
+                                $calendarioExtras = CalendarioExaExtra::where('lectivo_id', $inscripcion->lectivo_id)
+                                    ->whereDate('fec_inicio', '<=', date('Y-m-d'))
+                                    ->whereDate('fec_fin', '>=', date('Y-m-d'))
+                                    ->where('duracion_periodo_id', $inscripcion->grado->duracion_periodo_id)
+                                    ->count();
+                                  }
+                            @endphp
                             @if($calendarioExtras>0)
                                 @if($r->st_materium_id == 2)
                                     @permission('hacademicas.examenes')
