@@ -20,6 +20,7 @@
             <th>Plantel</th><th>Id</th><th>Matricula</th><th>P. Nombre</th><th>S. Nombre</th><th>A. Paterno</th><th>A. Materno</th>
             <th>F. Nacimiento</th><th>Edad</th><th>Sexo</th><th>CURP</th><th>Especialidad</th>
             <th>Estatus Cliente</th><th>Estatus Seguimiento</th><th>Concepto</th><th>Municipio</th>
+            <th>Contacto Seguro</th>
         </thead>
         <tbody>    
           @php
@@ -43,6 +44,13 @@
             <td>{{ $registro->especialidad }}</td>
             <td>{{ $registro->estatus_cliente }}</td><td>{{ $registro->estatus_seguimiento }}</td><td>{{ $registro->concepto }}</td>
             <td>{{$registro->municipio}}</td>
+            <td>
+              <strong>Padre:</strong> {{ $registro->nombre_padre }} ({{ $registro->cel_padre }})
+              <br>
+              <strong>Madre:</strong> {{ $registro->nombre_madre }} ({{ $registro->cel_madre }})
+              <br>
+              <strong>Acudiente:</strong> {{ $registro->nombre_acudiente }} ({{ $registro->cel_acudiente }})
+            </td>
           </tr>
         
         @endforeach

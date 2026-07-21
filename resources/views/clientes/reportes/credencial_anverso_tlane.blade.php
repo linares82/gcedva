@@ -60,6 +60,7 @@
                 {{$inscripcion->grado->nombre2}} <br/>
                 {{$cliente->nombre}} {{$cliente->nombre2}} <br/>
                 {{$cliente->ape_paterno}} {{$cliente->ape_materno}} <br/>
+                Matricula: {{$cliente->matricula}} <br/>
                 ID: {{$cliente->id}}
               </td>
           </tr>

@@ -620,6 +620,7 @@ class AsignacionAcademicasController extends Controller
 			'n.name as nivel',
 			'h.nivel_id',
 			'g.name as grado',
+			'g.nombre2',
 			'g.rvoe',
 			'h.grado_id',
 			'p.razon as plantel',
@@ -766,6 +767,7 @@ class AsignacionAcademicasController extends Controller
 			->where('grupo_id', $datos['grupo_f'])
 			->where('materium_id', $datos['materia_f'])
 			->whereNull('hacademicas.deleted_at')
+			->whereNull('cli.deleted_at')
 			->orderBy('ape_paterno')
 			->orderBy('ape_materno')
 			->orderBy('nombre')
@@ -808,6 +810,7 @@ class AsignacionAcademicasController extends Controller
 			//'e.imagen',
 			'g.imagen',
 			'g.denominacion',
+			'g.nombre2',
 			'g.name as grado',
 			'g.fec_rvoe',
 			'g.rvoe',

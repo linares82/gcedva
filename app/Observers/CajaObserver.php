@@ -114,6 +114,8 @@ class CajaObserver
                     ->whereNull('deleted_at')
                     ->whereDate('fecha_pago', '<=', $fechaActual)
                     ->count();
+                //dd($adeudos);
+                //Log::info($adeudos);
                 if ($adeudos == 0 and $cliente->st_cliente_id <> 20 and $cliente->st_cliente_id <> 30 and $cliente->st_cliente_id <> 31) {
                     if ($inscripcions->isEmpty()) {
                         $cliente->st_cliente_id = 22;

@@ -229,7 +229,7 @@ class GruposController extends Controller
 			$r = DB::table('grupos as g')
 				->join('grupo_periodo_estudios as gp', 'gp.grupo_id', '=', 'g.id')
 				->join('periodo_estudios as p', 'p.id', '=', 'gp.periodo_estudio_id')
-				->select('p.id', 'p.name')
+				->select('p.id', 'p.name', 'g.bnd_activo')
 				->where('g.id', '=', $grupo)
 				->where('g.id', '>', '0')
 				->get();
@@ -240,13 +240,15 @@ class GruposController extends Controller
 						array_push($final, array(
 							'id' => $r1->id,
 							'name' => $r1->name,
-							'selectec' => 'Selected'
+							'selectec' => 'Selected',
+							'bnd_activo' => $r1->bnd_activo
 						));
 					} else {
 						array_push($final, array(
 							'id' => $r1->id,
 							'name' => $r1->name,
-							'selectec' => ''
+							'selectec' => '',
+							'bnd_activo' => $r1->bnd_activo
 						));
 					}
 				}

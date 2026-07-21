@@ -2362,8 +2362,8 @@ class CajasController extends Controller
             ->whereNull('ln.deleted_at')
             ->get();
 
-
-        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'empleados'))
+        $formasPago = $this->formasPago;
+        return view('cajas.caja', compact('cliente', 'caja', 'combinaciones', 'cajas', 'empleados', 'formasPago'))
             ->with('list', Caja::getListFromAllRelationApps())
             ->with('list1', CajaLn::getListFromAllRelationApps());
     }

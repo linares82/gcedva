@@ -2708,7 +2708,13 @@ class ClientesController extends Controller
             'esp.name as especialidad',
             'clientes.curp',
             'clientes.genero',
-            'muni.name as municipio'
+            'muni.name as municipio',
+            'clientes.nombre_padre',
+            'clientes.cel_padre',
+            'clientes.nombre_madre',
+            'clientes.cel_madre',
+            'clientes.nombre_acudiente',
+            'clientes.cel_acudiente'
         ) //curp, sexo
             ->join('municipios as muni', 'muni.id', 'clientes.municipio_id')
             ->join('especialidads as esp', 'esp.id', '=', 'clientes.especialidad_id')

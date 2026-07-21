@@ -8815,6 +8815,22 @@ Route::post(
         'uses' => 'AdeudosController@adeudosPagosR'
     )
 )->middleware('auth');
+Route::get(
+    '/adeudos/conteoAdeudosXCliente',
+    array(
+        'as' => 'adeudos.conteoAdeudosXCliente',
+        //'middleware' => 'permission:adeudos.conteoAdeudosXCliente',
+        'uses' => 'AdeudosController@conteoAdeudosXCliente'
+    )
+)->middleware('auth');
+Route::post(
+    '/adeudos/conteoAdeudosXClienteR',
+    array(
+        'as' => 'adeudos.conteoAdeudosXClienteR',
+        //'middleware' => 'permission:adeudos.conteoAdeudosXCliente',
+        'uses' => 'AdeudosController@conteoAdeudosXClienteR'
+    )
+)->middleware('auth');
 Route::post(
     '/adeudos/update/{id}',
     array(

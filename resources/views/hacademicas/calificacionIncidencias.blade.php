@@ -110,6 +110,16 @@
                          <td>
                          </td>
                          <td>
+                            @php
+                                $inscripcion = App\Inscripcion::find($r->inscripcion_id);
+                                if ($r->hacademica_lectivo_id <= $r->inscripcion_lectivo_id) {
+                                $calendarioExtras = App\CalendarioExaExtra::where('lectivo_id', $inscripcion->lectivo_id)
+                                    ->whereDate('fec_inicio', '<=', date('Y-m-d'))
+                                    ->whereDate('fec_fin', '>=', date('Y-m-d'))
+                                    ->where('duracion_periodo_id', $inscripcion->grado->duracion_periodo_id)
+                                    ->count();
+                                  }
+                            @endphp
                             @permission('incidenciasCalificacions.create')
                             @if ($dentroPeriodoIncidencias)
                                 <a target="_blank" href="{{ route('incidenciasCalificacions.create', array('calificacion_ponderacion_id'=>$r->calificacion_ponderacion_id)) }}" class="btn btn-warning btn-xs" target="_blank">Incidencia</a>         

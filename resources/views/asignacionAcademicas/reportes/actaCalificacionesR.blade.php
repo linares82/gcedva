@@ -87,7 +87,7 @@
                     </td>
                     <td align="right" class="td_derecha">
                         {{ $encabezado->grado->denominacion }}<br/>
-                        {{ $encabezado->grado->rvoe }}<br/>
+                        {{ $encabezado->grado->nombre2 }}<br/>
                         @php
                             $fechaEntero=strtotime($encabezado->grado->fec_rvoe);
                             $anio=date('Y',$fechaEntero);
@@ -127,7 +127,7 @@
                         <td>Nombre de la Institución</td><td>{{ $encabezado->grado->denominacion }}</td><td>Fecha Emision</td><td>{{ Date('d-m-Y') }}</td>
                     </tr>
                     <tr>
-                        <td>Nivel</td><td colspan='3'>{{ $encabezado->nivel->name }}</td>
+                        <td>Nivel</td><td colspan='3'>{{ $encabezado->grado->nombre2 }}</td>
                     </tr>
                     <tr>
                         <td>Programa</td><td colspan='3'>{{ $encabezado->grado->rvoe }}</td>

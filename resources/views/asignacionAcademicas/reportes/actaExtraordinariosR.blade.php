@@ -130,6 +130,7 @@
                     </td>
                     <td align="right" class="td_derecha">
                         {{ $encabezado->denominacion }}<br/>
+                        {{ $encabezado->nombre2 }}<br/>
                         @php
                             $fechaEntero=strtotime($encabezado->fec_rvoe);
                             $anio=date('Y',$fechaEntero);

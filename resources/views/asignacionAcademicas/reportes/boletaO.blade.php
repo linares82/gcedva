@@ -225,7 +225,7 @@
                      <td width="32%" bordercolor="#FFFFFF"><div align="center"><span style="font-weight: bold"></span></div></td>
                     </tr>
                     <tr>
-                      <td colspan="2" bordercolor="#FFFFFF"><p>Promedio  general evaluatorio entregado a: <span style="font-weight: bold">{{$cliente->nombre." ".$cliente->nombre2." ".$cliente->ape_paterno." ".$cliente->ape_materno}}</span>, que acredita  tanto su conocimiento, habilidades y destrezas adquiridas en <u>{{$c->grado}}</u> 
+                      <td colspan="2" bordercolor="#FFFFFF"><p>Promedio  general evaluatorio entregado a: <span style="font-weight: bold">{{$cliente->nombre." ".$cliente->nombre2." ".$cliente->ape_paterno." ".$cliente->ape_materno}}</span>, que acredita  tanto su conocimiento, habilidades y destrezas adquiridas en <u> {{$c->combinacionCliente->grado->nombre2}}</u> 
                         
                        </p></td>
                       </tr>

@@ -3290,14 +3290,14 @@ class AdeudosController extends Controller
                 ->leftJoin('cajas as caj', 'caj.id', '=', 'adeudos.caja_id')
                 ->join('caja_conceptos as cc', 'cc.id', '=', 'adeudos.caja_concepto_id')
                 ->where('p.id', $plantel)
-                //->whereIn('stc.id', array(3, 4, 20, 23, 24, 25))
+                ->whereIn('stc.id', array(3, 4, 17, 20, 23, 24, 25, 26))
                 ->whereDate('adeudos.fecha_pago', '>=', $datos['fecha_f'])
                 ->whereDate('adeudos.fecha_pago', '<=', $datos['fecha_t'])
                 ->whereNull('adeudos.deleted_at')
                 ->whereNull('s.deleted_at')
                 ->orderBy('p.id')
                 ->orderBy('adeudos.caja_concepto_id')
-                ->orderBy('c.id')
+                ->orderBy('c.i')
                 ->get();
             //$registros_totales = DB::select('CALL maestroR(?,?,?)', array($plantel, $datos['fecha_f'], $datos['fecha_t']));
             //dd($registros_totales[0]->razon);
@@ -3325,7 +3325,13 @@ class AdeudosController extends Controller
                 array_push($lineas_detalle, $registro->toArray());
                 $calculo['plantel'] = $registro->razon;
 
-                if (is_null($registro->borrado_c) and is_null($registro->borrado_cln) and ($registro->st_cliente_id == 4 or $registro->st_cliente_id == 20)) {
+                if (
+                    is_null($registro->borrado_c) and is_null($registro->borrado_cln) and
+                    ($registro->st_cliente_id == 4 or $registro->st_cliente_id == 17 or
+                        $registro->st_cliente_id == 20 or $registro->st_cliente_id == 23 or
+                        $registro->st_cliente_id == 24 or $registro->st_cliente_id == 25 or
+                        $registro->st_cliente_id == 26)
+                ) {
                     $calculo['clientes_activos']++;
                     $calculo['concepto'] = "Total";
                     if ($registro->pagado_bnd == 1) {
@@ -5051,5 +5057,53 @@ class AdeudosController extends Controller
         //dd($detalle);
 
         return view('adeudos.reportes.adeudosXConceptoAlMesR', compact('totales', 'detalle'));
+    }
+
+    public function conteoAdeudosXCliente()
+    {
+        $plantels = Plantel::pluck('razon', 'id');
+        $st_clientes = StCliente::pluck('name', 'id');
+        return view('adeudos.reportes.conteoAdeudosXcliente', compact('plantels', 'st_clientes'));
+    }
+
+    public function conteoAdeudosXClienteR(Request $request)
+    {
+
+        $datos = $request->all();
+        $hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
+        $adeudos = Adeudo::select(DB::raw('p.razon,adeudos.cliente_id,stc.name as estatus, 
+                (select count(a1.id) from adeudos as a1 where pagado_bnd=0 and a1.cliente_id=adeudos.cliente_id and 
+                a1.deleted_at is null and fecha_pago < "' . $hoy . '") as adeudos_pendientes'))
+            ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
+            ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
+            ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+            ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+            ->join('caja_conceptos as caj_con', 'caj_con.id', '=', 'adeudos.caja_concepto_id')
+            ->join('seguimientos as ss', 'ss.cliente_id', '=', 'c.id')
+            ->where('cc.plantel_id', '>', 0)
+            ->where('cc.especialidad_id', '>', 0)
+            ->where('cc.nivel_id', '>', 0)
+            ->where('cc.grado_id', '>', 0)
+            ->where('cc.turno_id', '>', 0)
+            //->where('c.id', $caja->cliente_id)
+            ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
+            ->where('fecha_pago', '<=', $hoy)
+            ->where('pagado_bnd', 0)
+            ->where('c.plantel_id', $datos['plantel'])
+            ->whereNull('cc.deleted_at')
+            ->whereNull('c.deleted_at')
+            ->distinct()
+            ->whereIn('c.st_cliente_id', $datos['st_clientes'])
+            ->orderBy('adeudos_pendientes', 'asc')
+            ->orderBy('adeudos.cliente_id', 'asc')
+            //->groupBy('p.razon')
+            //->groupBy('adeudos.cliente_id')
+            //->groupBy('stc.name')
+            //->having('adeudos_pendientes', 0)
+            //->having('adeudos_cantidad', '<=', 3)
+            ->get();
+        //dd($adeudos->toArray());
+
+        return view('adeudos.reportes.conteoAdeudosXclienteR', compact('adeudos'));
     }
 }

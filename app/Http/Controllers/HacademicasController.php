@@ -435,7 +435,7 @@ class HacademicasController extends Controller
 
         $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
         //$examen->reverse();
-        //$examen->put(0,'Seleccionar OpciÃƒÂ³n');
+        //$examen->put(0,'Seleccionar OpciÃƒÆ’Ã‚Â³n');
         //$examen->reverse();
         //dd($hacademica->toArray());
         $lectivos = Lectivo::pluck('name', 'id');
@@ -549,7 +549,7 @@ class HacademicasController extends Controller
         //dd($hacademicas->toArray());
         $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
         //$examen->reverse();
-        //$examen->put(0,'Seleccionar OpciÃƒÂ³n');
+        //$examen->put(0,'Seleccionar OpciÃƒÆ’Ã‚Â³n');
         //$examen->reverse();
         $hacademica_id = $h->id;
         Session::flash('msj', 'Registro Creado');
@@ -782,6 +782,7 @@ class HacademicasController extends Controller
                 'cli.ape_materno',
                 'cli.bnd_doc_oblig_entregados',
                 'c.calificacion',
+                'c.tpo_examen_id',
                 'cp.calificacion_parcial_calculada',
                 'cp.id as calificacion_ponderacion_id',
                 'cp.calificacion_parcial',
@@ -1112,7 +1113,7 @@ class HacademicasController extends Controller
                 ->where('bnd_activo', 1)
                 ->pluck('name', 'id');
 
-            return view('hacademicas.calificacionGrupos', compact('asignacion', 'examen', 'carga_ponderaciones', 'ponderacion_seleccionada', 'asignacionAcademica', 'calendarioExtras'))
+            return view('hacademicas.calificacionGrupos', compact('asignacion', 'examen', 'carga_ponderaciones', 'ponderacion_seleccionada', 'asignacionAcademica', 'calendarioExtras', 'dentroPeriodoExamenes'))
                 ->with('list', Hacademica::getListFromAllRelationApps())
                 ->with('msj', $msj);
         }
@@ -1141,7 +1142,8 @@ class HacademicasController extends Controller
             'ponderacion_seleccionada',
             'asignacionAcademica',
             'calendarioExtras',
-            'dentroPeriodoIncidencias'
+            'dentroPeriodoIncidencias',
+            'dentroPeriodoExamenes'
         ))
             ->with('list', Hacademica::getListFromAllRelationApps())
             ->with('msj', $msj);
@@ -1370,7 +1372,7 @@ class HacademicasController extends Controller
     {
         $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
         //$examen->reverse();
-        //$examen->put(0,'Seleccionar OpciÃƒÂ³n');
+        //$examen->put(0,'Seleccionar OpciÃƒÆ’Ã‚Â³n');
         //$examen->reverse();
         $plantels = Plantel::pluck('razon', 'id');
         $lectivos = Lectivo::pluck('name', 'id');
@@ -1574,7 +1576,8 @@ class HacademicasController extends Controller
             'stc.name as estatus_cliente',
             'stc.id as estatus_cliente_id',
             'af.fecha as fecha_acta',
-            'af.consecutivo as consecutivo_acta'
+            'af.consecutivo as consecutivo_acta',
+            'hacademicas.inscripcion_id'
         )
             ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
             ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')

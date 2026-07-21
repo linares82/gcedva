@@ -990,6 +990,7 @@ class InscripcionsController extends Controller
             ->whereNull('hacademicas.deleted_at')
             ->whereNull('aa.deleted_at')
             ->whereNull('i.deleted_at')
+            ->whereNull('c.deleted_at')
             //->where('inscripcions.grado_id',$data['grado_f'])
             ->orderBy('hacademicas.plantel_id')
             ->orderBy('hacademicas.lectivo_id')

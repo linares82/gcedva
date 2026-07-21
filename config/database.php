@@ -51,6 +51,7 @@ return [
             'prefix' => '',
             'strict' => true,
             'engine' => null,
+            'timezone' => '-06:00'
         ],
 
         'remoto' => [
