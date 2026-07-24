@@ -35,6 +35,14 @@
     @endif
 </div>
 
+<div class="col-md-4 form-group @if($errors->has('porc_permitido')) has-error @endif">
+    <label for="porc_permitido-field">Procentaje del grupo permitido (ejemp: 0.10)</label>
+    {!! Form::text("porc_permitido", null, array("class" => "form-control", "id" => "porc_permitido-field")) !!}
+    @if($errors->has("porc_permitido"))
+    <span class="help-block">{{ $errors->first("porc_permitido") }}</span>
+    @endif
+</div>
+
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function() {
@@ -53,16 +61,16 @@
             show_select_today: 'Hoy',
         });
         
-        getCmbEspecialidad();
+        getCmbCargaPonde();
         
         $('#ponderacion_id-field').change(function(){
-            getCmbEspecialidad();
+            getCmbCargaPonde();
         });
     });
     
     
 
-    function getCmbEspecialidad() {
+    function getCmbCargaPonde() {
         //var $example = $("#especialidad_id-field").select2();
         var a = $('#frm_cliente').serialize();
         $.ajax({

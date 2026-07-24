@@ -21,7 +21,15 @@ class CalendarioExaExtra extends Model
 	}
 
 	//Mass Assignment
-	protected $fillable = ['plantel_id', 'duracion_periodo_id', 'fec_inicio', 'fec_fin', 'lectivo_id', 'usu_alta_id', 'usu_mod_id'];
+	protected $fillable = [
+		'plantel_id',
+		'duracion_periodo_id',
+		'fec_inicio',
+		'fec_fin',
+		'lectivo_id',
+		'usu_alta_id',
+		'usu_mod_id'
+	];
 
 	public function usu_alta()
 	{

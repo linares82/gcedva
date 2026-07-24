@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -9,7 +11,8 @@ use Auth;
 use App\Http\Requests\updateIncidenciasJustificacion;
 use App\Http\Requests\createIncidenciasJustificacion;
 
-class IncidenciasJustificacionsController extends Controller {
+class IncidenciasJustificacionsController extends Controller
+{
 
 	/**
 	 * Display a listing of the resource.
@@ -31,7 +34,7 @@ class IncidenciasJustificacionsController extends Controller {
 	public function create()
 	{
 		return view('incidenciasJustificacions.create')
-			->with( 'list', IncidenciasJustificacion::getListFromAllRelationApps() );
+			->with('list', IncidenciasJustificacion::getListFromAllRelationApps());
 	}
 
 	/**
@@ -44,11 +47,13 @@ class IncidenciasJustificacionsController extends Controller {
 	{
 
 		$input = $request->all();
-		$input['usu_alta_id']=Auth::user()->id;
-		$input['usu_mod_id']=Auth::user()->id;
-
+		$input['usu_alta_id'] = Auth::user()->id;
+		$input['usu_mod_id'] = Auth::user()->id;
+		if (!isset($input['bnd_activo']) /*and Auth::user()->can('grupos.bnd_activo')*/) {
+			$input['bnd_activo'] = false;
+		}
 		//create data
-		IncidenciasJustificacion::create( $input );
+		IncidenciasJustificacion::create($input);
 
 		return redirect()->route('incidenciasJustificacions.index')->with('message', 'Registro Creado.');
 	}
@@ -61,7 +66,7 @@ class IncidenciasJustificacionsController extends Controller {
 	 */
 	public function show($id, IncidenciasJustificacion $incidenciasJustificacion)
 	{
-		$incidenciasJustificacion=$incidenciasJustificacion->find($id);
+		$incidenciasJustificacion = $incidenciasJustificacion->find($id);
 		return view('incidenciasJustificacions.show', compact('incidenciasJustificacion'));
 	}
 
@@ -73,9 +78,9 @@ class IncidenciasJustificacionsController extends Controller {
 	 */
 	public function edit($id, IncidenciasJustificacion $incidenciasJustificacion)
 	{
-		$incidenciasJustificacion=$incidenciasJustificacion->find($id);
+		$incidenciasJustificacion = $incidenciasJustificacion->find($id);
 		return view('incidenciasJustificacions.edit', compact('incidenciasJustificacion'))
-			->with( 'list', IncidenciasJustificacion::getListFromAllRelationApps() );
+			->with('list', IncidenciasJustificacion::getListFromAllRelationApps());
 	}
 
 	/**
@@ -86,9 +91,9 @@ class IncidenciasJustificacionsController extends Controller {
 	 */
 	public function duplicate($id, IncidenciasJustificacion $incidenciasJustificacion)
 	{
-		$incidenciasJustificacion=$incidenciasJustificacion->find($id);
+		$incidenciasJustificacion = $incidenciasJustificacion->find($id);
 		return view('incidenciasJustificacions.duplicate', compact('incidenciasJustificacion'))
-			->with( 'list', IncidenciasJustificacion::getListFromAllRelationApps() );
+			->with('list', IncidenciasJustificacion::getListFromAllRelationApps());
 	}
 
 	/**
@@ -101,10 +106,16 @@ class IncidenciasJustificacionsController extends Controller {
 	public function update($id, IncidenciasJustificacion $incidenciasJustificacion, updateIncidenciasJustificacion $request)
 	{
 		$input = $request->all();
-		$input['usu_mod_id']=Auth::user()->id;
+		//dd($input);
+		$input['usu_mod_id'] = Auth::user()->id;
+		if (!isset($input['bnd_activo']) /*and Auth::user()->can('grupos.bnd_activo')*/) {
+			$input['bnd_activo'] = 0;
+		}
 		//update data
-		$incidenciasJustificacion=$incidenciasJustificacion->find($id);
-		$incidenciasJustificacion->update( $input );
+		//dd($input);
+		$incidenciasJustificacion = $incidenciasJustificacion->find($id);
+
+		$incidenciasJustificacion->update($input);
 
 		return redirect()->route('incidenciasJustificacions.index')->with('message', 'Registro Actualizado.');
 	}
@@ -115,12 +126,11 @@ class IncidenciasJustificacionsController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id,IncidenciasJustificacion $incidenciasJustificacion)
+	public function destroy($id, IncidenciasJustificacion $incidenciasJustificacion)
 	{
-		$incidenciasJustificacion=$incidenciasJustificacion->find($id);
+		$incidenciasJustificacion = $incidenciasJustificacion->find($id);
 		$incidenciasJustificacion->delete();
 
 		return redirect()->route('incidenciasJustificacions.index')->with('message', 'Registro Borrado.');
 	}
-
 }

@@ -21,7 +21,18 @@ class CalendarioIncidenciaCal extends Model
 	}
 
 	//Mass Assignment
-	protected $fillable = ['lectivo_id', 'ponderacion_id', 'carga_ponderacion_id', 'v_inicio', 'v_fin', 'plantel_id', 'usu_alta_id', 'usu_mod_id'];
+	protected $fillable = [
+		'lectivo_id',
+		'ponderacion_id',
+		'carga_ponderacion_id',
+		'v_inicio',
+		'v_fin',
+		'plantel_id',
+		'usu_alta_id',
+		'usu_mod_id',
+		'porc_permitido',
+		'bloqueo_incidencias'
+	];
 
 	public function usu_alta()
 	{

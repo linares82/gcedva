@@ -71,4 +71,9 @@ class Calificacion extends Model
 	{
 		return $this->hasMany('App\CalificacionPonderacion');
 	} // end
+
+	public function hcalificacions()
+	{
+		return $this->hasMany('App\Hcalificacion');
+	} // end
 }

@@ -782,7 +782,6 @@ class HacademicasController extends Controller
                 'cli.ape_materno',
                 'cli.bnd_doc_oblig_entregados',
                 'c.calificacion',
-                'c.tpo_examen_id',
                 'cp.calificacion_parcial_calculada',
                 'cp.id as calificacion_ponderacion_id',
                 'cp.calificacion_parcial',
@@ -1134,6 +1133,10 @@ class HacademicasController extends Controller
         }
 
         //dd($hacademicas->toArray());
+        $check_excepcion = 0;
+        if (isset($data['excepcion'])) {
+            $check_excepcion = $data['excepcion'];
+        }
         return view('hacademicas.calificacionGrupos', compact(
             'asignacion',
             'examen',
@@ -1143,7 +1146,8 @@ class HacademicasController extends Controller
             'asignacionAcademica',
             'calendarioExtras',
             'dentroPeriodoIncidencias',
-            'dentroPeriodoExamenes'
+            'dentroPeriodoExamenes',
+            'check_excepcion'
         ))
             ->with('list', Hacademica::getListFromAllRelationApps())
             ->with('msj', $msj);
@@ -1492,26 +1496,10 @@ class HacademicasController extends Controller
         $hoy = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'));
         $periodos_capturados_total = 0;
         //dd($lectivo->periodoExamens->ToArray());
-        foreach ($lectivo->periodoExamens as $periodoExamen) {
-            //periodos de examen asociados al lectivo            
-            $calificacion_inicio = Carbon::createFromFormat('Y-m-d', $periodoExamen->inicio);
-            $calificacion_fin = Carbon::createFromFormat('Y-m-d', $periodoExamen->fin);
-            //dd($periodoExamen);
-            if ($calificacion_inicio->lessThanOrEqualTo($hoy)  and $calificacion_fin->greaterThanOrEqualTo($hoy)) {
-                //$dentroPeriodoExamenesAsignacion = $periodoExamen->id; Se deshabilita la opcion de periodos de examen directo en el lectivo
-            }
 
-            $periodos_capturados_total++;
-        }
         //dd($dentroPeriodoExamenes);
         //dd($lectivo->calendarioEvaluacions->toArray());
-        foreach ($lectivo->calendarioEvaluacions as $fechaCalendario) {
-            $calificacion_inicio = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_inicio);
-            $calificacion_fin = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_fin);
-            if ($calificacion_inicio->lessThanOrEqualTo($hoy)  and $calificacion_fin->greaterThanOrEqualTo($hoy)) {
-                $dentroPeriodoExamenes = $fechaCalendario->id;
-            }
-        }
+
 
         $dentroPeriodoIncidencias = 0;
         $lectivosExtraIncidencias = Hacademica::select('calif.lectivo_id')
@@ -1533,6 +1521,7 @@ class HacademicasController extends Controller
             ->has('calendarioIncidenciaCals')
             ->with('calendarioIncidenciaCals')->get();
         //dd($lectivosIncidencias);
+        $calendario_activo = 0;
         foreach ($lectivosIncidencias as $lectivoIncidencia) {
             foreach ($lectivoIncidencia->calendarioIncidenciaCals as $fechaCalendario) {
                 $calificacion_inicio = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_inicio);
@@ -1545,9 +1534,11 @@ class HacademicasController extends Controller
                 ) {
                     $dentroPeriodoIncidencias = $fechaCalendario->id;
                     //dd($dentroPeriodoIncidencias);
+                    $calendario_activo = $fechaCalendario;
                 }
             }
         }
+
 
 
         //dd($periodos_capturados_total);
@@ -1577,7 +1568,8 @@ class HacademicasController extends Controller
             'stc.id as estatus_cliente_id',
             'af.fecha as fecha_acta',
             'af.consecutivo as consecutivo_acta',
-            'hacademicas.inscripcion_id'
+            'hacademicas.inscripcion_id',
+            'cont_inci'
         )
             ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
             ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
@@ -1646,8 +1638,6 @@ class HacademicasController extends Controller
             $carga_ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $materia->ponderacion_id)->pluck('name', 'id');
         }
 
-
-
         //dd($hacademicas->toArray());
         return view('hacademicas.calificacionIncidencias', compact(
             'asignacion',
@@ -1655,7 +1645,8 @@ class HacademicasController extends Controller
             'carga_ponderaciones',
             'hacademicas',
             'ponderacion_seleccionada',
-            'dentroPeriodoIncidencias'
+            'dentroPeriodoIncidencias',
+            'calendario_activo'
         ))
             ->with('list', Hacademica::getListFromAllRelationApps())
             //->withInput()

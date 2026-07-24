@@ -60,6 +60,16 @@
                 </div>
             {!! Form::close() !!}
             @if(isset($hacademicas))
+                <div class="row"></div>
+                    @php
+                        $total_alumnos=count($hacademicas);
+                        $porcentaje_permitido=ceil(count($hacademicas)*$calendario_activo->porc_permitido);
+                        $total_incidencias_actuales=$hacademicas->sum('cont_inci');
+                    @endphp
+                    <div class="well well-sm">
+                    <strong>Total Alumnos:</strong>{{  count($hacademicas) }} <strong>Porcentaje permitido:</strong>{{  $calendario_activo->porc_permitido }}( {{ $porcentaje_permitido }}) <strong>Total incidencias actuales:</strong> {{ $total_incidencias_actuales }}
+                    </div>
+                
                 <div class="table-responsive">
                  <table class="table table-condensed table-striped">
                      <thead>
@@ -122,7 +132,11 @@
                             @endphp
                             @permission('incidenciasCalificacions.create')
                             @if ($dentroPeriodoIncidencias)
-                                <a target="_blank" href="{{ route('incidenciasCalificacions.create', array('calificacion_ponderacion_id'=>$r->calificacion_ponderacion_id)) }}" class="btn btn-warning btn-xs" target="_blank">Incidencia</a>         
+                                    @if($total_incidencias_actuales<$porcentaje_permitido)
+                                        <a target="_blank" href="{{ route('incidenciasCalificacions.create', array('calificacion_ponderacion_id'=>$r->calificacion_ponderacion_id)) }}" class="btn btn-warning btn-xs" target="_blank">Incidencia {{$r->cont_inci}}</a>         
+                                    @else
+                                        Incidencias {{$r->cont_inci}}         
+                                    @endif
                             @endif
                             @endpermission
                          </td>

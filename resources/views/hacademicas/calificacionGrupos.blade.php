@@ -141,18 +141,6 @@
                          <td><div id="div_cp{{$r->id}}{{$r->calificacion_ponderacion_id}}">{{ $r->calificacion_parcial_calculada }}</div></td>
                          <td>
                             @php
-                                $inscripcion = App\Inscripcion::find($r->inscripcion_id);
-                                if ($r->hacademica_lectivo_id <= $r->inscripcion_lectivo_id) {
-                                $calendarioExtras = App\CalendarioExaExtra::where('lectivo_id', $inscripcion->lectivo_id)
-                                    ->whereDate('fec_inicio', '<=', date('Y-m-d'))
-                                    ->whereDate('fec_fin', '>=', date('Y-m-d'))
-                                    ->where('duracion_periodo_id', $inscripcion->grado->duracion_periodo_id)
-                                    ->count();
-                                  }
-                                
-                            @endphp
-
-                            @php
                                 $param_bloqueoXdoc=\App\Param::where('llave','bloqueo_caja_calif_asistenciasXDoc')->value('valor');
                                 $excepcion_documentos=\App\Plantel::find($r->plantel_id);
                                 
@@ -184,13 +172,14 @@
                                         @endpermission
                                     @endif
                                 @endif
-                            @elseif($r->estatus_cliente_id==1 or $r->estatus_cliente_id==22 or $r->tpo_examen_id==2)
+                             @elseif($r->estatus_cliente_id==1 or $r->estatus_cliente_id==22 or $r->tpo_examen_id==2)
+				
                                 @if($r->tpo_examen_id==2 and $calendarioExtras>0)
                                     @permission('hacademicas.calificacionExamenExtra')
                                     {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
                                     "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
                                     @endpermission
-                                @elseif($r->tpo_examen_id==1)
+                                @else
                                     {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
                                     "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
                                 @endif
@@ -198,14 +187,15 @@
                                 
                             @else
                                 @if($param_bloqueoXdoc==1)
-                                    @if(($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) and $dentroPeriodoIncidencias==0)
+				    
+                                    @if((($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) /*and $dentroPeriodoIncidencias==0*/))
                                     {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
                                     "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
-				                    @elseif(($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) and $dentroPeriodoExamenes>0)
+				    @elseif((($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) and $dentroPeriodoExamenes>0) or $check_excepcion)
                                     {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
                                     "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
                                     @endif
-				                @else
+				@else
                                     {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
                                     "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
 
@@ -214,7 +204,6 @@
                              
                          </td>
                          <td>
-                            
                             @if(($r->estatus_cliente_id==3 or 
                                 $r->estatus_cliente_id==25 or 
                                  $r->estatus_cliente_id==26 or
@@ -222,7 +211,7 @@
                                  $r->estatus_cliente_id==28) and 
                                  $r->tpo_examen_id==1 )
                                 @if($param_bloqueoXdoc==1)
-                                    @if(($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) /*and $dentroPeriodoIncidencias==0*/)
+                                    @if(($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) and $dentroPeriodoIncidencias==0)
                                         @permission('hacademicas.calificacionBaja')
                                             <button type="button"  
                                             class="btn btn-primary btn-xs btn-guardar_caificacion" 
@@ -255,7 +244,7 @@
                                     data-cliente_id="{{$r->id}}"
                                     >Actualizar</button>
                                     @endpermission
-                                @elseif($r->tpo_examen_id==1)
+                                @else
                                     <button type="button"  
                                     class="btn btn-primary btn-xs btn-guardar_caificacion" 
                                     data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
@@ -267,16 +256,15 @@
                                 @permission('hCalificacions.index')
                                 <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar" class="btn btn-success btn-xs" target="_blank">Historia</a>
                                 @endpermission
-                            @else
-                                
+                             @else
                                 @if($param_bloqueoXdoc==1)
-                                    @if(($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) /*and $dentroPeriodoIncidencias==0*/)
+                                    @if((($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) /*and $dentroPeriodoIncidencias==0*/))
                                     <button type="button"  
                                         class="btn btn-primary btn-xs btn-guardar_caificacion" 
                                         data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
                                         data-cliente_id="{{$r->id}}"
                                     >Actualizar</button>
-				                    @elseif(($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) /*and $dentroPeriodoExamenes>0*/)
+				    @elseif((($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) and $dentroPeriodoExamenes>0) or $check_excepcion)
                                     <button type="button"  
                                         class="btn btn-primary btn-xs btn-guardar_caificacion" 
                                         data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
@@ -284,7 +272,6 @@
                                     >Actualizar</button>
                                     @endif
                                  @else
-                                  
                                     <button type="button"  
                                     class="btn btn-primary btn-xs btn-guardar_caificacion" 
                                     data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
@@ -294,11 +281,20 @@
                                  @permission('hCalificacions.index')
                                  <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar" class="btn btn-success btn-xs" target="_blank">Historia</a>
                                  @endpermission
-                            @endif
+                             @endif
                             @permission('incidenciasCalificacions.create')
                             
                             @endpermission
-                            
+                            @php
+                                $inscripcion = App\Inscripcion::find($r->inscripcion_id);
+                                if ($r->hacademica_lectivo_id <= $r->inscripcion_lectivo_id) {
+                                $calendarioExtras = App\CalendarioExaExtra::where('lectivo_id', $inscripcion->lectivo_id)
+                                    ->whereDate('fec_inicio', '<=', date('Y-m-d'))
+                                    ->whereDate('fec_fin', '>=', date('Y-m-d'))
+                                    ->where('duracion_periodo_id', $inscripcion->grado->duracion_periodo_id)
+                                    ->count();
+                                  }
+                            @endphp
                             @if($calendarioExtras>0)
                                 @if($r->st_materium_id == 2)
                                     @permission('hacademicas.examenes')

@@ -44,7 +44,8 @@
 
                     <div class="form-group col-md-4 @if($errors->has('grado_id')) has-error @endif">
                        <label for="grado_id-field">Grado</label>
-                       {!! Form::select("grado_id", $list["Grado"], isset($hacademica) ? $hacademica->grado_id : null, array("class" => "form-control select_seguridad", "id" => "grado_id-field")) !!}
+                       {!! Form::hidden("grado_id", isset($hacademica) ? $hacademica->grado_id : null, array("class" => "form-control input-sm", "id" => "grado_id-field")) !!}
+                       {!! Form::select("grado_id", $list["Grado"], isset($hacademica) ? $hacademica->grado_id : null, array("class" => "form-control select_seguridad", "id" => "grado-field")) !!}
                        @if($errors->has("grado_id"))
                         <span class="help-block">{{ $errors->first("grado_id") }}</span>
                        @endif
@@ -52,7 +53,8 @@
                     
                     <div class="form-group col-md-4 @if($errors->has('materium_id')) has-error @endif">
                        <label for="materium_id-field">Materia</label>
-                       {!! Form::select("materium_id", $list["Materium"], isset($hacademica) ? $hacademica->materium_id : null, array("class" => "form-control select_seguridad", "id" => "materium_id-field")) !!}
+                       {!! Form::hidden("materium_id", isset($hacademica) ? $hacademica->materium_id : null, array("class" => "form-control input-sm", "id" => "materium_id-field")) !!}
+                       {!! Form::select("materium_id", $list["Materium"], isset($hacademica) ? $hacademica->materium_id : null, array("class" => "form-control select_seguridad", "id" => "materium-field")) !!}
                        @if($errors->has("materium_id"))
                         <span class="help-block">{{ $errors->first("materium_id") }}</span>
                        @endif
@@ -64,7 +66,8 @@
 
                     <div class="form-group col-md-4 @if($errors->has('lectivo_id')) has-error @endif">
                         <label for="lectivo_id-field">Lectivo</label>
-                        {!! Form::select("lectivo_id", $lectivos, isset($calendario_extras) ? $calendario_extras->lectivo_id : null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
+                        {!! Form::hidden("lectivo_id", isset($hacademica) ? $hacademica->lectivo_id : null, array("class" => "form-control input-sm", "id" => "lectivo_id-field")) !!}
+                        {!! Form::select("lectivo_id", $lectivos, isset($calendario_extras) ? $calendario_extras->lectivo_id : null, array("class" => "form-control select_seguridad", "id" => "lectivo-field")) !!}
                         @if($errors->has("lectivo_id"))
                          <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
                         @endif
@@ -72,7 +75,8 @@
 
                     <div class="form-group col-md-4 @if($errors->has('examen_id')) has-error @endif" >
                        <label for="examen_id-field">Examen</label>
-                       {!! Form::select("examen_id", $examen, null, array("class" => "form-control select_seguridad", "id" => "examen_id-field")) !!}
+                       {!! Form::hidden("examen_id", 2, array("class" => "form-control input-sm", "id" => "examen_id-field")) !!}
+                       {!! Form::select("examen_id", $examen, null, array("class" => "form-control select_seguridad", "id" => "examen-field")) !!}
                        @if($errors->has("examen_id"))
                         <span class="help-block">{{ $errors->first("Examen_id") }}</span>
                        @endif
@@ -241,6 +245,11 @@
     });
 
     $(document).ready(function() {
+      $('input').prop('readonly', true);
+      $('#grado-field').prop('disabled', true);
+      $('#materium-field').prop('disabled', true);
+      $('#lectivo-field').prop('disabled', true);
+      $('#examen-field').prop('disabled', true);
       CmbGrado();
       CmbMateria();
 

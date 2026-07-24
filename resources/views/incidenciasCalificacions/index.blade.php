@@ -105,7 +105,6 @@
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'incidencias_justificacion_id', 'title' => 'JUSTIFICACION'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'usu_alta_id', 'title' => 'ALTA'])</th>
                             <th>Estatus</th>
-                            <th>RESPUESTA</th>
                             <th class="text-right">OPCIONES</th>
                         </tr>
                     </thead>
@@ -113,7 +112,7 @@
                     <tbody>
                         @foreach($incidenciasCalificacions as $incidenciasCalificacion)
                             <tr>
-                                <td><a href="{{ route('incidenciasCalificacions.show', $incidenciasCalificacion->id) }}">{{$incidenciasCalificacion->id}}</a></td>
+                                <td>{{$incidenciasCalificacion->id}}</td>
                                 <td>{{$incidenciasCalificacion->cliente_id}} {{$incidenciasCalificacion->cliente->nombre}} {{$incidenciasCalificacion->cliente->nombre2}} {{$incidenciasCalificacion->cliente->ape_paterno}} {{$incidenciasCalificacion->cliente->ape_materno}}</td>
                                 <td>{{$incidenciasCalificacion->cliente->plantel->razon}} </td>
                                 <td>{{$incidenciasCalificacion->calificacionPonderacion->cargaPonderacion->name}}</td>
@@ -133,7 +132,6 @@
                                     Sin revisar
                                     @endif
                                 </td>
-                                <td>{{$incidenciasCalificacion->respuesta}}</td>
                                 <td class="text-right">
 				    @if($incidenciasCalificacion->imagen)
 				    <a target="_blank" href="{{ asset('storage/incidencias_calificacions/' . $incidenciasCalificacion->imagen) }}">

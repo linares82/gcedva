@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CalendarioIncidenciaCal;
 use App\Calificacion;
 use App\CalificacionPonderacion;
 use App\Empleado;
@@ -54,9 +55,9 @@ class IncidenciasCalificacionsController extends Controller
 		$tpo_examen_id = CalificacionPonderacion::find($calificacion_ponderacion_id)->calificacion->tpo_examen_id;
 		$justificacion = [];
 		if ($tpo_examen_id == 2) {
-			$justificacion = IncidenciasJustificacion::where('id', 4)->pluck('name', 'id');
+			$justificacion = IncidenciasJustificacion::where('id', 4)->where('bnd_activo', 1)->pluck('name', 'id');
 		} else {
-			$justificacion = IncidenciasJustificacion::where('id', "<>", 4)->pluck('name', 'id');
+			$justificacion = IncidenciasJustificacion::where('id', "<>", 4)->where('bnd_activo', 1)->pluck('name', 'id');
 		}
 
 		return view('incidenciasCalificacions.create', compact('calificacion_ponderacion_id', 'justificacion', 'tpo_examen_id'))
@@ -84,6 +85,9 @@ class IncidenciasCalificacionsController extends Controller
 
 		//create data
 		$incidenciaCalificacion = IncidenciasCalificacion::create($input);
+		$this->autorizar($incidenciaCalificacion->id);
+		$calificacionPonderacion->cont_inci = $calificacionPonderacion->cont_inci + 1;
+		$calificacionPonderacion->save();
 		if ($request->hasFile('imagen')) {
 			$file = $request->file('imagen');
 			$extension = $file->getClientOriginalExtension();
@@ -130,9 +134,9 @@ class IncidenciasCalificacionsController extends Controller
 		$tpo_examen_id = $incidenciasCalificacion->calificacion->tpo_examen_id;
 		$justificacion = [];
 		if ($tpo_examen_id == 2) {
-			$justificacion = IncidenciasJustificacion::where('id', 4)->pluck('name', 'id');
+			$justificacion = IncidenciasJustificacion::where('id', 4)->where('bnd_activo', 1)->pluck('name', 'id');
 		} else {
-			$justificacion = IncidenciasJustificacion::where('id', "<>", 4)->pluck('name', 'id');
+			$justificacion = IncidenciasJustificacion::where('id', "<>", 4)->where('bnd_activo', 1)->pluck('name', 'id');
 		}
 		return view('incidenciasCalificacions.edit', compact('incidenciasCalificacion', 'calificacion_ponderacion_id', 'justificacion', 'tpo_examen_id'))
 			->with('list', IncidenciasCalificacion::getListFromAllRelationApps());
@@ -200,18 +204,15 @@ class IncidenciasCalificacionsController extends Controller
 		return redirect()->route('incidenciasCalificacions.index')->with('message', 'Registro Borrado.');
 	}
 
-	public function Autorizar(Request $request)
+	public function Autorizar($id)
 	{
-		$datos = $request->all();
 
-		$incidenciasCalificacion = IncidenciasCalificacion::find($datos['id']);
-		$input['respuesta'] = $datos['respuesta'];
+
+		$incidenciasCalificacion = IncidenciasCalificacion::find($id);
 		$input['usu_mod_id'] = Auth::user()->id;
 		$input['bnd_autorizada'] = 1;
 		$input['bnd_rechazada'] = 0;
 		$input['fecha_ar'] = date('Y-m-d');
-
-
 
 		$incidenciasCalificacion->update($input);
 
@@ -225,10 +226,11 @@ class IncidenciasCalificacionsController extends Controller
 		}
 
 		//dd($incidenciasCalificacion->usu_alta->email);
+		/*
 		Mail::to($incidenciasCalificacion->usu_alta->email)
 			->send(new AvisoIncidencia($incidenciasCalificacion));
-
-		return redirect()->route('incidenciasCalificacions.show', $datos['id']);
+		*/
+		//return redirect()->route('incidenciasCalificacions.show', $datos['id']);
 	}
 
 	public function Rechazar(Request $request)
@@ -383,5 +385,55 @@ class IncidenciasCalificacionsController extends Controller
 		} else {
 			return "Error vuelva a intentarlo";
 		}
+	}
+
+	public function incidencias()
+	{
+		$planteles = Plantel::pluck('razon', 'id');
+		return view('incidenciasCalificacions.reportes.incidencias', compact('planteles'))
+			->with('list', CalendarioIncidenciaCal::getListFromAllRelationApps());
+	}
+
+	public function incidenciasR(Request $request)
+	{
+		$datos = $request->all();
+		//dd($datos);
+		$registros = IncidenciasCalificacion::select(
+			'p.razon',
+			'c.id as cliente_id',
+			'c.nombre',
+			'c.nombre2',
+			'c.ape_paterno',
+			'c.ape_materno',
+			'm.name as materia',
+			'incidencias_calificacions.calificacion_nueva',
+			'incidencias_calificacions.bnd_autorizada',
+			'fecha_ar',
+			'incidencias_calificacions.calificacion_id',
+			'ij.name as justificacion',
+			'lec.name as lectivo'
+		)
+			->join('hacademicas as h', 'h.id', 'incidencias_calificacions.hacademica_id')
+			->join('lectivos as lec', 'lec.id', 'h.lectivo_id')
+			->join('materia as m', 'm.id', 'h.materium_id')
+			->join('plantels as p', 'p.id', 'h.plantel_id')
+			->join('clientes as c', 'c.id', 'h.cliente_id')
+			->join('calificacions as calif', 'calif.id', 'incidencias_calificacions.calificacion_id')
+			->join('calificacion_ponderacions as cp', 'cp.id', 'incidencias_calificacions.calificacion_ponderacion_id')
+			->join('carga_ponderacions as detalle_ponde', 'detalle_ponde.id', 'cp.carga_ponderacion_id')
+			->leftJoin('incidencias_justificacions as ij', 'ij.id', 'incidencias_calificacions.incidencias_justificacion_id')
+			->where('p.id', $datos['plantel_f'])
+			->where('h.lectivo_id', $datos['lectivo_f'])
+			->where('detalle_ponde.ponderacion_id', $datos['ponderacion_id'])
+			->where('detalle_ponde.id', $datos['carga_ponderacion_id'])
+			//->whereDate('incidencias_calificacions.fecha_ar', '>=', $datos['fecha_f'])
+			//->whereDate('incidencias_calificacions.fecha_ar', '<=', $datos['fecha_t'])
+			->orderBy('p.id')
+			->orderBy('c.id')
+			->orderBy('fecha_ar')
+			->get();
+
+		//dd($registros->toArray());
+		return view('incidenciasCalificacions.reportes.incidenciasR', compact('registros'));
 	}
 }

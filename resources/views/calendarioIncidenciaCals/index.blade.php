@@ -200,6 +200,7 @@
                     <td>{{$calendarioIncidenciaCal->v_fin}}</td>
                     
                                 <td class="text-right">
+                                    
                                     @permission('calendarioIncidenciaCals.edit')
                                     <a class="btn btn-xs btn-warning" href="{{ route('calendarioIncidenciaCals.edit', $calendarioIncidenciaCal->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
                                     @endpermission

@@ -145,7 +145,7 @@ class CalendarioExaExtrasController extends Controller
 			->first();
 		//dd($calendario);
 		if (is_null($calendario)) {
-			return json_encode(array('msj' => 'No hay calendario de exÃ¡menes extras para este periodo'));
+			return json_encode(array('msj' => 'No hay calendario de exámenes extras para este periodo'));
 		}
 
 		if (!is_null($calendario)) {
@@ -169,7 +169,7 @@ class CalendarioExaExtrasController extends Controller
 				->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
 				//->where('h.materium_id', $hacademica->materium_id)
 				->where('h.cliente_id', $datos['cliente_id'])
-				->where('calificacions.lectivo_id', $calendario->lectivo_id)
+				//->where('calificacions.lectivo_id', $calendario->lectivo_id)
 				->whereDate('calificacions.fecha', '>=', $calendario->fec_inicio)
 				->whereDate('calificacions.fecha', '<=', $calendario->fec_fin)
 				->where('tpo_examen_id', 2)
