@@ -753,6 +753,7 @@ class HistoriaClientesController extends Controller
 			'c.nombre',
 			'c.nombre2',
 			'c.ape_paterno',
+			'c.matricula',
 			'historia_clientes.descripcion',
 			'c.ape_materno',
 			'p.razon',

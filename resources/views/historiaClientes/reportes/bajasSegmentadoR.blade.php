@@ -75,10 +75,13 @@
                 <th><strong>Plantel</strong></th>
                 <th><strong>Id Cliente</strong></th>
                 <th><strong>Cliente</strong></th>
+                <th><strong>Matricula</strong></th>
                 <th><strong>Evento</strong></th>
                 <th><strong>Descripcion</strong></th>
                 <th><strong>Fecha</strong></th>
                 <th><strong>Seccion</strong></th>
+                <th><strong>T. Fijo</strong></th>
+                <th><strong>T. Celular</strong></th>
                 <th><strong>Adeudo Pendiente</strong></th>
             </thead>
             <tbody>
@@ -87,10 +90,13 @@
                     <td>{{$registro->razon}}</td>
                     <td>{{$registro->cliente}}</td>
                     <td>{{$registro->nombre}} {{$registro->nombre2}} {{$registro->ape_paterno}} {{$registro->ape_materno}}</td>
+                    <td>{{$registro->matricula}}</td>
                     <td> {{$registro->evento}}</td>
                     <td> {{$registro->descripcion}}</td>
                     <td> {{$registro->fecha}}</td>
                     <td>{{$registro->seccion}}</td>
+                    <td>{{$registro->tel_fijo}}</td>
+                    <td>{{$registro->tel_cel}}</td>
                     <td>{{$registro->adeudo_pendiente}}</td>
                     
                 </tr>

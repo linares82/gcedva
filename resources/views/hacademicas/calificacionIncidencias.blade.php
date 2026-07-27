@@ -61,6 +61,7 @@
             {!! Form::close() !!}
             @if(isset($hacademicas))
                 <div class="row"></div>
+                    @if(!is_null($calendario_activo))
                     @php
                         $total_alumnos=count($hacademicas);
                         $porcentaje_permitido=ceil(count($hacademicas)*$calendario_activo->porc_permitido);
@@ -69,7 +70,9 @@
                     <div class="well well-sm">
                     <strong>Total Alumnos:</strong>{{  count($hacademicas) }} <strong>Porcentaje permitido:</strong>{{  $calendario_activo->porc_permitido }}( {{ $porcentaje_permitido }}) <strong>Total incidencias actuales:</strong> {{ $total_incidencias_actuales }}
                     </div>
-                
+                    @else
+                        Sin calendario activo
+                    @endif
                 <div class="table-responsive">
                  <table class="table table-condensed table-striped">
                      <thead>

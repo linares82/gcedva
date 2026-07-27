@@ -1,26 +1,25 @@
-@inject('cli_funciones','App\Http\Controllers\ClientesController')
+@inject('cli_funciones', 'App\Http\Controllers\ClientesController')
 
 @extends('plantillas.admin_template')
 
 @include('hacademicas._common')
 
 @section('header')
-
-	<ol class="breadcrumb">
-		<li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
-	    <li><a href="{{ route('hacademicas.index') }}">@yield('hacademicasAppTitle')</a></li>
-	    <li class="active">Calificaciones</li>
-	</ol>
+    <ol class="breadcrumb">
+        <li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
+        <li><a href="{{ route('hacademicas.index') }}">@yield('hacademicasAppTitle')</a></li>
+        <li class="active">Calificaciones</li>
+    </ol>
 
     <div class="page-header">
         <h3><i class="glyphicon glyphicon-plus"></i> @yield('hacademicasAppTitle') / Calificaciones </h3>
     </div>
 
     <style>
-      table tr:hover {
-        background-color: #A9D0F5;
-        cursor: pointer;
-    }
+        table tr:hover {
+            background-color: #A9D0F5;
+            cursor: pointer;
+        }
     </style>
 @endsection
 
@@ -29,407 +28,468 @@
 
     <div class="row">
         <div class="col-md-12">
-            @if(isset($msj) and $msj<>"")
+            @if (isset($msj) and $msj != '')
                 <div class="alert alert-danger">
                     <ul>
-                            <li><i class="glyphicon glyphicon-remove"></i> {{ $msj }}</li>
+                        <li><i class="glyphicon glyphicon-remove"></i> {{ $msj }}</li>
                     </ul>
                 </div>
             @endif
-            {!! Form::open(array('route' => 'hacademicas.calificacionGrupo', "id"=>"frm_academica")) !!}
-                <div class="form-group col-md-4 @if($errors->has('tpo_examen_id')) has-error @endif">
-                   <label for="tpo_examen_id-field">Examen</label>
-                   {!! Form::hidden("asignacion", $asignacion, array("class" => "form-control input-sm", "id" => "mail_acudiente-field")) !!}
-                   {!! Form::select("tpo_examen_id", $examen, null, array("class" => "form-control select_seguridad", "id" => "tpo_examen_id-field")) !!}
-                   <div id='loading' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
-                   @if($errors->has("tpo_examen_id"))
-                    <span class="help-block">{{ $errors->first("st_materium_id") }}</span>
-                   @endif
-                </div>
-                <div class="form-group col-md-4 @if($errors->has('carga_ponderacion_id')) has-error @endif">
-                    <label for="carga_ponderacion_id-field">Ponderacion</label>
-                    {!! Form::select("carga_ponderacion_id", $carga_ponderaciones, null, array("class" => "form-control select_seguridad", "id" => "carga_ponderacion_id-field")) !!}
-                    @if($errors->has("carga_ponderacion_id"))
-                     <span class="help-block">{{ $errors->first("carga_ponderacion_id") }}</span>
+            {!! Form::open(['route' => 'hacademicas.calificacionGrupo', 'id' => 'frm_academica']) !!}
+            <div class="form-group col-md-4 @if ($errors->has('tpo_examen_id')) has-error @endif">
+                <label for="tpo_examen_id-field">Examen</label>
+                {!! Form::hidden('asignacion', $asignacion, [
+                    'class' => 'form-control input-sm',
+                    'id' => 'mail_acudiente-field',
+                ]) !!}
+                {!! Form::select('tpo_examen_id', $examen, null, [
+                    'class' => 'form-control select_seguridad',
+                    'id' => 'tpo_examen_id-field',
+                ]) !!}
+                <div id='loading' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}"
+                        title="Enviando" /></div>
+                @if ($errors->has('tpo_examen_id'))
+                    <span class="help-block">{{ $errors->first('st_materium_id') }}</span>
+                @endif
+            </div>
+            <div class="form-group col-md-4 @if ($errors->has('carga_ponderacion_id')) has-error @endif">
+                <label for="carga_ponderacion_id-field">Ponderacion</label>
+                {!! Form::select('carga_ponderacion_id', $carga_ponderaciones, null, [
+                    'class' => 'form-control select_seguridad',
+                    'id' => 'carga_ponderacion_id-field',
+                ]) !!}
+                @if ($errors->has('carga_ponderacion_id'))
+                    <span class="help-block">{{ $errors->first('carga_ponderacion_id') }}</span>
+                @endif
+            </div>
+            <div class="form-group col-md-4 @if ($errors->has('no_aprobados')) has-error @endif">
+                <label for="no_aprobados-field">No Aprobados</label>
+                {!! Form::checkbox('no_aprobados', 1, false) !!}
+                @if ($errors->has('no_aprobados'))
+                    <span class="help-block">{{ $errors->first('no_aprobados') }}</span>
+                @endif
+            </div>
+            @permission('calificacions.excepcion')
+                <div class="form-group col-md-4 @if ($errors->has('excepcion')) has-error @endif">
+                    <label for="excepcion-field">Exepcion</label>
+                    {!! Form::checkbox('excepcion', 1, false) !!}
+                    @if ($errors->has('excepcion'))
+                        <span class="help-block">{{ $errors->first('excepcion') }}</span>
                     @endif
-                 </div>
-                 <div class="form-group col-md-4 @if($errors->has('no_aprobados')) has-error @endif">
-                       <label for="no_aprobados-field">No Aprobados</label>
-                       {!! Form::checkbox("no_aprobados", 1, false) !!}
-                       @if($errors->has("no_aprobados"))
-                        <span class="help-block">{{ $errors->first("no_aprobados") }}</span>
-                       @endif
-                    </div>
-                 @permission('calificacions.excepcion')
-                    <div class="form-group col-md-4 @if($errors->has('excepcion')) has-error @endif">
-                       <label for="excepcion-field">Exepcion</label>
-                       {!! Form::checkbox("excepcion", 1, false) !!}
-                       @if($errors->has("excepcion"))
-                        <span class="help-block">{{ $errors->first("excepcion") }}</span>
-                       @endif
-                    </div>
-                @endpermission
-                <div class="row"></div>
-                <div class="well well-sm">
-                    <button type="submit" class="btn btn-primary">Cargar</button>
                 </div>
+            @endpermission
+            <div class="row"></div>
+            <div class="well well-sm">
+                <button type="submit" class="btn btn-primary">Cargar</button>
+            </div>
             {!! Form::close() !!}
-            @if(isset($hacademicas))
+            @if (isset($hacademicas))
                 <div class="table-responsive">
-                 <table class="table table-condensed table-striped">
-                     <thead>
-                         <th>id</th>
-                         <th>Alumno-Estatus</th>
-                         <th>Materia-Estatus</th>
-                         <th>Doc. Entregados</th>
-                         <th>Acta Final</th>
-                         <th>Ponderacion</th>
-                         <th>Calificacion Total</th>
-                         <th>Calificacion</th>
-                         <th>Calificacion Parcial</th>
-                         <th width="100px"></th>
-                         <th></th>
-                         <th></th>
-                     </thead>
-                     <tbody>
-                         
-                         @foreach($hacademicas as $r)
-                         <tr>
-                         @php
-                             $validaEntregaDocs3Meses=$cli_funciones->validaEntregaDocs3Meses($r->id);
-                         @endphp
-                         <td>{{$r->id}}</td>
-                         <td>
-                            {{$r->ape_paterno." ".$r->ape_materno." ".$r->nombre." ".$r->nombre2}} / 
-                            <span class="badge">
-                                {{$r->estatus_cliente}}
-                            </span>
-                        </td>
-                         <td>
-                            {{ $asignacionAcademica->materia->name }}
-                            @if($r->st_materium_id == 1)
-                                <span class="badge bg-green">
-                                Aprobado</td>
-                                </span>
-                            @elseif($r->st_materium_id == 2)
-                                <span class="badge bg-red">
-                                No Aprobado</td>
-                                </span>
+                    <table class="table table-condensed table-striped">
+                        <thead>
+                            <th>id</th>
+                            <th>Alumno-Estatus</th>
+                            <th>Materia-Estatus</th>
+                            <th>Doc. Entregados</th>
+                            <th>Acta Final</th>
+                            <th>Ponderacion</th>
+                            <th>Calificacion Total</th>
+                            <th>Calificacion</th>
+                            <th>Calificacion Parcial</th>
+                            <th width="100px"></th>
+                            <th></th>
+                            <th></th>
+                        </thead>
+                        <tbody>
+
+                            @foreach ($hacademicas as $r)
+                                <tr>
+                                    @php
+                                        $validaEntregaDocs3Meses = $cli_funciones->validaEntregaDocs3Meses($r->id);
+                                    @endphp
+                                    <td>{{ $r->id }}</td>
+                                    <td>
+                                        {{ $r->ape_paterno . ' ' . $r->ape_materno . ' ' . $r->nombre . ' ' . $r->nombre2 }} /
+                                        <span class="badge">
+                                            {{ $r->estatus_cliente }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {{ $asignacionAcademica->materia->name }}
+                                        @if ($r->st_materium_id == 1)
+                                            <span class="badge bg-green">
+                                                Aprobado
+                                    </td>
+                                    </span>
+                                @elseif($r->st_materium_id == 2)
+                                    <span class="badge bg-red">
+                                        No Aprobado</td>
+                                    </span>
                             @endif
-                            
-                         <td>
-                            
-                             @if($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses)
-                             SI o dentro de plazo valido
-                             @else
-                             <strong>NO</strong>
-                             
-                             @endif
-                        </td>
-                         <td>
-                             @php
-                                 if(isset($r->fecha_acta)){
-                                    $fecha=\Carbon\Carbon::createFromFormat('Y-m-d',$r->fecha_acta);
-                                    echo "F".$fecha->day.sprintf("%02d",$fecha->month).substr($fecha->year,-2).sprintf("%03d",$r->consecutivo_acta);
-                                }
-                             @endphp
-                             
-                         </td>
-                         <td>{{$r->ponderacion}}</td>
-                         <td><div id="div_c{{$r->id}}{{$r->calificacion_ponderacion_id}}">{{$r->calificacion}}</div></td>
-                         <td><div id="div_par{{$r->id}}{{$r->calificacion_ponderacion_id}}">{{ $r->calificacion_parcial }}</div></td>
-                         <td><div id="div_cp{{$r->id}}{{$r->calificacion_ponderacion_id}}">{{ $r->calificacion_parcial_calculada }}</div></td>
-                         <td>
-                            @php
-                                $inscripcion = App\Inscripcion::find($r->inscripcion_id);
-                                if ($r->hacademica_lectivo_id <= $r->inscripcion_lectivo_id) {
-                                $calendarioExtras = App\CalendarioExaExtra::where('lectivo_id', $inscripcion->lectivo_id)
-                                    ->whereDate('fec_inicio', '<=', date('Y-m-d'))
-                                    ->whereDate('fec_fin', '>=', date('Y-m-d'))
-                                    ->where('duracion_periodo_id', $inscripcion->grado->duracion_periodo_id)
-                                    ->count();
-                                  }
-                            @endphp
-                            @php
-                                $param_bloqueoXdoc=\App\Param::where('llave','bloqueo_caja_calif_asistenciasXDoc')->value('valor');
-                                $excepcion_documentos=\App\Plantel::find($r->plantel_id);
-                                
-                                if($excepcion_documentos->bnd_excepcion_documentos==1){
-                                    $param_bloqueoXdoc=0;
-                                
-                                }
-                                
-                            @endphp
-				
-                            @if(($r->estatus_cliente_id==3 or 
-                            $r->estatus_cliente_id==25 or 
-                             $r->estatus_cliente_id==26 or
-                             $r->estatus_cliente_id==27 or 
-                             $r->estatus_cliente_id==28) and $r->tpo_examen_id==1)
-				
-                                @if($param_bloqueoXdoc==1)
-                                    @if(($r->bnd_doc_oblig_entregados==1 or 
-                                        $validaEntregaDocs3Meses) and 
-                                        $dentroPeriodoIncidencias==0)
-                                        @permission('hacademicas.calificacionBaja')
-                                        {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6 input_calificacion", 
-                                        "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
+
+                            <td>
+
+                                @if ($r->bnd_doc_oblig_entregados == 1 or $validaEntregaDocs3Meses)
+                                    SI o dentro de plazo valido
+                                @else
+                                    <strong>NO</strong>
+                                @endif
+                            </td>
+                            <td>
+                                @php
+                                    if (isset($r->fecha_acta)) {
+                                        $fecha = \Carbon\Carbon::createFromFormat('Y-m-d', $r->fecha_acta);
+                                        echo 'F' .
+                                            $fecha->day .
+                                            sprintf('%02d', $fecha->month) .
+                                            substr($fecha->year, -2) .
+                                            sprintf('%03d', $r->consecutivo_acta);
+                                    }
+                                @endphp
+
+                            </td>
+                            <td>{{ $r->ponderacion }}</td>
+                            <td>
+                                <div id="div_c{{ $r->id }}{{ $r->calificacion_ponderacion_id }}">
+                                    {{ $r->calificacion }}</div>
+                            </td>
+                            <td>
+                                <div id="div_par{{ $r->id }}{{ $r->calificacion_ponderacion_id }}">
+                                    {{ $r->calificacion_parcial }}</div>
+                            </td>
+                            <td>
+                                <div id="div_cp{{ $r->id }}{{ $r->calificacion_ponderacion_id }}">
+                                    {{ $r->calificacion_parcial_calculada }}</div>
+                            </td>
+                            <td>
+                                @php
+                                    $inscripcion = App\Inscripcion::find($r->inscripcion_id);
+                                    if ($r->hacademica_lectivo_id <= $r->inscripcion_lectivo_id) {
+                                        $calendarioExtras = App\CalendarioExaExtra::where(
+                                            'lectivo_id',
+                                            $inscripcion->lectivo_id,
+                                        )
+                                            ->whereDate('fec_inicio', '<=', date('Y-m-d'))
+                                            ->whereDate('fec_fin', '>=', date('Y-m-d'))
+                                            ->where('duracion_periodo_id', $inscripcion->grado->duracion_periodo_id)
+                                            ->count();
+                                    }
+                                @endphp
+                                @php
+                                    $param_bloqueoXdoc = \App\Param::where(
+                                        'llave',
+                                        'bloqueo_caja_calif_asistenciasXDoc',
+                                    )->value('valor');
+                                    $excepcion_documentos = \App\Plantel::find($r->plantel_id);
+
+                                    if ($excepcion_documentos->bnd_excepcion_documentos == 1) {
+                                        $param_bloqueoXdoc = 0;
+                                    }
+
+                                @endphp
+
+                                @if (
+                                    ($r->estatus_cliente_id == 3 or
+                                        $r->estatus_cliente_id == 25 or
+                                        $r->estatus_cliente_id == 26 or
+                                        $r->estatus_cliente_id == 27 or
+                                        $r->estatus_cliente_id == 28) and
+                                        $r->tpo_examen_id == 1)
+                                    @if ($param_bloqueoXdoc == 1)
+                                        @if (($r->bnd_doc_oblig_entregados == 1 or $validaEntregaDocs3Meses) and $dentroPeriodoIncidencias == 0)
+                                            @permission('hacademicas.calificacionBaja')
+                                                {!! Form::number('calificacion', null, [
+                                                    'class' => 'form-control input-sm col-md-6 input_calificacion',
+                                                    'id' => 'calificacion_parcial' . $r->id . $r->calificacion_ponderacion_id,
+                                                    'min' => 0,
+                                                    'max' => 10,
+                                                ]) !!}
+                                            @endpermission
+                                        @else
+                                            @permission('hacademicas.calificacionBaja')
+                                                {!! Form::number('calificacion', null, [
+                                                    'class' => 'form-control input-sm col-md-6',
+                                                    'id' => 'calificacion_parcial' . $r->id . $r->calificacion_ponderacion_id,
+                                                    'min' => 0,
+                                                    'max' => 10,
+                                                ]) !!}
+                                            @endpermission
+                                        @endif
+                                    @endif
+                                @elseif($r->estatus_cliente_id == 1 or $r->estatus_cliente_id == 22 or $r->tpo_examen_id == 2)
+                                    @if ($r->tpo_examen_id == 2 and $calendarioExtras > 0)
+                                        @permission('hacademicas.calificacionExamenExtra')
+                                            <!--Aqui iba el campo de captura de calificacion-->
                                         @endpermission
                                     @else
-                                        @permission('hacademicas.calificacionBaja')
-                                        {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
-                                        "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
-                                        @endpermission
+                                        {!! Form::number('calificacion', null, [
+                                            'class' => 'form-control input-sm col-md-6',
+                                            'id' => 'calificacion_parcial' . $r->id . $r->calificacion_ponderacion_id,
+                                            'min' => 0,
+                                            'max' => 10,
+                                        ]) !!}
                                     @endif
-                                @endif
-                             @elseif($r->estatus_cliente_id==1 or $r->estatus_cliente_id==22 or $r->tpo_examen_id==2)
-				
-                                @if($r->tpo_examen_id==2 and $calendarioExtras>0)
-                                    @permission('hacademicas.calificacionExamenExtra')
-                                    {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
-                                    "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
-                                    @endpermission
                                 @else
-                                    {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
-                                    "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
-                                @endif
-                                
-                                
-                            @else
-                                @if($param_bloqueoXdoc==1)
-				    
-                                    @if((($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) /*and $dentroPeriodoIncidencias==0*/))
-                                    {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
-                                    "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
-				    @elseif((($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) and $dentroPeriodoExamenes>0) or $check_excepcion)
-                                    {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
-                                    "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
+                                    @if ($param_bloqueoXdoc == 1)
+                                        @if ($r->bnd_doc_oblig_entregados == 1 or $validaEntregaDocs3Meses /*and $dentroPeriodoIncidencias==0*/)
+                                            {!! Form::number('calificacion', null, [
+                                                'class' => 'form-control input-sm col-md-6',
+                                                'id' => 'calificacion_parcial' . $r->id . $r->calificacion_ponderacion_id,
+                                                'min' => 0,
+                                                'max' => 10,
+                                            ]) !!}
+                                        @elseif((($r->bnd_doc_oblig_entregados == 1 or $validaEntregaDocs3Meses) and $dentroPeriodoExamenes > 0) or $check_excepcion)
+                                            {!! Form::number('calificacion', null, [
+                                                'class' => 'form-control input-sm col-md-6',
+                                                'id' => 'calificacion_parcial' . $r->id . $r->calificacion_ponderacion_id,
+                                                'min' => 0,
+                                                'max' => 10,
+                                            ]) !!}
+                                        @endif
+                                    @else
+                                        {!! Form::number('calificacion', null, [
+                                            'class' => 'form-control input-sm col-md-6',
+                                            'id' => 'calificacion_parcial' . $r->id . $r->calificacion_ponderacion_id,
+                                            'min' => 0,
+                                            'max' => 10,
+                                        ]) !!}
                                     @endif
-				@else
-                                    {!! Form::number("calificacion", null, array("class" => "form-control input-sm col-md-6", 
-                                    "id" => "calificacion_parcial".$r->id.$r->calificacion_ponderacion_id, 'min' => 0, 'max' =>10)) !!}
+                                @endif
 
-                                @endif
-                             @endif
-                             
-                         </td>
-                         <td>
-                            @if(($r->estatus_cliente_id==3 or 
-                                $r->estatus_cliente_id==25 or 
-                                 $r->estatus_cliente_id==26 or
-                                 $r->estatus_cliente_id==27 or 
-                                 $r->estatus_cliente_id==28) and 
-                                 $r->tpo_examen_id==1 )
-                                @if($param_bloqueoXdoc==1)
-                                    @if(($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) and $dentroPeriodoIncidencias==0)
+                            </td>
+                            <td>
+                                @if (
+                                    ($r->estatus_cliente_id == 3 or
+                                        $r->estatus_cliente_id == 25 or
+                                        $r->estatus_cliente_id == 26 or
+                                        $r->estatus_cliente_id == 27 or
+                                        $r->estatus_cliente_id == 28) and
+                                        $r->tpo_examen_id == 1)
+                                    @if ($param_bloqueoXdoc == 1)
+                                        @if (($r->bnd_doc_oblig_entregados == 1 or $validaEntregaDocs3Meses) and $dentroPeriodoIncidencias == 0)
+                                            @permission('hacademicas.calificacionBaja')
+                                                <button type="button" class="btn btn-primary btn-xs btn-guardar_caificacion"
+                                                    data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
+                                                    data-cliente_id="{{ $r->id }}">Actualizar</button>
+                                            @endpermission
+                                        @endif
+                                    @else
                                         @permission('hacademicas.calificacionBaja')
-                                            <button type="button"  
-                                            class="btn btn-primary btn-xs btn-guardar_caificacion" 
-                                            data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
-                                            data-cliente_id="{{$r->id}}"
-                                        >Actualizar</button>
+                                            <button type="button" class="btn btn-primary btn-xs btn-guardar_caificacion"
+                                                data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
+                                                data-cliente_id="{{ $r->id }}">Actualizar</button>
                                         @endpermission
                                     @endif
-                                @else
-                                    @permission('hacademicas.calificacionBaja')
-                                        <button type="button"  
-                                        class="btn btn-primary btn-xs btn-guardar_caificacion" 
-                                        data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
-                                        data-cliente_id="{{$r->id}}"
-                                    >Actualizar</button>
+                                    @permission('hCalificacions.index')
+                                        <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar"
+                                            class="btn btn-success btn-xs" target="_blank">Historia</a>
                                     @endpermission
-                                @endif
-                                @permission('hCalificacions.index')
-                                <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar" class="btn btn-success btn-xs" target="_blank">Historia</a>
-                                @endpermission
-                                
-                             @elseif($r->estatus_cliente_id==1 or 
-                             $r->estatus_cliente_id==22 or 
-                             $r->tpo_examen_id==2)
-                                @php
-                                    //dd($r->tpo_examen_id."--".$calendarioExtras);
-                                @endphp
-                                @if($r->tpo_examen_id==2 and $calendarioExtras>0)
-                                    @permission('hacademicas.calificacionExamenExtra')
-                                    <button type="button"  
-                                    class="btn btn-primary btn-xs btn-guardar_caificacion" 
-                                    data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
-                                    data-cliente_id="{{$r->id}}"
-                                    >Actualizar</button>
-                                    @endpermission
-                                    @permission('incidenciasCalificacions.create')
-                                    <a target="_blank" href="{{ route('incidenciasCalificacions.create', array('calificacion_ponderacion_id'=>$r->calificacion_ponderacion_id)) }}" class="btn btn-warning btn-xs" target="_blank">Incidencia {{$r->cont_inci}}</a>         
-                                    @endpermission
-                                @else
-                                    <button type="button"  
-                                    class="btn btn-primary btn-xs btn-guardar_caificacion" 
-                                    data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
-                                    data-cliente_id="{{$r->id}}"
-                                    >Actualizar</button>
-                                @endif
-                                
-                                
-                                @permission('hCalificacions.index')
-                                <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar" class="btn btn-success btn-xs" target="_blank">Historia</a>
-                                @endpermission
-                             @else
-                                @if($param_bloqueoXdoc==1)
-                                    @if((($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) /*and $dentroPeriodoIncidencias==0*/))
-                                    <button type="button"  
-                                        class="btn btn-primary btn-xs btn-guardar_caificacion" 
-                                        data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
-                                        data-cliente_id="{{$r->id}}"
-                                    >Actualizar</button>
-				    @elseif((($r->bnd_doc_oblig_entregados==1 or $validaEntregaDocs3Meses) and $dentroPeriodoExamenes>0) or $check_excepcion)
-                                    <button type="button"  
-                                        class="btn btn-primary btn-xs btn-guardar_caificacion" 
-                                        data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
-                                        data-cliente_id="{{$r->id}}"
-                                    >Actualizar</button>
+                                @elseif($r->estatus_cliente_id == 1 or $r->estatus_cliente_id == 22 or $r->tpo_examen_id == 2)
+                                    @php
+                                        //echo($r->tpo_examen_id."--".$calendarioExtras);
+                                    @endphp
+                                    @if ($r->tpo_examen_id == 2 and $calendarioExtras > 0)
+                                        @permission('hacademicas.calificacionExamenExtra')
+                                            <button type="button" class="btn btn-primary btn-xs btn-guardar_caificacion"
+                                                data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
+                                                data-cliente_id="{{ $r->id }}">Actualizar</button>
+                                        @endpermission
+                                        @php
+                                        @endphp
+                                    @else
+                                        <button type="button" class="btn btn-primary btn-xs btn-guardar_caificacion"
+                                            data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
+                                            data-cliente_id="{{ $r->id }}">Actualizar</button>
                                     @endif
-                                 @else
-                                    <button type="button"  
-                                    class="btn btn-primary btn-xs btn-guardar_caificacion" 
-                                    data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
-                                    data-cliente_id="{{$r->id}}"
-                                    >Actualizar</button>
-                                 @endif
-                                 @permission('hCalificacions.index')
-                                 <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar" class="btn btn-success btn-xs" target="_blank">Historia</a>
-                                 @endpermission
-                             @endif
-                            @permission('incidenciasCalificacions.create')
-                            
-                            @endpermission
-                            
-                            @if($calendarioExtras>0)
-                                @if($r->st_materium_id == 2)
-                                    @permission('hacademicas.examenes')
-                                    <a target="_blank" href="{{ route('hacademicas.examenes', array('hacademica_id'=>$r->hacademica_id)) }}" class="btn btn-info btn-xs" target="_blank">Crear Extra.</a>     
+
+
+                                    @permission('hCalificacions.index')
+                                        <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar"
+                                            class="btn btn-success btn-xs" target="_blank">Historia</a>
+                                    @endpermission
+                                @else
+                                    @if ($param_bloqueoXdoc == 1)
+                                        @if ($r->bnd_doc_oblig_entregados == 1 or $validaEntregaDocs3Meses /*and $dentroPeriodoIncidencias==0*/)
+                                            <button type="button" class="btn btn-primary btn-xs btn-guardar_caificacion"
+                                                data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
+                                                data-cliente_id="{{ $r->id }}">Actualizar</button>
+                                        @elseif(($r->bnd_doc_oblig_entregados == 1 or $validaEntregaDocs3Meses) and $dentroPeriodoExamenes > 0 or $check_excepcion)
+                                            <button type="button" class="btn btn-primary btn-xs btn-guardar_caificacion"
+                                                data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
+                                                data-cliente_id="{{ $r->id }}">Actualizar</button>
+                                        @endif
+                                    @else
+                                        <button type="button" class="btn btn-primary btn-xs btn-guardar_caificacion"
+                                            data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
+                                            data-cliente_id="{{ $r->id }}">Actualizar</button>
+                                    @endif
+                                    @permission('hCalificacions.index')
+                                        <a href="{{ url('hCalificacions/index') }}?q%5Bs%5D=&q%5Bclientes.nombre_cont%5D=&q%5Bcalificacions.calificacion_cont%5D=&q%5Bh_calificacions.calificacion_ponderacion_id_cont%5D={{ $r->calificacion_ponderacion_id }}&q%5Bcarga_ponderacions.name_cont%5D=&q%5Bcalificacion_parcial_anterior_cont%5D=&q%5Bcalificacion_parcial_actual_cont%5D=&q%5Busu_alta_id_cont%5D=&q%5Busu_mod_id_cont%5D=&commit=Buscar"
+                                            class="btn btn-success btn-xs" target="_blank">Historia</a>
                                     @endpermission
                                 @endif
-                            @endif
-                         </td>
-                         <td>
-                             <div id='loading{{$r->id}}}' style='display: none'><img src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div> 
-                         </td>
-                         </tr>
-                         @endforeach
-                     </tbody>
-                 </table>
-                </div>
-            @endif
-            @if(!isset($hacademicas))
-                Lo sentimos usted no es el profesor de la materia o la fecha limite del perido lectivo ha finalizado.
-            @endif        
+                                @permission('incidenciasCalificacions.create')
+                                @endpermission
+
+                                @if ($calendarioExtras > 0)
+                                    @if ($r->st_materium_id == 2)
+                                        @permission('hacademicas.examenes')
+                                            <a target="_blank"
+                                                href="{{ route('hacademicas.examenes', ['hacademica_id' => $r->hacademica_id]) }}"
+                                                class="btn btn-info btn-xs" target="_blank">Crear Extra.</a>
+                                        @endpermission
+                                    @endif
+                                    @php
+                                        $lineaCaja = \App\CajaLn::where(
+                                            'calificacion_id',
+                                            $r->calificacion_id,
+                                        )->first();
+                                    @endphp
+                                    @if ($r->tpo_examen_id == 2 and !is_null($lineaCaja))
+                                        @if ($r->st_materium_id == 2)
+                                            @permission('incidenciasCalificacions.create')
+                                                <a target="_blank"
+                                                    href="{{ route('incidenciasCalificacions.create', ['calificacion_ponderacion_id' => $r->calificacion_ponderacion_id]) }}"
+                                                    class="btn btn-warning btn-xs" target="_blank">Incidencia Extra
+                                                    {{ $r->cont_inci }}</a>
+                                            @endpermission
+                                        @endif
+                                    @endif
+                                @endif
+                            </td>
+                            <td>
+                                <div id='loading{{ $r->id }}}' style='display: none'><img
+                                        src="{{ asset('images/ajax-loader.gif') }}" title="Enviando" /></div>
+                            </td>
+                            </tr>
+            @endforeach
+            </tbody>
+            </table>
         </div>
+        @endif
+        @if (!isset($hacademicas))
+            Lo sentimos usted no es el profesor de la materia o la fecha limite del perido lectivo ha finalizado.
+        @endif
     </div>
-    
-    
+    </div>
+
+
 @endsection
 @push('scripts')
-  
-  <script type="text/javascript">
-      $('.fecha').Zebra_DatePicker({
-        days:['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
-        months:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-        readonly_element: false,
-        lang_clear_date: 'Limpiar',
-        show_select_today: 'Hoy',
-      });
-     
-     $(document).on("click", ".btn-guardar_caificacion", function (e) {
-        //alert($('#calificacion_parcial'+$(this).data('cliente_id')).val());
-        @php
-            $calificacion_prohibida=\App\Param::where('llave', 'calificacion_prohibida')->first();
-            //dd($ponderacion_seleccionada->bnd_excepcion_calificacion_prohibida);
-            if(!isset($ponderacion_seleccionada)){
-                $excepcion_calificacion_prohibida=0;
-            }else{
-                $excepcion_calificacion_prohibida=$ponderacion_seleccionada->bnd_excepcion_calificacion_prohibida;
-            }
-        @endphp 
-        
-        
-        if({{$calificacion_prohibida->valor}} && 
-            !{{$excepcion_calificacion_prohibida}} &&
-            $('#calificacion_parcial'+$(this).data('cliente_id')).val()>=1 && 
-            $('#calificacion_parcial'+$(this).data('cliente_id')).val()<=4.9){
-            alert("Calificacion invalida");
-        }else{
-            var miurl = "{{route('hacademicas.actualizarCalificacion')}}";
-        let id=$(this).data('cliente_id');
-        let calificacion_ponderacion=$(this).data('calificacion_ponderacion_id')
-        var data = new FormData();
-        data.append('calificacion_ponderacion', $(this).data('calificacion_ponderacion_id'));
-        data.append('calificacion_parcial', $('#calificacion_parcial'+$(this).data('cliente_id')+$(this).data('calificacion_ponderacion_id')).val());
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('#_token').val()
-            }
+    <script type="text/javascript">
+        $('.fecha').Zebra_DatePicker({
+            days: ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'],
+            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre',
+                'Octubre', 'Noviembre', 'Diciembre'
+            ],
+            readonly_element: false,
+            lang_clear_date: 'Limpiar',
+            show_select_today: 'Hoy',
         });
-        $.ajax({
-            url: miurl,
-            type: 'GET',
 
-            // Form data
-            //datos del formulario
-            data: "calificacion_ponderacion=" + $(this).data('calificacion_ponderacion_id') +
-                  "&calificacion_parcial=" + $('#calificacion_parcial'+$(this).data('cliente_id')+$(this).data('calificacion_ponderacion_id')).val() + "",
-            //necesario para subir archivos via ajax
-            dataType: 'json',
-            //mientras enviamos el archivo
-            beforeSend : function(){$(".btn-guardar_caificacion").prop('disabled',true);},
-            complete : function(){$(".btn-guardar_caificacion").prop('disabled',false);},
-            //una vez finalizado correctamente
-            success: function (data) {
-                //location.reload();
-                //console.log(data.calificacion);
-                $('#div_c'+id+calificacion_ponderacion).html(data.calificacion);
-                $('#div_par'+id+calificacion_ponderacion).html(data.calificacion_parcial);
-                $('#div_cp'+id+calificacion_ponderacion).html(data.calificacion_parcial_calculada);
-            },
-            //si ha ocurrido un error
-            error: function (data) {
-                
+        $(document).on("click", ".btn-guardar_caificacion", function(e) {
+            //alert($('#calificacion_parcial'+$(this).data('cliente_id')).val());
+            @php
+                $calificacion_prohibida = \App\Param::where('llave', 'calificacion_prohibida')->first();
+                //dd($ponderacion_seleccionada->bnd_excepcion_calificacion_prohibida);
+                if (!isset($ponderacion_seleccionada)) {
+                    $excepcion_calificacion_prohibida = 0;
+                } else {
+                    $excepcion_calificacion_prohibida = $ponderacion_seleccionada->bnd_excepcion_calificacion_prohibida;
+                }
+            @endphp
 
-            }
-        });
-        }
-        
-    })
-    
-    cmbPonderaciones();
-    
-    $('#tpo_examen_id-field').change(function(){
-        cmbPonderaciones();
-    });
-    
-    function cmbPonderaciones(){
-        $.ajax({
-            url: '{{ route("hacademicas.cmbPonderaciones") }}',
-                    type: 'GET',
-                    data: "tpo_examen_id=" + $('#tpo_examen_id-field option:selected').val() + 
-                          "&asignacion_id=" + {{$asignacion}} + 
-                          "&carga_ponderacion_id="+$('#carga_ponderacion_id-field option:selected').val(),
-                    dataType: 'json',
-                    beforeSend : function(){$("#loading").show(); },
-                    complete : function(){$("#loading").hide(); },
-                    success: function(data){
-                        $('#carga_ponderacion_id-field').empty();
-                        $('#carga_ponderacion_id-field').append($('<option></option>').text('Seleccionar').val('0'));
-                        $.each(data, function(i) {
-                            //alert(data[i].name);
-                            $('#carga_ponderacion_id-field').append("<option " + data[i].selectec + " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
-                        });
-                        $('#carga_ponderacion_id-field').select2({
-                            placeholder: 'Seleccionar opciÃ³n'
-                          });
+
+            if ({{ $calificacion_prohibida->valor }} &&
+                !{{ $excepcion_calificacion_prohibida }} &&
+                $('#calificacion_parcial' + $(this).data('cliente_id')).val() >= 1 &&
+                $('#calificacion_parcial' + $(this).data('cliente_id')).val() <= 4.9) {
+                alert("Calificacion invalida");
+            } else {
+                var miurl = "{{ route('hacademicas.actualizarCalificacion') }}";
+                let id = $(this).data('cliente_id');
+                let calificacion_ponderacion = $(this).data('calificacion_ponderacion_id')
+                var data = new FormData();
+                data.append('calificacion_ponderacion', $(this).data('calificacion_ponderacion_id'));
+                data.append('calificacion_parcial', $('#calificacion_parcial' + $(this).data('cliente_id') + $(this)
+                    .data('calificacion_ponderacion_id')).val());
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('#_token').val()
                     }
-            });
-    }
+                });
+                $.ajax({
+                    url: miurl,
+                    type: 'GET',
 
-    
-</script>
+                    // Form data
+                    //datos del formulario
+                    data: "calificacion_ponderacion=" + $(this).data('calificacion_ponderacion_id') +
+                        "&calificacion_parcial=" + $('#calificacion_parcial' + $(this).data('cliente_id') +
+                            $(this).data('calificacion_ponderacion_id')).val() + "",
+                    //necesario para subir archivos via ajax
+                    dataType: 'json',
+                    //mientras enviamos el archivo
+                    beforeSend: function() {
+                        $(".btn-guardar_caificacion").prop('disabled', true);
+                    },
+                    complete: function() {
+                        $(".btn-guardar_caificacion").prop('disabled', false);
+                    },
+                    //una vez finalizado correctamente
+                    success: function(data) {
+                        //location.reload();
+                        //console.log(data.calificacion);
+                        $('#div_c' + id + calificacion_ponderacion).html(data.calificacion);
+                        $('#div_par' + id + calificacion_ponderacion).html(data.calificacion_parcial);
+                        $('#div_cp' + id + calificacion_ponderacion).html(data
+                            .calificacion_parcial_calculada);
+                    },
+                    //si ha ocurrido un error
+                    error: function(data) {
+
+
+                    }
+                });
+            }
+
+        })
+
+        cmbPonderaciones();
+
+        $('#tpo_examen_id-field').change(function() {
+            cmbPonderaciones();
+        });
+
+        function cmbPonderaciones() {
+            $.ajax({
+                url: '{{ route('hacademicas.cmbPonderaciones') }}',
+                type: 'GET',
+                data: "tpo_examen_id=" + $('#tpo_examen_id-field option:selected').val() +
+                    "&asignacion_id=" + {{ $asignacion }} +
+                    "&carga_ponderacion_id=" + $('#carga_ponderacion_id-field option:selected').val(),
+                dataType: 'json',
+                beforeSend: function() {
+                    $("#loading").show();
+                },
+                complete: function() {
+                    $("#loading").hide();
+                },
+                success: function(data) {
+                    $('#carga_ponderacion_id-field').empty();
+                    $('#carga_ponderacion_id-field').append($('<option></option>').text('Seleccionar').val(
+                    '0'));
+                    $.each(data, function(i) {
+                        //alert(data[i].name);
+                        $('#carga_ponderacion_id-field').append("<option " + data[i].selectec +
+                            " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
+                    });
+                    $('#carga_ponderacion_id-field').select2({
+                        placeholder: 'Seleccionar opciÃƒÂ³n'
+                    });
+                }
+            });
+        }
+    </script>
 @endpush
