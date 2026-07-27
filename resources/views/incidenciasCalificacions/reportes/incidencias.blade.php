@@ -6,11 +6,11 @@
     <ol class="breadcrumb">
         <li><a href="{{ route('home') }}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
         <li><a href="{{ route('seguimientos.index') }}">@yield('seguimientosAppTitle')</a></li>
-        <li class="active">Reporte de Seguimientos</li>
+        <li class="active">Reporte de Incidencias</li>
     </ol>
 
     <div class="page-header">
-        <h3><i class="glyphicon glyphicon-plus"></i> @yield('seguimientosAppTitle') / Inscritos por Plantel y Asesor </h3>
+        <h3><i class="glyphicon glyphicon-plus"></i> @yield('seguimientosAppTitle') / Incidencias </h3>
     </div>
 @endsection
 

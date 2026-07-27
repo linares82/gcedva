@@ -141,6 +141,16 @@
                          <td><div id="div_cp{{$r->id}}{{$r->calificacion_ponderacion_id}}">{{ $r->calificacion_parcial_calculada }}</div></td>
                          <td>
                             @php
+                                $inscripcion = App\Inscripcion::find($r->inscripcion_id);
+                                if ($r->hacademica_lectivo_id <= $r->inscripcion_lectivo_id) {
+                                $calendarioExtras = App\CalendarioExaExtra::where('lectivo_id', $inscripcion->lectivo_id)
+                                    ->whereDate('fec_inicio', '<=', date('Y-m-d'))
+                                    ->whereDate('fec_fin', '>=', date('Y-m-d'))
+                                    ->where('duracion_periodo_id', $inscripcion->grado->duracion_periodo_id)
+                                    ->count();
+                                  }
+                            @endphp
+                            @php
                                 $param_bloqueoXdoc=\App\Param::where('llave','bloqueo_caja_calif_asistenciasXDoc')->value('valor');
                                 $excepcion_documentos=\App\Plantel::find($r->plantel_id);
                                 
@@ -236,6 +246,9 @@
                              @elseif($r->estatus_cliente_id==1 or 
                              $r->estatus_cliente_id==22 or 
                              $r->tpo_examen_id==2)
+                                @php
+                                    //dd($r->tpo_examen_id."--".$calendarioExtras);
+                                @endphp
                                 @if($r->tpo_examen_id==2 and $calendarioExtras>0)
                                     @permission('hacademicas.calificacionExamenExtra')
                                     <button type="button"  
@@ -243,6 +256,9 @@
                                     data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
                                     data-cliente_id="{{$r->id}}"
                                     >Actualizar</button>
+                                    @endpermission
+                                    @permission('incidenciasCalificacions.create')
+                                    <a target="_blank" href="{{ route('incidenciasCalificacions.create', array('calificacion_ponderacion_id'=>$r->calificacion_ponderacion_id)) }}" class="btn btn-warning btn-xs" target="_blank">Incidencia {{$r->cont_inci}}</a>         
                                     @endpermission
                                 @else
                                     <button type="button"  
@@ -285,16 +301,7 @@
                             @permission('incidenciasCalificacions.create')
                             
                             @endpermission
-                            @php
-                                $inscripcion = App\Inscripcion::find($r->inscripcion_id);
-                                if ($r->hacademica_lectivo_id <= $r->inscripcion_lectivo_id) {
-                                $calendarioExtras = App\CalendarioExaExtra::where('lectivo_id', $inscripcion->lectivo_id)
-                                    ->whereDate('fec_inicio', '<=', date('Y-m-d'))
-                                    ->whereDate('fec_fin', '>=', date('Y-m-d'))
-                                    ->where('duracion_periodo_id', $inscripcion->grado->duracion_periodo_id)
-                                    ->count();
-                                  }
-                            @endphp
+                            
                             @if($calendarioExtras>0)
                                 @if($r->st_materium_id == 2)
                                     @permission('hacademicas.examenes')

@@ -231,6 +231,7 @@
                                                 $dentroCalendarioIncidencias=true;
                                             }
                                         }
+
                                     @endphp
                                     @if($dentroCalendarioIncidencias)
                                     <a class="btn btn-xs btn-warning" href="{{ route('hacademicas.calificacionIncidencia', ['asignacion'=>$asignacionAcademica->id]) }}"><i class="glyphicon glyphicon-edit"></i>Incidencia</a>
