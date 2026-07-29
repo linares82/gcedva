@@ -66,8 +66,8 @@
 
                     <div class="form-group col-md-4 @if($errors->has('lectivo_id')) has-error @endif">
                         <label for="lectivo_id-field">Lectivo</label>
-                        {!! Form::hidden("lectivo_id", isset($hacademica) ? $hacademica->lectivo_id : null, array("class" => "form-control input-sm", "id" => "lectivo_id-field")) !!}
-                        {!! Form::select("lectivo_id", $lectivos, isset($calendario_extras) ? $calendario_extras->lectivo_id : null, array("class" => "form-control select_seguridad", "id" => "lectivo-field")) !!}
+                        {!! Form::hidden("lectivo_id", isset($inscripcion) ? $inscripcion->lectivo_id : null, array("class" => "form-control input-sm", "id" => "lectivo_id-field")) !!}
+                        {!! Form::select("lectivo_id", $lectivos, isset($inscripcion) ? $inscripcion->lectivo_id : null, array("class" => "form-control select_seguridad", "id" => "lectivo-field")) !!}
                         @if($errors->has("lectivo_id"))
                          <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
                         @endif

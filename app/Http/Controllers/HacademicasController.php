@@ -453,7 +453,8 @@ class HacademicasController extends Controller
             'calendario_extras',
             'conteo_extras_materia_actual',
             'limite_extras',
-            'conteo_extras'
+            'conteo_extras',
+            'inscripcion'
         ))
             ->with('list', Hacademica::getListFromAllRelationApps());
     }
