@@ -163,6 +163,7 @@
                             </td>
                             <td>
                                 @php
+                                /*
                                     $inscripcion = App\Inscripcion::find($r->inscripcion_id);
                                     if ($r->hacademica_lectivo_id <= $r->inscripcion_lectivo_id) {
                                         $calendarioExtras = App\CalendarioExaExtra::where(
@@ -174,6 +175,19 @@
                                             ->where('duracion_periodo_id', $inscripcion->grado->duracion_periodo_id)
                                             ->count();
                                     }
+                                            */
+                                    if ($r->calificacion_lectivo_id>0) {
+                                        $inscripcion = App\Inscripcion::find($r->inscripcion_id);
+                                        $calendarioExtras = App\CalendarioExaExtra::where(
+                                            'lectivo_id',
+                                            $r->calificacion_lectivo_id,
+                                        )
+                                            ->whereDate('fec_inicio', '<=', date('Y-m-d'))
+                                            ->whereDate('fec_fin', '>=', date('Y-m-d'))
+                                            ->where('duracion_periodo_id', $inscripcion->grado->duracion_periodo_id)
+                                            ->count();
+                                    }
+                                    echo $calendarioExtras;
                                 @endphp
                                 @php
                                     $param_bloqueoXdoc = \App\Param::where(

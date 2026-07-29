@@ -13,10 +13,13 @@ use App\Http\Requests\createIncidenciasCalificacion;
 use App\Http\Requests\updateIncidenciasCalificacion;
 use App\IncidenciasCalificacion;
 use App\IncidenciasJustificacion;
+use App\Lectivo;
 use App\Mail\AvisoIncidencia;
 use App\Param;
 use App\Plantel;
+use App\TpoExamen;
 use Auth;
+use DB;
 use Exception;
 use File;
 use Illuminate\Http\Request;
@@ -390,7 +393,9 @@ class IncidenciasCalificacionsController extends Controller
 	public function incidencias()
 	{
 		$planteles = Plantel::pluck('razon', 'id');
-		return view('incidenciasCalificacions.reportes.incidencias', compact('planteles'))
+		$tpoExamens = TpoExamen::pluck('name', 'id');
+
+		return view('incidenciasCalificacions.reportes.incidencias', compact('planteles', 'tpoExamens'))
 			->with('list', CalendarioIncidenciaCal::getListFromAllRelationApps());
 	}
 
@@ -398,42 +403,141 @@ class IncidenciasCalificacionsController extends Controller
 	{
 		$datos = $request->all();
 		//dd($datos);
-		$registros = IncidenciasCalificacion::select(
-			'p.razon',
-			'c.id as cliente_id',
-			'c.nombre',
-			'c.nombre2',
-			'c.ape_paterno',
-			'c.ape_materno',
-			'm.name as materia',
-			'incidencias_calificacions.calificacion_nueva',
-			'incidencias_calificacions.bnd_autorizada',
-			'fecha_ar',
-			'incidencias_calificacions.calificacion_id',
-			'ij.name as justificacion',
-			'lec.name as lectivo'
-		)
-			->join('hacademicas as h', 'h.id', 'incidencias_calificacions.hacademica_id')
-			->join('lectivos as lec', 'lec.id', 'h.lectivo_id')
-			->join('materia as m', 'm.id', 'h.materium_id')
-			->join('plantels as p', 'p.id', 'h.plantel_id')
-			->join('clientes as c', 'c.id', 'h.cliente_id')
-			->join('calificacions as calif', 'calif.id', 'incidencias_calificacions.calificacion_id')
-			->join('calificacion_ponderacions as cp', 'cp.id', 'incidencias_calificacions.calificacion_ponderacion_id')
-			->join('carga_ponderacions as detalle_ponde', 'detalle_ponde.id', 'cp.carga_ponderacion_id')
-			->leftJoin('incidencias_justificacions as ij', 'ij.id', 'incidencias_calificacions.incidencias_justificacion_id')
-			->where('p.id', $datos['plantel_f'])
-			->where('h.lectivo_id', $datos['lectivo_f'])
-			->where('detalle_ponde.ponderacion_id', $datos['ponderacion_id'])
-			->where('detalle_ponde.id', $datos['carga_ponderacion_id'])
-			//->whereDate('incidencias_calificacions.fecha_ar', '>=', $datos['fecha_f'])
-			//->whereDate('incidencias_calificacions.fecha_ar', '<=', $datos['fecha_t'])
-			->orderBy('p.id')
-			->orderBy('c.id')
-			->orderBy('fecha_ar')
-			->get();
+
+		if ($datos['tpo_examen'] == 1) {
+
+			$registros = IncidenciasCalificacion::select(
+				'p.razon',
+				'c.id as cliente_id',
+				'c.nombre',
+				'c.nombre2',
+				'c.ape_paterno',
+				'c.ape_materno',
+				'm.name as materia',
+				'incidencias_calificacions.calificacion_nueva',
+				'incidencias_calificacions.bnd_autorizada',
+				'fecha_ar',
+				'incidencias_calificacions.calificacion_id',
+				'ij.name as justificacion',
+				'lec.name as lectivo',
+				'ponde.name as ponderacion',
+				'detalle_ponde.name as detalle_ponde',
+				'e.nombre as nombre_maestro',
+				'e.ape_paterno as ape_paterno_maestro',
+				'e.ape_materno as ape_materno_maestro',
+				'u.name as usu_alta',
+				'te.name as tipo_examen',
+				DB::raw(
+					'(select hc.calificacion_parcial_anterior from h_calificacions as hc 
+					where hc.calificacion_ponderacion_id=incidencias_calificacions.calificacion_ponderacion_id
+					order by hc.id desc limit 1) as calif_anterior'
+				),
+				DB::raw(
+					'(select cic.id from calendario_incidencia_cals as cic 
+					where cic.lectivo_id=' . $datos['lectivo_f'] .
+						' and cic.ponderacion_id=' . $datos['ponderacion_id'] . ' and cic.carga_ponderacion_id=' . $datos['carga_ponderacion_id'] . ') 
+					as calendario_incidencias'
+				)
+			)
+				->join('hacademicas as h', 'h.id', 'incidencias_calificacions.hacademica_id')
+				->join('lectivos as lec', 'lec.id', 'h.lectivo_id')
+				->join('materia as m', 'm.id', 'h.materium_id')
+				->join('plantels as p', 'p.id', 'h.plantel_id')
+				->join('clientes as c', 'c.id', 'h.cliente_id')
+				->join('calificacions as calif', 'calif.id', 'incidencias_calificacions.calificacion_id')
+				->join('tpo_examens as te', 'te.id', 'calif.tpo_examen_id')
+				->join('calificacion_ponderacions as cp', 'cp.id', 'incidencias_calificacions.calificacion_ponderacion_id')
+				->join('carga_ponderacions as detalle_ponde', 'detalle_ponde.id', 'cp.carga_ponderacion_id')
+				->join('ponderacions as ponde', 'ponde.id', 'detalle_ponde.ponderacion_id')
+				->join('asignacion_academicas as aa', 'aa.materium_id', 'h.materium_id')
+				->whereColumn('aa.lectivo_id', 'h.lectivo_id')
+				->whereColumn('aa.plantel_id', 'h.plantel_id')
+				->whereColumn('aa.grupo_id', 'h.grupo_id')
+				->join('empleados as e', 'e.id', 'aa.empleado_id')
+				->join('users as u', 'u.id', 'incidencias_calificacions.usu_alta_id')
+				->leftJoin('incidencias_justificacions as ij', 'ij.id', 'incidencias_calificacions.incidencias_justificacion_id')
+				->where('p.id', $datos['plantel_f'])
+				->where('calif.tpo_examen_id', $datos['tpo_examen'])
+				->where('h.lectivo_id', $datos['lectivo_f'])
+				->where('detalle_ponde.ponderacion_id', $datos['ponderacion_id'])
+				->where('detalle_ponde.id', $datos['carga_ponderacion_id'])
+				//->whereDate('incidencias_calificacions.fecha_ar', '>=', $datos['fecha_f'])
+				//->whereDate('incidencias_calificacions.fecha_ar', '<=', $datos['fecha_t'])
+				->orderBy('p.id')
+				->orderBy('c.id')
+				->orderBy('fecha_ar')
+				->get();
+			//dd($registros);
+			return view('incidenciasCalificacions.reportes.incidenciasR', compact('registros'));
+		} elseif ($datos['tpo_examen'] == 2) {
+
+			$registros = IncidenciasCalificacion::select(
+				'p.razon',
+				'c.id as cliente_id',
+				'c.nombre',
+				'c.nombre2',
+				'c.ape_paterno',
+				'c.ape_materno',
+				'm.name as materia',
+				'incidencias_calificacions.calificacion_nueva',
+				'incidencias_calificacions.bnd_autorizada',
+				'fecha_ar',
+				'incidencias_calificacions.calificacion_id',
+				'ij.name as justificacion',
+				'lec.name as lectivo',
+				'ponde.name as ponderacion',
+				'detalle_ponde.name as detalle_ponde',
+				'e.nombre as nombre_maestro',
+				'e.ape_paterno as ape_paterno_maestro',
+				'e.ape_materno as ape_materno_maestro',
+				'u.name as usu_alta',
+				'te.name as tipo_examen',
+				DB::raw(
+					'(select hc.calificacion_parcial_anterior from h_calificacions as hc 
+					where hc.calificacion_ponderacion_id=incidencias_calificacions.calificacion_ponderacion_id
+					order by hc.id desc limit 1) as calif_anterior'
+				),
+				DB::raw(
+					'(select cee.id from calendario_exa_extras as cee 
+					where cee.lectivo_id=' . $datos['lectivo_f'] .
+						' and cee.plantel_id=' . $datos['plantel_f'] . ' and cee.duracion_periodo_id=g.duracion_periodo_id) 
+					as calendario_exa_extras'
+				)
+			)
+				->join('hacademicas as h', 'h.id', 'incidencias_calificacions.hacademica_id')
+				->join('grados as g', 'g.id', 'h.grado_id')
+				->join('materia as m', 'm.id', 'h.materium_id')
+				->join('plantels as p', 'p.id', 'h.plantel_id')
+				->join('clientes as c', 'c.id', 'h.cliente_id')
+				->join('calificacions as calif', 'calif.id', 'incidencias_calificacions.calificacion_id')
+				->join('lectivos as lec', 'lec.id', 'calif.lectivo_id')
+				->join('tpo_examens as te', 'te.id', 'calif.tpo_examen_id')
+				->join('calificacion_ponderacions as cp', 'cp.id', 'incidencias_calificacions.calificacion_ponderacion_id')
+				->join('carga_ponderacions as detalle_ponde', 'detalle_ponde.id', 'cp.carga_ponderacion_id')
+				->join('ponderacions as ponde', 'ponde.id', 'detalle_ponde.ponderacion_id')
+				->join('asignacion_academicas as aa', 'aa.materium_id', 'h.materium_id')
+				->whereColumn('aa.lectivo_id', 'h.lectivo_id')
+				->whereColumn('aa.plantel_id', 'h.plantel_id')
+				->whereColumn('aa.grupo_id', 'h.grupo_id')
+				->join('empleados as e', 'e.id', 'aa.empleado_id')
+				->join('users as u', 'u.id', 'incidencias_calificacions.usu_alta_id')
+				->leftJoin('incidencias_justificacions as ij', 'ij.id', 'incidencias_calificacions.incidencias_justificacion_id')
+				->where('p.id', $datos['plantel_f'])
+				->where('calif.tpo_examen_id', $datos['tpo_examen'])
+				->where('h.lectivo_id', $datos['lectivo_f'])
+				->where('detalle_ponde.ponderacion_id', $datos['ponderacion_id'])
+				->where('detalle_ponde.id', $datos['carga_ponderacion_id'])
+				//->whereDate('incidencias_calificacions.fecha_ar', '>=', $datos['fecha_f'])
+				//->whereDate('incidencias_calificacions.fecha_ar', '<=', $datos['fecha_t'])
+				->orderBy('p.id')
+				->orderBy('c.id')
+				->orderBy('fecha_ar')
+				->get();
+			return view('incidenciasCalificacions.reportes.incidenciasR', compact('registros'));
+		}
+
 
 		//dd($registros->toArray());
-		return view('incidenciasCalificacions.reportes.incidenciasR', compact('registros'));
+
 	}
 }

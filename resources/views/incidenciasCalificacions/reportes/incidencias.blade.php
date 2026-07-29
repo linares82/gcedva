@@ -32,6 +32,16 @@
                     <span class="help-block">{{ $errors->first('plantel_f') }}</span>
                 @endif
             </div>
+            <div class="form-group col-md-6 @if ($errors->has('tpo_examen')) has-error @endif">
+                <label for="plantel_f-field">Tipo de Examen:</label>
+                {!! Form::select('tpo_examen', $tpoExamens, null, [
+                    'class' => 'form-control select_seguridad',
+                    'id' => 'tpo_examen-field',
+                ]) !!}
+                @if ($errors->has('plantel_f'))
+                    <span class="help-block">{{ $errors->first('tpo_examen') }}</span>
+                @endif
+            </div>
             <div class="form-group col-md-6 @if ($errors->has('lectivo_f')) has-error @endif">
                 <label for="lectivo_f-field">Lectivo de:</label>
                 {!! Form::select('lectivo_f', $list['Lectivo'], null, [
@@ -42,6 +52,7 @@
                     <span class="help-block">{{ $errors->first('lectivo_f') }}</span>
                 @endif
             </div>
+
             <div class="form-group col-md-6 @if ($errors->has('ponderacion_id')) has-error @endif">
                 <label for="ponderacion_id-field">Ponderacion</label>
                 {!! Form::select('ponderacion_id', $list['Ponderacion'], null, [
@@ -64,18 +75,7 @@
                     <span class="help-block">{{ $errors->first('carga_ponderacion_id') }}</span>
                 @endif
             </div>
-            <!--    <div class="form-group col-md-6 @if ($errors->has('plantel_t')) has-error @endif">
-                        <label for="plantel_t-field">Plantel a:</label>
-                        {!! Form::select('plantel_t', $planteles, null, [
-                            'class' => 'form-control select_seguridad',
-                            'id' => 'plantel_t-field',
-                        ]) !!}
-                        @if ($errors->has('plantel_t'))
-    <span class="help-block">{{ $errors->first('plantel_t') }}</span>
-    @endif
-                    </div>
-                
-                
+            <!--
                     <div class="form-group col-md-6 @if ($errors->has('fecha_f')) has-error @endif">
                         <label for="fecha_f-field">Fecha de:</label>
                         {!! Form::text('fecha_f', null, ['class' => 'form-control input-sm', 'id' => 'fecha_f-field']) !!}
@@ -83,6 +83,7 @@
     <span class="help-block">{{ $errors->first('fecha_f') }}</span>
     @endif
                     </div>
+                    /*
                     <div class="form-group col-md-6 @if ($errors->has('fecha_t')) has-error @endif">
                         <label for="fecha_t-field">Fecha a:</label>
                         {!! Form::text('fecha_t', null, ['class' => 'form-control input-sm', 'id' => 'fecha_t-field']) !!}
@@ -90,7 +91,22 @@
     <span class="help-block">{{ $errors->first('fecha_t') }}</span>
     @endif
                     </div>
-                    -->
+                -->
+
+            <!--    <div class="form-group col-md-6 @if ($errors->has('plantel_t')) has-error @endif">
+                                    <label for="plantel_t-field">Plantel a:</label>
+                                    {!! Form::select('plantel_t', $planteles, null, [
+                                        'class' => 'form-control select_seguridad',
+                                        'id' => 'plantel_t-field',
+                                    ]) !!}
+                                    @if ($errors->has('plantel_t'))
+    <span class="help-block">{{ $errors->first('plantel_t') }}</span>
+    @endif
+                                </div>
+                            
+                            
+                                
+                                -->
             <div class="row">
             </div>
             <div class="well well-sm">
@@ -147,7 +163,7 @@
                     //$example.select2("destroy");
                     $('#carga_ponderacion_id-field').empty();
                     $('#carga_ponderacion_id-field').append($('<option></option>').text('Seleccionar').val(
-                    '0'));
+                        '0'));
                     $.each(data, function(i) {
                         //alert(data[i].name);
                         $('#carga_ponderacion_id-field').append("<option " + data[i].selectec +

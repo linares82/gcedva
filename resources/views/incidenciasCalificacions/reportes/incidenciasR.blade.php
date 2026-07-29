@@ -17,8 +17,11 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th></th><th>Plantel</th><th>Cliente</th><th>Materia</th><th>Calificacion Nueva</th><th>Lectivo</th>
-                    <th>Autorizada</th><th>Fecha</th><th>Justificacion</th>
+                    <th></th><th>Plantel</th><th>Cliente</th><th>Materia</th><th>T. Examen</th>
+                    <th>Ponderacion</th><th>Calificacion Anterior</th>
+                    <th>Calificacion Nueva</th><th>Lectivo</th>
+                    <th>Fecha</th><th>Justificacion</th>
+                    <th>Docente</th><th>U. Alta</th>
                 </tr> 
             </thead>
             <tbody>
@@ -35,18 +38,15 @@
                         <td>{{$registro->razon}}</td>
                         <td>{{$registro->cliente_id}} - {{$registro->nombre}} {{$registro->nombre2}} {{$registro->ape_paterno}} {{$registro->ape_materno}}</td>
                         <td>{{$registro->materia}}</td>
+                        <td>{{$registro->tipo_examen}}</td>
+                        <td>{{$registro->ponderacion}} / {{$registro->detalle_ponde}}</td>
+                        <td>{{round($registro->calif_anterior, 2)}}</td>
                         <td>{{$registro->calificacion_nueva}}</td>
                         <td>{{$registro->lectivo}}</td>
-                        <td>
-                            @if($registro->bnd_autorizada==1)
-                            SI
-                            @else
-                            NO
-                            @endif
-                        </td>
-                        
                         <td>{{$registro->fecha_ar}}</td>
                         <td>{{$registro->justificacion}}</td>
+                        <td>{{$registro->nombre_maestro}} {{$registro->ape_paterno_maestro}} {{$registro->ape_materno_maestro}}</td>
+                        <td>{{$registro->usu_alta}}</td>
                     </tr>
                     
                     
