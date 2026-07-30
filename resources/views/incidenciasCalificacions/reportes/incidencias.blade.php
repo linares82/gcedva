@@ -119,6 +119,17 @@
 @push('scripts')
     <script type="text/javascript">
         $(document).ready(function() {
+
+            $('#tpo_examen-field').on('change', function() {
+                if($('#tpo_examen-field option:selected').val()==2){
+                    $('#ponderacion_id-field').prop('disabled', true);
+                    $('#carga_ponderacion_id-field').prop('disabled', true);
+                }else{
+                    $('#ponderacion_id-field').prop('disabled', false);
+                    $('#carga_ponderacion_id-field').prop('disabled', false);
+                }
+            });
+
             $('#ponderacion_id-field').change(function() {
                 getCmbCargaPonde();
             });
