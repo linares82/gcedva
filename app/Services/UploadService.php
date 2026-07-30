@@ -11,6 +11,7 @@ class UploadService
     {
         // filename withouth extension
         $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        //dd($filename);
         // extension
         $extension = $file->getClientOriginalExtension();
         // add time to filename
@@ -40,6 +41,7 @@ class UploadService
 
     public static function urlFile(string $path, string $disk = 'public'): string
     {
+        //dd(Storage::disk($disk)->url($path));
         return Storage::disk($disk)->url($path);
     }
 }
