@@ -15,7 +15,7 @@ class CreateMaterialsTable extends Migration
 	{
 		Schema::create('materials', function (Blueprint $table) {
 			$table->increments('id');
-			$table->integer('seccion_id')->unsigned();
+			$table->integer('secciones_cat_id')->unsigned();
 			$table->string('descripcion')->nullable();
 			$table->string('archivo')->nullable();
 			$table->date('fecha_disponibilidad')->nullable();
@@ -25,7 +25,7 @@ class CreateMaterialsTable extends Migration
 			$table->softDeletes();
 			$table->foreign('usu_mod_id')->references('id')->on('users');
 			$table->foreign('usu_alta_id')->references('id')->on('users');
-			$table->foreign('seccion_id')->references('id')->on('seccions');
+			$table->foreign('secciones_cat_id')->references('id')->on('secciones_cats');
 		});
 	}
 

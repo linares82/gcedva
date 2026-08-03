@@ -57,7 +57,7 @@
             @endphp
             @foreach($periodos->sortBy('orden') as $periodo)
                 <tr>
-                    <td>{{$periodo->name}}</td>
+                    <td>{{$periodo->id}} - {{$periodo->name}}</td>
                     <td>
                     @php
                     $materias=App\Materium::join('materium_periodos as mp','mp.materium_id','materia.id')

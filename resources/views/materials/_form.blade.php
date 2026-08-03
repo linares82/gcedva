@@ -1,10 +1,17 @@
-                <div class="form-group col-md-4 @if($errors->has('seccion_id')) has-error @endif">
-                       <label for="seccion_id-field">Seccion</label>
-                       {!! Form::select("seccion_id", $list["Seccion"], null, array("class" => "form-control select_seguridad", "id" => "seccion_id-field")) !!}
-                       @if($errors->has("seccion_id"))
-                        <span class="help-block">{{ $errors->first("seccion_id") }}</span>
+                <div class="form-group col-md-4 @if($errors->has('secciones_cat_id')) has-error @endif">
+                       <label for="secciones_cat_id-field">Seccion</label>
+                       {!! Form::select("secciones_cat_id", $list["SeccionesCat"], null, array("class" => "form-control select_seguridad", "id" => "secciones_cat_id-field")) !!}
+                       @if($errors->has("secciones_cat_id"))
+                        <span class="help-block">{{ $errors->first("secciones_cat_id") }}</span>
                        @endif
                     </div>
+                    <div class="form-group col-md-4 @if($errors->has('ciclo_matricula_id')) has-error @endif">
+                     <label for="ciclo_matricula_id-field">Ciclo</label>
+                     {!! Form::select("ciclo_matricula_id", $list["CicloMatricula"], null, array("class" => "form-control select_seguridad", "id" => "ciclo_matricula_id-field")) !!}
+                     @if($errors->has("ciclo_matricula_id"))
+                      <span class="help-block">{{ $errors->first("ciclo_matricula_id") }}</span>
+                     @endif
+                  </div>
                     <div class="form-group col-md-4 @if($errors->has('descripcion')) has-error @endif">
                        <label for="descripcion-field">Descripcion</label>
                        {!! Form::text("descripcion", null, array("class" => "form-control", "id" => "descripcion-field")) !!}

@@ -179,7 +179,8 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'seccions.name', 'title' => 'SECCION_NAME'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'seccions.name', 'title' => 'SECCION'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'ciclo_matriculas.name', 'title' => 'CICLO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'descripcion', 'title' => 'DESCRIPCION'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'archivo', 'title' => 'ARCHIVO'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'fecha_disponibilidad', 'title' => 'FECHA_DISPONIBILIDAD'])</th>
@@ -192,6 +193,7 @@
                             <tr>
                                 <td><a href="{{ route('materials.show', $material->id) }}">{{$material->id}}</a></td>
                                 <td>{{$material->seccion->name}}</td>
+                                <td>{{$material->cicloMatricula->name}}</td>
                     <td>{{$material->descripcion}}</td>
                     <td>{{$material->archivo}}</td>
                     <td>{{$material->fecha_disponibilidad}}</td>
