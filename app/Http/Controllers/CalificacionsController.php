@@ -269,4 +269,50 @@ class CalificacionsController extends Controller
 		//dd($registros->toArray());
 		return view('calificacions.reportes.examenesR', compact('registros'));
 	}
+
+	public function reprobados()
+	{
+		$planteles = Plantel::pluck('razon', 'id');
+		$lectivos = Lectivo::pluck('name', 'id');
+
+		return view('calificacions.reportes.reprobados', compact('planteles', 'lectivos'));
+	}
+
+	public function reprobadosR(Request $request)
+	{
+		$datos = $request->all();
+		//dd($datos);
+
+		$registros = Calificacion::select(
+			'cli.id as cliente_id',
+			'p.razon as plantel',
+			'cli.nombre',
+			'cli.nombre2',
+			'cli.ape_paterno',
+			'cli.ape_paterno',
+			'cli.matricula',
+			'l.name as lectivo',
+			'calificacions.calificacion',
+			'ste.name as tpo_examen',
+			'm.name as materia'
+		)
+			->join('hacademicas as h', 'h.id', 'calificacions.hacademica_id')
+			->join('lectivos as l', 'l.id', 'h.lectivo_id')
+			->join('materia as m', 'm.id', 'h.materium_id')
+			->join('plantels as p', 'p.id', 'h.plantel_id')
+			->join('clientes as cli', 'cli.id', 'h.cliente_id')
+			->join('st_materias as stc', 'stc.id', 'h.st_materium_id')
+			->join('tpo_examens as ste', 'ste.id', 'calificacions.tpo_examen_id')
+			->whereIn('stc.id', array(0, 2))
+			->where('p.id', $datos['plantel_f'])
+			->where('cli.matricula', 'like',  $datos['inicio_matricula'] . '%')
+			->where('h.lectivo_id', '<', $datos['lectivo'])
+			->orderBy('p.id')
+			->orderBy('cli.id')
+			->get();
+		//dd($registros->toArray());
+
+		//dd($registros->toArray());
+		return view('calificacions.reportes.reprobadosR', compact('registros'));
+	}
 }

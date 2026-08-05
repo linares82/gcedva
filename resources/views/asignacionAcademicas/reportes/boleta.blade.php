@@ -142,18 +142,46 @@
                                             @endphp
 					    
                                             @foreach($a->calificaciones as $cali)
-                                            <tr>
-                                                
+                                            
+                                            <!--<tr>-->
                                                 <tr>
-						    
+                                                    @php
+                                                        $colspan=0;
+                                                        foreach($cali->calificacionPonderacions as $calificacionPonderacion){
+                                                            $colspan++;
+                                                        }
+                                                        
+                                                        $cantidad_materias_validas=0;
+                                                        $sumatoria_calificacions_validas=0;
+                                                        $calificacion_final=0;
+                                                        foreach($cali->calificacionPonderacions as $calificacionPonderacion){
+                                                            if(is_null($calificacionPonderacion->deleted)){
+                                                                if($calificacionPonderacion->calificacion_parcial>0){
+                                                                    $cantidad_materias_validas++;
+                                                                    $sumatoria_calificacions_validas=$sumatoria_calificacions_validas+$calificacionPonderacion->calificacion_parcial;
+                                                                }   
+                                                            }
+                                                        }
+                                                        if($cantidad_materias_validas>0){
+                                                            if(($sumatoria_calificacions_validas/$cantidad_materias_validas)>=6){
+                                                                $calificacion_final=round($sumatoria_calificacions_validas/$cantidad_materias_validas);
+                                                            }else{
+                                                                $calificacion_final=intdiv(($sumatoria_calificacions_validas/$cantidad_materias_validas),1);
+                                                            }    
+                                                        }
+                                                    @endphp
+                                                    <th colspan="{{$colspan+1}}">
                                                     <strong>Tipo de examen:{{  $cali->tpoExamen->name}} - </strong>
+                                                    <strong>Calificacion Sin Ponderar: {{ $calificacion_final }}  <!--@{{$cali->calificacion<6 ? ($cali->calificacion % 1) : round($cali->calificacion,0)}}--></strong>        
+                                                    </th>
+                                                </tr>    
+                                                <tr>
                                                     @foreach($cali->calificacionPonderacions as $calificacionPonderacion)
                                                         <th class="centrar_texto">{{$calificacionPonderacion->cargaPonderacion->name}}</th>
                                                     @endforeach
                                                     <th>Promedio Real {{ $cali->tpo_examen_id==1 ? 'O.' : 'E.'}}  </th>
                                                 </tr>
-                                                <tr>
-                                                    <strong>Calificacion Sin Ponderar: <!--@{{$cali->calificacion<6 ? ($cali->calificacion % 1) : round($cali->calificacion,0)}}--></strong>
+                                                <tr>    
                                                     @php
                                                         $cantidad_materias_validas=0;
                                                         $sumatoria_calificacions_validas=0;
@@ -170,17 +198,9 @@
                                                         @endif
                                                     @endforeach
                                                         <td>{{$cali->calificacion<6 ? (intdiv($cali->calificacion,1)) : round($cali->calificacion,0)}} </td>
-                                                    @if($cantidad_materias_validas>0)
-                                                    @if(($sumatoria_calificacions_validas/$cantidad_materias_validas)>=6)    
-                                                    {{ round($sumatoria_calificacions_validas/$cantidad_materias_validas) }}
-                                                    @else
-                                                     {{ intdiv(($sumatoria_calificacions_validas/$cantidad_materias_validas),1) }}
-                                                    @endif
-                                                    @else
-                                                        0
-                                                    @endif
+                                                    
                                                 </tr>
-                                            <tr>
+                                            <!--<tr>-->
                                             
                                             @endforeach
                                         </tbody>
