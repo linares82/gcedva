@@ -901,6 +901,7 @@ class ComposerStaticInit94ee770e675e3957b9a5767755ac4657
         'AddBotResumenToProspectosTable' => __DIR__ . '/../..' . '/database/migrations/2025_09_08_180205_add_bot_resumen_to_prospectos_table.php',
         'AddCajaConceptoIdToMateriaTable' => __DIR__ . '/../..' . '/database/migrations/2026_04_27_103855_add_caja_concepto_id_to_materia_table.php',
         'AddCajaLnIdToCalificacionsTable' => __DIR__ . '/../..' . '/database/migrations/2026_04_27_165018_add_caja_ln_id_to_calificacions_table.php',
+        'AddCalifAnteriorToIncidenciasCalificacionsTable' => __DIR__ . '/../..' . '/database/migrations/2026_08_06_173148_add_calif_anterior_to_incidencias_calificacions_table.php',
         'AddCalificacionAprobatoriaToPlantelsTable' => __DIR__ . '/../..' . '/database/migrations/2024_04_29_105044_add_calificacion_aprobatoria_to_plantels_table.php',
         'AddCalificacionIdToCajaLnsTable' => __DIR__ . '/../..' . '/database/migrations/2026_04_27_171116_add_calificacion_id_to_caja_lns_table.php',
         'AddCamposToConciliacionMultiDetallesTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_07_163931_add_campos_to_conciliacion_multi_detalles_table.php',

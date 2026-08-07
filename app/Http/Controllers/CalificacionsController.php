@@ -294,13 +294,15 @@ class CalificacionsController extends Controller
 			'l.name as lectivo',
 			'calificacions.calificacion',
 			'ste.name as tpo_examen',
-			'm.name as materia'
+			'm.name as materia',
+			'stcli.name as st_cliente'
 		)
 			->join('hacademicas as h', 'h.id', 'calificacions.hacademica_id')
 			->join('lectivos as l', 'l.id', 'h.lectivo_id')
 			->join('materia as m', 'm.id', 'h.materium_id')
 			->join('plantels as p', 'p.id', 'h.plantel_id')
 			->join('clientes as cli', 'cli.id', 'h.cliente_id')
+			->join('st_clientes as stcli', 'stcli.id', 'cli.st_cliente_id')
 			->join('st_materias as stc', 'stc.id', 'h.st_materium_id')
 			->join('tpo_examens as ste', 'ste.id', 'calificacions.tpo_examen_id')
 			->whereIn('stc.id', array(0, 2))

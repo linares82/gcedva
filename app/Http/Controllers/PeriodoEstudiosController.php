@@ -792,6 +792,7 @@ class PeriodoEstudiosController extends Controller
             ->where('hacademicas.grupo_id', $cliente_base->grupo_id)
             ->whereIn('materium_id', $materias_array)
             ->whereNull('i.deleted_at')
+            ->whereNull('c.deleted_at')
             ->whereNull('hacademicas.deleted_at')
             ->distinct()
             ->orderBy('c.ape_paterno')

@@ -117,7 +117,7 @@
                                 <td>{{$incidenciasCalificacion->cliente->plantel->razon}} </td>
                                 <td>{{$incidenciasCalificacion->calificacionPonderacion->cargaPonderacion->name}}</td>
                                 <td>{{$incidenciasCalificacion->materium->name}}</td>
-                                <td>{{$incidenciasCalificacion->calificacionPonderacion->calificacion_parcial}}</td>
+                                <td>{{$incidenciasCalificacion->calif_anterior}}</td>
                                 <td>{{$incidenciasCalificacion->calificacion_nueva}}</td>
                                 <td>
                                     {{optional($incidenciasCalificacion->incidenciasJustificacion)->name}}

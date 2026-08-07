@@ -23,6 +23,7 @@ class IncidenciasCalificacion extends Model
 		'calificacion_ponderacion_id',
 		'cliente_id',
 		'calificacion_nueva',
+		'calif_anterior',
 		'justificacion',
 		'respuesta',
 		'bnd_autorizada',

@@ -696,10 +696,12 @@ class HacademicasController extends Controller
         //dd($lectivo->calendarioEvaluacions->toArray());
         //calendario de evaluaciones
         foreach ($lectivo->calendarioEvaluacions as $fechaCalendario) {
-            $calificacion_inicio = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_inicio);
-            $calificacion_fin = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_fin);
-            if ($calificacion_inicio->lessThanOrEqualTo($hoy) and $calificacion_fin->greaterThanOrEqualTo($hoy)) {
-                $dentroPeriodoExamenes = $fechaCalendario->id;
+            if ($fechaCalendario->carga_ponderacion_id == $data['carga_ponderacion_id']) {
+                $calificacion_inicio = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_inicio);
+                $calificacion_fin = Carbon::createFromFormat('Y-m-d', $fechaCalendario->v_fin);
+                if ($calificacion_inicio->lessThanOrEqualTo($hoy) and $calificacion_fin->greaterThanOrEqualTo($hoy)) {
+                    $dentroPeriodoExamenes = $fechaCalendario->id;
+                }
             }
         }
 
@@ -1168,7 +1170,8 @@ class HacademicasController extends Controller
             'calendarioExtras',
             'dentroPeriodoIncidencias',
             'dentroPeriodoExamenes',
-            'check_excepcion'
+            'check_excepcion',
+            'dentroCalendarioAsignacion'
         ))
             ->with('list', Hacademica::getListFromAllRelationApps())
             ->with('msj', $msj);

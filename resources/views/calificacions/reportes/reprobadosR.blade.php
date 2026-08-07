@@ -17,7 +17,8 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <tr>
-                    <th></th><th>Plantel</th><th>Cliente</th><th>Matricula</th>
+                    <th></th><th>Plantel</th><th>Cliente</th><th>Estatus</th>
+                    <th>Matricula</th>
                     <th>Lectivo</th><th>T. Examen</th><th>Materia</th>
                     <th>Calificacion</th>
                 </tr> 
@@ -31,6 +32,7 @@
                         <td>{{$contador_linea++}}</td>
                         <td>{{$registro->plantel}}</td>
                         <td>{{$registro->cliente_id}} - {{$registro->nombre}} {{$registro->nombre2}} {{$registro->ape_paterno}} {{$registro->ape_materno}}</td>
+                        <td>{{$registro->st_cliente}}</td>
                         <td>{{$registro->matricula}}</td>
                         <td>{{$registro->lectivo}}</td>
                         <td>{{$registro->tpo_examen}}</td>

@@ -80,6 +80,7 @@ class IncidenciasCalificacionsController extends Controller
 		//dd($input);
 		$calificacionPonderacion = CalificacionPonderacion::find($input['calificacion_ponderacion_id']);
 		$input['calificacion_id'] = $calificacionPonderacion->calificacion_id;
+		$input['calif_anterior'] = $calificacionPonderacion->calificacion_parcial;
 		$input['materium_id'] = $calificacionPonderacion->calificacion->hacademica->materium_id;
 		$input['hacademica_id'] = $calificacionPonderacion->calificacion->hacademica_id;
 		$input['cliente_id'] = $calificacionPonderacion->calificacion->hacademica->cliente_id;
@@ -427,17 +428,14 @@ class IncidenciasCalificacionsController extends Controller
 				'e.ape_materno as ape_materno_maestro',
 				'u.name as usu_alta',
 				'te.name as tipo_examen',
-				DB::raw(
-					'(select hc.calificacion_parcial_anterior from h_calificacions as hc 
-					where hc.calificacion_ponderacion_id=incidencias_calificacions.calificacion_ponderacion_id
-					order by hc.id desc limit 1) as calif_anterior'
-				),
-				DB::raw(
+				'calif_anterior',
+				'aa.id as asignacion'
+				/*DB::raw(
 					'(select cic.id from calendario_incidencia_cals as cic 
 					where cic.lectivo_id=' . $datos['lectivo_f'] .
 						' and cic.ponderacion_id=' . $datos['ponderacion_id'] . ' and cic.carga_ponderacion_id=' . $datos['carga_ponderacion_id'] . ') 
 					as calendario_incidencias'
-				)
+				)*/
 			)
 				->join('hacademicas as h', 'h.id', 'incidencias_calificacions.hacademica_id')
 				->join('lectivos as lec', 'lec.id', 'h.lectivo_id')
@@ -453,6 +451,7 @@ class IncidenciasCalificacionsController extends Controller
 				->whereColumn('aa.lectivo_id', 'h.lectivo_id')
 				->whereColumn('aa.plantel_id', 'h.plantel_id')
 				->whereColumn('aa.grupo_id', 'h.grupo_id')
+				->whereNull('aa.deleted_at')
 				->join('empleados as e', 'e.id', 'aa.empleado_id')
 				->join('users as u', 'u.id', 'incidencias_calificacions.usu_alta_id')
 				->leftJoin('incidencias_justificacions as ij', 'ij.id', 'incidencias_calificacions.incidencias_justificacion_id')
@@ -467,7 +466,7 @@ class IncidenciasCalificacionsController extends Controller
 				->orderBy('c.id')
 				->orderBy('fecha_ar')
 				->get();
-			//dd($registros);
+			//dd($registros->toArray());
 			return view('incidenciasCalificacions.reportes.incidenciasR', compact('registros'));
 		} elseif ($datos['tpo_examen'] == 2) {
 
@@ -492,17 +491,13 @@ class IncidenciasCalificacionsController extends Controller
 				'e.ape_materno as ape_materno_maestro',
 				'u.name as usu_alta',
 				'te.name as tipo_examen',
-				DB::raw(
-					'(select hc.calificacion_parcial_anterior from h_calificacions as hc 
-					where hc.calificacion_ponderacion_id=incidencias_calificacions.calificacion_ponderacion_id
-					order by hc.id desc limit 1) as calif_anterior'
-				),
-				DB::raw(
+				'calif_anterior',
+				/*DB::raw(
 					'(select cee.id from calendario_exa_extras as cee 
 					where cee.lectivo_id=' . $datos['lectivo_f'] .
 						' and cee.plantel_id=' . $datos['plantel_f'] . ' and cee.duracion_periodo_id=g.duracion_periodo_id) 
 					as calendario_exa_extras'
-				)
+				)*/
 			)
 				->join('hacademicas as h', 'h.id', 'incidencias_calificacions.hacademica_id')
 				->join('grados as g', 'g.id', 'h.grado_id')
@@ -519,6 +514,7 @@ class IncidenciasCalificacionsController extends Controller
 				->whereColumn('aa.lectivo_id', 'h.lectivo_id')
 				->whereColumn('aa.plantel_id', 'h.plantel_id')
 				->whereColumn('aa.grupo_id', 'h.grupo_id')
+				->whereNull('aa.deleted_at')
 				->join('empleados as e', 'e.id', 'aa.empleado_id')
 				->join('users as u', 'u.id', 'incidencias_calificacions.usu_alta_id')
 				->leftJoin('incidencias_justificacions as ij', 'ij.id', 'incidencias_calificacions.incidencias_justificacion_id')
@@ -531,7 +527,7 @@ class IncidenciasCalificacionsController extends Controller
 				//->whereDate('incidencias_calificacions.fecha_ar', '<=', $datos['fecha_t'])
 				->orderBy('p.id')
 				->orderBy('c.id')
-				->orderBy('fecha_ar')
+				->orderBy('incidencias_calificacions.created_at')
 				->get();
 			return view('incidenciasCalificacions.reportes.incidenciasR', compact('registros'));
 		}

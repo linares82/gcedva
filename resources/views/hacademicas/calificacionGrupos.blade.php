@@ -62,6 +62,7 @@
                     <span class="help-block">{{ $errors->first('carga_ponderacion_id') }}</span>
                 @endif
             </div>
+            @permission('calificacions.check_no_aprobados')
             <div class="form-group col-md-4 @if ($errors->has('no_aprobados')) has-error @endif">
                 <label for="no_aprobados-field">No Aprobados</label>
                 {!! Form::checkbox('no_aprobados', 1, false) !!}
@@ -69,6 +70,7 @@
                     <span class="help-block">{{ $errors->first('no_aprobados') }}</span>
                 @endif
             </div>
+            @endif
             @permission('calificacions.excepcion')
                 <div class="form-group col-md-4 @if ($errors->has('excepcion')) has-error @endif">
                     <label for="excepcion-field">Exepcion</label>
@@ -245,7 +247,7 @@
                                     @endif
                                 @else
                                     @if ($param_bloqueoXdoc == 1)
-                                        @if ($r->bnd_doc_oblig_entregados == 1 or $validaEntregaDocs3Meses /*and $dentroPeriodoIncidencias==0*/)
+                                        @if (($r->bnd_doc_oblig_entregados == 1 or $validaEntregaDocs3Meses) and $dentroPeriodoExamenes > 0 or $dentroCalendarioAsignacion>0)
                                             {!! Form::number('calificacion', null, [
                                                 'class' => 'form-control input-sm col-md-6',
                                                 'id' => 'calificacion_parcial' . $r->id . $r->calificacion_ponderacion_id,
@@ -323,7 +325,8 @@
                                     @endpermission
                                 @else
                                     @if ($param_bloqueoXdoc == 1)
-                                        @if ($r->bnd_doc_oblig_entregados == 1 or $validaEntregaDocs3Meses /*and $dentroPeriodoIncidencias==0*/)
+					
+                                        @if (($r->bnd_doc_oblig_entregados == 1 or $validaEntregaDocs3Meses) and $dentroPeriodoExamenes>0 or $dentroCalendarioAsignacion)
                                             <button type="button" class="btn btn-primary btn-xs btn-guardar_caificacion"
                                                 data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
                                                 data-cliente_id="{{ $r->id }}">Actualizar</button>
@@ -500,7 +503,7 @@
                             " value=\"" + data[i].id + "\">" + data[i].name + "<\/option>");
                     });
                     $('#carga_ponderacion_id-field').select2({
-                        placeholder: 'Seleccionar opciÃƒÂ³n'
+                        placeholder: 'Seleccionar opción'
                     });
                 }
             });
