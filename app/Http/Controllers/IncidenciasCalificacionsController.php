@@ -25,6 +25,7 @@ use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Mail;
+use Log;
 
 class IncidenciasCalificacionsController extends Controller
 {
@@ -89,9 +90,12 @@ class IncidenciasCalificacionsController extends Controller
 
 		//create data
 		$incidenciaCalificacion = IncidenciasCalificacion::create($input);
-		$this->autorizar($incidenciaCalificacion->id);
 		$calificacionPonderacion->cont_inci = $calificacionPonderacion->cont_inci + 1;
 		$calificacionPonderacion->save();
+
+		$this->autorizar($incidenciaCalificacion->id);
+
+
 		if ($request->hasFile('imagen')) {
 			$file = $request->file('imagen');
 			$extension = $file->getClientOriginalExtension();
@@ -265,6 +269,7 @@ class IncidenciasCalificacionsController extends Controller
 			$calificacion_ponderacion->calificacion_parcial = $data['calificacion_parcial'];
 			$calificacion_ponderacion->calificacion_parcial_calculada = $data['calificacion_parcial'] * $calificacion_ponderacion->ponderacion;
 			$calificacion_ponderacion->save();
+			Log::info('autorizacion y calcula calificacion');
 
 			//Calula calificacion del padre
 			if ($calificacion_ponderacion->padre_id > 0) {

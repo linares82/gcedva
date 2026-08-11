@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
 use App\CalendarioAsignacionPonderacion;
-use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updateCalendarioAsignacionPonderacion;
+use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Http\Requests\createCalendarioAsignacionPonderacion;
+use App\Http\Requests\updateCalendarioAsignacionPonderacion;
+use App\Lectivo;
+use App\Plantel;
+use Auth;
+use Illuminate\Http\Request;
 
 class CalendarioAsignacionPonderacionsController extends Controller
 {
@@ -125,5 +126,71 @@ class CalendarioAsignacionPonderacionsController extends Controller
 		$calendarioAsignacionPonderacion->delete();
 
 		return redirect()->route('asignacionAcademicas.edit', $asignacion)->with('message', 'Registro Borrado.');
+	}
+
+	public function cambioXcalendario()
+	{
+		$planteles = Plantel::pluck('razon', 'id');
+
+		$lectivos = Lectivo::pluck('name', 'id');
+		return view('calendarioAsignacionPonderacions.reportes.cambioXcalendario', compact('planteles', 'lectivos'));
+	}
+
+	public function cambioXcalendarioR(Request $request)
+	{
+		$datos = $request->all();
+		//dd($datos);
+
+		$registros = CalendarioAsignacionPonderacion::select(
+			'aa.id as asignacion_id',
+			'p.razon',
+			'l.name as lectivo',
+			'calendario_asignacion_ponderacions.fec_inicio',
+			'calendario_asignacion_ponderacions.fec_fin',
+			'aa.plantel_id',
+			'aa.lectivo_id',
+			'aa.grupo_id',
+			'aa.materium_id',
+			'calif.id as calificacion_id',
+			'h.id as hacadamica_id',
+			'hcalif.calificacion_parcial_anterior',
+			'hcalif.calificacion_parcial_actual',
+			'u.name as usu_alta',
+			'd.nombre',
+			'd.ape_paterno',
+			'd.ape_materno',
+			'm.name as materia',
+			'hcalif.created_at',
+			'h.cliente_id',
+			'cponde.name as carga_ponderacion'
+		)
+			->join('carga_ponderacions as cponde', 'cponde.id', 'calendario_asignacion_ponderacions.carga_ponderacion_id')
+			->join('users as u', 'u.id', 'calendario_asignacion_ponderacions.usu_alta_id')
+			->join('asignacion_academicas as aa', 'aa.id', 'calendario_asignacion_ponderacions.asignacion_id')
+			->join('empleados as d', 'd.id', 'aa.empleado_id')
+			->join('carga_ponderacions as cp', 'cp.id', 'calendario_asignacion_ponderacions.carga_ponderacion_id')
+			->join('lectivos as l', 'l.id', 'aa.lectivo_id')
+			->join('plantels as p', 'p.id', 'aa.plantel_id')
+			->join('hacademicas as h', 'h.plantel_id', 'aa.plantel_id')
+			->join('materia as m', 'm.id', 'aa.materium_id')
+			->whereColumn('h.grupo_id', 'aa.grupo_id')
+			->whereColumn('h.lectivo_id', 'aa.lectivo_id')
+			->whereColumn('h.materium_id', 'aa.materium_id')
+			->join('calificacions as calif', 'calif.hacademica_id', 'h.id')
+			->join('calificacion_ponderacions as cpon', 'cpon.calificacion_id', 'calif.id')
+			->join('h_calificacions as hcalif', 'hcalif.calificacion_id', 'calif.id')
+			//->whereColumn('hcalif.calificacion_ponderacion_id', 'calendario_asignacion_ponderacions.carga_ponderacion_id')
+			->where('calif.tpo_examen_id', 1)
+			->where('aa.plantel_id', $datos['plantel_f'])
+			->where('aa.lectivo_id', $datos['lectivo_f'])
+			->whereColumn('hcalif.created_at', '>=', 'calendario_asignacion_ponderacions.fec_inicio')
+			->whereColumn('hcalif.created_at', '<=', 'calendario_asignacion_ponderacions.fec_fin')
+			->get();
+		//dd($calendarios->toArray());
+
+		return view('calendarioAsignacionPonderacions.reportes.cambioXcalendarioR', compact('registros'));
+
+		//dd($registros->toArray());
+
 	}
 }

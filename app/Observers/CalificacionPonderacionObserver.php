@@ -6,6 +6,7 @@ use App\CalificacionPonderacion;
 use App\HCalifPonderacion;
 use App\HCalificacion;
 use Auth;
+use Log;
 
 class CalificacionPonderacionObserver
 {
@@ -82,6 +83,8 @@ class CalificacionPonderacionObserver
     public function hCalificacions($anterior, $nuevo)
     {
         //dd($anterior->id);
+        Log::info($anterior);
+        Log::info($nuevo);
         if ($nuevo->calificacion_parcial <> $anterior->calificacion_parcial) {
             $input['cliente_id'] = $anterior->calificacion->hacademica->cliente_id;
             $input['calificacion_id'] = $anterior->calificacion_id;
