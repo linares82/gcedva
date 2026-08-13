@@ -91,16 +91,18 @@ class CajaObserver
                 ->whereNull('adeudos.deleted_at')
                 ->count();
 
+            //Sin inscripcion, cliente Nuevo, seguimiento 75%
             if ($inscripcions->isEmpty() and $this->caja->cliente->st_cliente_id == 1 and $seguimiento->st_seguimiento_id == 5) {
-                $cliente->st_cliente_id = 5;
+                $cliente->st_cliente_id = 5; //Nueva inscripcion
                 $cliente->save();
-                $seguimiento->st_seguimiento_id = 2;
+                $seguimiento->st_seguimiento_id = 2; //100%
                 $seguimiento->save();
+                //Sin inscripcion, sin mensualidades pagadas y cliente no en baja
             } elseif ($inscripcions->isEmpty() and $mensualidades == 0 and $this->caja->cliente->st_cliente_id <> 3 /*and $this->caja->cliente->seguimiento->st_seguimiento_id==2*/) {
                 //if ($inscripcions->isEmpty()) {
-                $cliente->st_cliente_id = 22;
+                $cliente->st_cliente_id = 22; //preinscrito
                 $cliente->save();
-                $seguimiento->st_seguimiento_id = 2;
+                $seguimiento->st_seguimiento_id = 2; //100%
                 $seguimiento->save();
             } elseif ($this->caja->cliente->st_cliente_id <> 3) {
                 $diaFechaActual = Carbon::createFromFormat('Y-m-d', Date('Y-m-d'))->day;

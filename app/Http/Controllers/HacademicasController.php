@@ -804,6 +804,7 @@ class HacademicasController extends Controller
                 'c.lectivo_id as calificacion_lectivo_id',
                 'hacademicas.inscripcion_id',
                 'c.tpo_examen_id',
+                'c.bnd_extra_sin_caja'
             )
                 ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                 ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
@@ -859,6 +860,7 @@ class HacademicasController extends Controller
                 'c.lectivo_id as calificacion_lectivo_id',
                 'hacademicas.inscripcion_id',
                 'c.tpo_examen_id',
+                'c.bnd_extra_sin_caja'
             )
                 ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                 ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
@@ -918,6 +920,7 @@ class HacademicasController extends Controller
                     'c.lectivo_id as calificacion_lectivo_id',
                     'hacademicas.inscripcion_id',
                     'c.tpo_examen_id',
+                    'c.bnd_extra_sin_caja'
                 )
                     ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                     ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
@@ -972,6 +975,7 @@ class HacademicasController extends Controller
                     'c.lectivo_id as calificacion_lectivo_id',
                     'hacademicas.inscripcion_id',
                     'c.tpo_examen_id',
+                    'c.bnd_extra_sin_caja'
                 )
                     ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                     ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
@@ -1029,6 +1033,7 @@ class HacademicasController extends Controller
                     'c.lectivo_id as calificacion_lectivo_id',
                     'hacademicas.inscripcion_id',
                     'c.tpo_examen_id',
+                    'c.bnd_extra_sin_caja'
                 )
                     ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                     ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
@@ -1087,7 +1092,8 @@ class HacademicasController extends Controller
                 'i.lectivo_id as inscripcion_lectivo_id',
                 'hacademicas.lectivo_id as hacademicas_lectivo_id',
                 'c.lectivo_id as calificacion_lectivo_id',
-                'hacademicas.inscripcion_id'
+                'hacademicas.inscripcion_id',
+                'c.bnd_extra_sin_caja'
             )
                 ->where('hacademicas.grupo_id', '=', $asignacionAcademica->grupo_id)
                 ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
@@ -1712,5 +1718,218 @@ class HacademicasController extends Controller
                 'excepcion_activa' => $excepcion_activa
             ]
         );
+    }
+
+    public function getExamenesExtraExc(Request $request)
+    {
+        $datos = $request->all();
+        //dd($datos);
+        $hacademica = null;
+        $consulta_extras = null;
+        $calendario_extras = null;
+        $conteo_extras_materia_actual = null;
+        $limite_extras = null;
+        $conteo_extras = null;
+        if (isset($datos['hacademica_id'])) {
+            $hacademica = Hacademica::find($datos['hacademica_id']);
+            //$inscripcion = Inscripcion::where('id', $hacademica->inscripcion_id)->first();
+
+            $calendario_extras = CalendarioExaExtra:: //where('plantel_id', $hacademica->plantel_id)
+                where('duracion_periodo_id', $hacademica->grado->duracion_periodo_id)
+                ->whereDate('fec_inicio', '<=', date('Y-m-d'))
+                ->whereDate('fec_fin', '>=', date('Y-m-d'))
+                ->where('lectivo_id', $hacademica->inscripcion->lectivo_id)
+                ->orderBy('id', 'desc')
+                ->first();
+            //dd($calendario_extras);
+            $consulta_extras = Calificacion::select(
+                'l.name as lectivo',
+                'm.name as materia',
+                'te.name as tipo_evaluacion',
+                'calificacions.fecha',
+                'calificacions.calificacion',
+                'h.cliente_id'
+            )
+                ->join('hacademicas as h', 'h.id', 'calificacions.hacademica_id')
+                ->join('lectivos as l', 'l.id', 'calificacions.lectivo_id')
+                ->join('materia as m', 'm.id', 'h.materium_id')
+                ->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
+                //->where('h.materium_id', $hacademica->materium_id)
+                ->where('h.cliente_id', $hacademica->cliente_id)
+                //->where('calificacions.lectivo_id', $calendario_extras->lectivo_id)
+                ->whereDate('calificacions.fecha', '>=', $calendario_extras->fec_inicio)
+                ->whereDate('calificacions.fecha', '<=', $calendario_extras->fec_fin)
+                ->where('tpo_examen_id', 2)
+                ->get();
+            //dd($consulta_extras);
+            $conteo_extras_materia_actual = Calificacion::select(
+                'l.name as lectivo',
+                'm.name as materia',
+                'te.name as tipo_evaluacion',
+                'calificacions.fecha',
+                'calificacions.calificacion',
+                'h.cliente_id'
+            )
+                ->join('hacademicas as h', 'h.id', 'calificacions.hacademica_id')
+                ->join('lectivos as l', 'l.id', 'calificacions.lectivo_id')
+                ->join('materia as m', 'm.id', 'h.materium_id')
+                ->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
+                ->where('h.materium_id', $hacademica->materium_id)
+                ->where('h.cliente_id', $hacademica->cliente_id)
+                //->where('calificacions.lectivo_id', $hacademica->lectivo_id)
+                ->whereDate('calificacions.fecha', '>=', $calendario_extras->fec_inicio)
+                ->whereDate('calificacions.fecha', '<=', $calendario_extras->fec_fin)
+                ->where('tpo_examen_id', 2)
+                ->count();
+            $limite_extras = $hacademica->grado->duracionPeriodo->bloqueo_cantidad_extras;
+            //dd($hacademica->grado->duracionPeriodo);
+            $conteo_extras = Calificacion::select(
+                'l.name as lectivo',
+                'm.name as materia',
+                'te.name as tipo_evaluacion',
+                'calificacions.fecha',
+                'calificacions.calificacion',
+                'h.cliente_id'
+            )
+                ->join('hacademicas as h', 'h.id', 'calificacions.hacademica_id')
+                ->join('lectivos as l', 'l.id', 'calificacions.lectivo_id')
+                ->join('materia as m', 'm.id', 'h.materium_id')
+                ->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
+                //->where('h.materium_id', $hacademica->materium_id)
+                ->where('h.cliente_id', $hacademica->cliente_id)
+                //->where('calificacions.lectivo_id', $hacademica->lectivo_id)
+                ->whereDate('calificacions.fecha', '>=', $calendario_extras->fec_inicio)
+                ->whereDate('calificacions.fecha', '<=', $calendario_extras->fec_fin)
+                ->where('tpo_examen_id', 2)
+                ->count();
+        }
+
+        $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
+        //$examen->reverse();
+        //$examen->put(0,'Seleccionar OpciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n');
+        //$examen->reverse();
+        //dd($hacademica->toArray());
+        $lectivos = Lectivo::pluck('name', 'id');
+
+        /*	dd('conteo_extras_materia_actual:'.$conteo_extras_materia_actual.
+            ' limite_extras:'.$limite_extras.
+            ' conteo_extras:'.$conteo_extras
+	);
+*/
+        return view('hacademicas.examenExtraExc', compact(
+            'examen',
+            'lectivos',
+            'hacademica',
+            'consulta_extras',
+            'calendario_extras',
+            'conteo_extras_materia_actual',
+            'limite_extras',
+            'conteo_extras',
+            //'inscripcion'
+        ))
+            ->with('list', Hacademica::getListFromAllRelationApps());
+    }
+
+    public function postExamenesExtraExc(Request $request)
+    {
+        //dd($request->all());
+        $input = $request->all();
+
+        //dd($input['calificacion'][0]);
+        //dd($input);
+
+        if (
+            isset($input['cliente_id']) and
+            isset($input['grado_id']) and
+            isset($input['materium_id']) and
+            isset($input['examen_id']) and
+            isset($input['lectivo_id'])
+        ) {
+            //isset($input['calificacion']) and
+            //isset($input['fecha']) )
+            $h = Inscripcion::select('h.id')
+                ->join('clientes as c', 'c.id', '=', 'inscripcions.cliente_id')
+                ->join('hacademicas as h', 'h.inscripcion_id', '=', 'inscripcions.id')
+                ->where('c.id', '=', $input['cliente_id'])
+                ->where('inscripcions.grado_id', '=', $input['grado_id'])
+                ->where('h.materium_id', '=', $input['materium_id'])
+                ->where('h.deleted_at', '=', null)
+                ->first();
+            $calificacion_extraordinaria = Calificacion::where('hacademica_id', $h->id)->where('tpo_examen_id', 2)->first();
+
+
+            //dd($h->id);
+            //if (!is_object($calificacion_extraordinaria)) {
+            $c = new Calificacion;
+            $c->hacademica_id = $h->id;
+            $c->tpo_examen_id = $input['examen_id'];
+            $c->lectivo_id = $input['lectivo_id'];
+            $c->calificacion = 0;
+            $c->fecha = date('Y-m-d');
+            $c->reporte_bnd = 0;
+            if (isset($input['reporte_bnd'])) {
+                $c->reporte_bnd = 1;
+            }
+            $c->bnd_extra_sin_caja = 1;
+            $c->usu_alta_id = Auth::user()->id;
+            $c->usu_mod_id = Auth::user()->id;
+            $c->save();
+
+            $g = Grado::find($input['grado_id'])->first();
+            $extra_bachillerato = Param::where('llave', 'extra_bachillerato')->first();
+            $extra_no_bachillerato = Param::where('llave', 'extra_no_bachillerato')->first();
+            $final = Param::where('llave', 'final')->first();
+            if ($input['examen_id'] == 2 and $g->name == "BACHILLERATO") {
+                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_bachillerato->valor)->get();
+            } elseif ($input['examen_id'] == 2 and $g->name <> "BACHILLERATO") {
+                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $extra_no_bachillerato->valor)->get();
+            } elseif ($input['examen_id'] == 3) {
+                $ponderaciones = CargaPonderacion::where('ponderacion_id', '=', $final->valor)->get();
+            }
+            //dd($ponderaciones);
+            foreach ($ponderaciones as $p) {
+                $ponde['calificacion_id'] = $c->id;
+                $ponde['carga_ponderacion_id'] = $p->id;
+                $ponde['calificacion_parcial'] = 0;
+                $ponde['ponderacion'] = $p->porcentaje;
+                $ponde['usu_alta_id'] = Auth::user()->id;
+                $ponde['usu_mod_id'] = Auth::user()->id;
+                $ponde['tiene_detalle'] = $p->tiene_detalle;
+                $ponde['padre_id'] = $p->padre_id;
+                $c_nueva = CalificacionPonderacion::create($ponde);
+
+                //Log::info($c_nueva->id . "- nuevo registro de ponderacion");
+            }
+            //}
+        }
+        /* if(isset($input['cve_alumno']) and isset($input['grado_id']) and isset($input['materium_id'])){
+          $hacademicas=Hacademica::select('calif.id',
+          DB::raw('concat(c.nombre, " ", c.ape_paterno," ", c.ape_materno) as nombre'),
+          'm.name as materia','te.name as examen', 'calif.calificacion', 'calif.fecha',
+          'g.name as grado', 'calif.calificacion', 'calif.fecha', 'calif.reporte_bnd')
+          ->join('clientes as c', 'c.id', 'hacademicas.cliente_id')
+          ->join('calificacions as calif', 'hacademicas.id', '=', 'calif.hacademica_id')
+          ->join('tpo_examens as te', 'te.id', '=', 'calif.tpo_examen_id')
+          ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+          ->join('grados as g', 'g.id', '=', 'hacademicas.grado_id')
+          ->where('hacademicas.plantel_id', '=', $input['plantel_id'])
+          ->where('hacademicas.grupo_id', '=', $input['grupo_id'])
+          ->where('hacademicas.lectivo_id', '=', $input['lectivo_id'])
+          ->where('hacademicas.materium_id', '=', $input['materium_id'])
+          ->get();
+          } */
+
+        //dd($hacademicas->toArray());
+        $examen = TpoExamen::where('id', '>', 1)->pluck('name', 'id');
+        //$examen->reverse();
+        //$examen->put(0,'Seleccionar OpciÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³n');
+        //$examen->reverse();
+        $hacademica_id = $h->id;
+        Session::flash('msj', 'Registro Creado');
+        /*return view('hacademicas.examen', compact('examen'))
+                        ->with('list', Hacademica::getListFromAllRelationApps());
+         * 
+         */
+        return redirect()->route('hacademicas.examenesExtraExc', compact('examen', 'hacademica_id'))->with('message', 'Registro Creado.');
     }
 }

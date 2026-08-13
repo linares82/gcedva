@@ -1766,7 +1766,9 @@ class InscripcionsController extends Controller
         foreach ($resultados as $resultado) {
             if (strval($resultado['calificacion']) >= 6) {
                 //Log::info($resultado['creditos']);
-                $total_creditos = $total_creditos + trim($resultado['creditos']);
+                if (is_numeric(trim($resultado['creditos']))) {
+                    $total_creditos = $total_creditos + trim($resultado['creditos']);
+                }
                 $suma_calificaciones = $suma_calificaciones + $resultado['calificacion'];
                 $total_materias = $total_materias + 1;
             } else {

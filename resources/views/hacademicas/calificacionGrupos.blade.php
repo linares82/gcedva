@@ -361,8 +361,9 @@
                                             'calificacion_id',
                                             $r->calificacion_id,
                                         )->first();
+                                        
                                     @endphp
-                                    @if ($r->tpo_examen_id == 2 and !is_null($lineaCaja))
+                                    @if (($r->tpo_examen_id == 2 and !is_null($lineaCaja)) or $r->bnd_extra_sin_caja==1)
                                         @if ($r->st_materium_id == 2)
                                             @permission('incidenciasCalificacions.create')
                                                 <a target="_blank"

@@ -29,7 +29,8 @@ class Calificacion extends Model
 		'usu_mod_id',
 		'acta_final_id',
 		'lectivo_id',
-		'caja_ln_id'
+		'caja_ln_id',
+		'bnd_extra_sin_caja'
 	];
 
 	public function usu_alta()

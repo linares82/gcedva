@@ -349,6 +349,12 @@ class AdeudosController extends Controller
             $cliente->save();
         }
 
+        if ($seguimiento->st_seguimiento_id <> 2) {
+            $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
+            $seguimiento->st_seguimiento_id = 5;
+            $seguimiento->save();
+        }
+
         $adeudos = Adeudo::where('cliente_id', '=', $cliente->id)
             ->where('combinacion_cliente_id', '=', $combinacion->id)
             ->where('inicial_bnd', 1)

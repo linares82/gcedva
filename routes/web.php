@@ -6249,6 +6249,22 @@ Route::post(
     )
 )->middleware('auth');
 Route::get(
+    '/hacademicas/examenesExtraExc',
+    array(
+        'as' => 'hacademicas.examenesExtraExc',
+        'middleware' => 'permission:hacademicas.examenesExtraExc',
+        'uses' => 'HacademicasController@getExamenesExtraExc'
+    )
+)->middleware('auth');
+Route::post(
+    '/hacademicas/examenesExtraExc',
+    array(
+        'as' => 'hacademicas.examenesExtraExc',
+        'middleware' => 'permission:hacademicas.examenesExtraExc',
+        'uses' => 'HacademicasController@postExamenesExtraExc'
+    )
+)->middleware('auth');
+Route::get(
     '/hacademicas/racademicas',
     array(
         'as' => 'hacademicas.racademicas',

@@ -70,6 +70,7 @@ return array(
     'AddBndEnLineaToFormaPagosTable' => $baseDir . '/database/migrations/2025_11_21_114631_add_bnd_en_linea_to_forma_pagos_table.php',
     'AddBndExcepcionDocumentosToPlantelsTable' => $baseDir . '/database/migrations/2023_04_21_155410_add_bnd_excepcion_documentos_to_plantels_table.php',
     'AddBndEximirDescuentoToAdeudosTable' => $baseDir . '/database/migrations/2020_07_03_104152_add_bnd_eximir_descuento_to_adeudos_table.php',
+    'AddBndExtraSinCajaToCalificacions' => $baseDir . '/database/migrations/2026_08_12_162645_add_bnd_extra_sin_caja_to_calificacions.php',
     'AddBndExtraordinarioToCajaConceptosTable' => $baseDir . '/database/migrations/2026_03_13_153933_add_bnd_extraordinario_to_caja_conceptos_table.php',
     'AddBndGeneraMatriculaToCajaConceptosTable' => $baseDir . '/database/migrations/2021_09_03_081521_add_bnd_genera_matricula_to_caja_conceptos_table.php',
     'AddBndGraficaLectivosTable' => $baseDir . '/database/migrations/2018_06_19_145551_add_bnd_grafica_lectivos_table.php',
