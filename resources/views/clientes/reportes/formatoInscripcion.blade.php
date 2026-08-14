@@ -38,12 +38,12 @@
         <tr>
             <td style="width: 20%;">
                 <!--<img src="{{ asset('/imagenes/planteles/'.$cliente->plantel_id."/".$cliente->plantel->logo) }}" alt="Sin logo" height="80px" ></img>-->
-                <img src="{{asset('storage/especialidads/'.$combinacion->especialidad->imagen)}}" alt="Logo" height="42" width="42" > </td>
+                <img src="{{asset('storage/grados/'.$combinacion->grado->imagen)}}" alt="Logo" height="42" width="42" > </td>
             </td>
             <td align="center">
-                {{ $cliente->plantel->razon }} <br>
+                {{ $combinacion->grado->denominacion }} <br>
                 <strong>SOLICITUD DE INSCRIPCIÓN</strong> <br>
-                <p>{{ $combinacion->grado->name }} <br> Registro de Incorporación: {{ $combinacion->grado->rvoe }} </p>
+                <p>{{ $combinacion->grado->nombre2 }} <br> Registro de Incorporación: {{ $combinacion->grado->rvoe }} </p>
             </td>
             <td style="width: 20%;">
                 <table>

@@ -537,7 +537,23 @@
                                                 <!--@@endif-->
                                                 @endif
                                             @endpermission
-                                            
+                                            @permission('inscripcions.createExcepcion') 
+                                                
+                                                
+                                                <!--@@if($cliente->seguimiento->st_seguimiento_id==2 and $cliente->st_cliente_id==22)-->
+                                                <button class="inscribir-create btn btn-primary btn-xs" data-cliente_id="{{$c->cliente_id}}"
+                                                                                                   data-cliente_nombre="{{$cliente->nombre.' '.$cliente->nombre2.' '.$cliente->ape_paterno.' '.$cliente->ape_materno}}"
+                                                                                                   data-plantel="{{$c->plantel_id}}"
+                                                                                                   data-especialidad="{{$c->especialidad_id}}"
+                                                                                                   data-nivel="{{$c->nivel_id}}"
+                                                                                                   data-grado="{{$c->grado_id}}"
+                                                                                                   data-turno="{{$c->turno_id}}"
+                                                                                                   data-combinacion="{{$c->id}}"
+                                                                                                   data-st_cliente="{{$cliente->st_cliente_id}}">
+                                                <span class="glyphicon glyphicon-star"></span> Inscribir </button>
+                                                <!--@@endif-->
+                                                
+                                            @endpermission
                                         </td>
                                     </tr>
                                     @endif

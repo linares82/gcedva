@@ -238,12 +238,14 @@
                                             <!--Aqui iba el campo de captura de calificacion-->
                                         @endpermission
                                     @else
+                                        <!--
                                         {!! Form::number('calificacion', null, [
                                             'class' => 'form-control input-sm col-md-6',
                                             'id' => 'calificacion_parcial' . $r->id . $r->calificacion_ponderacion_id,
                                             'min' => 0,
                                             'max' => 10,
                                         ]) !!}
+                                        -->
                                     @endif
                                 @else
                                     @if ($param_bloqueoXdoc == 1)
@@ -306,16 +308,19 @@
                                     @endphp
                                     @if ($r->tpo_examen_id == 2 and $calendarioExtras > 0)
                                         @permission('hacademicas.calificacionExamenExtra')
-                                            <button type="button" class="btn btn-primary btn-xs btn-guardar_caificacion"
+                                            <!--<button type="button" class="btn btn-primary btn-xs btn-guardar_caificacion"
                                                 data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
                                                 data-cliente_id="{{ $r->id }}">Actualizar</button>
+                                            -->
                                         @endpermission
                                         @php
                                         @endphp
                                     @else
+                                    <!--
                                         <button type="button" class="btn btn-primary btn-xs btn-guardar_caificacion"
                                             data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
                                             data-cliente_id="{{ $r->id }}">Actualizar</button>
+                                    -->
                                     @endif
 
 
@@ -327,9 +332,11 @@
                                     @if ($param_bloqueoXdoc == 1)
 					
                                         @if (($r->bnd_doc_oblig_entregados == 1 or $validaEntregaDocs3Meses) and $dentroPeriodoExamenes>0 or $dentroCalendarioAsignacion)
+                                            <!--
                                             <button type="button" class="btn btn-primary btn-xs btn-guardar_caificacion"
                                                 data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
                                                 data-cliente_id="{{ $r->id }}">Actualizar</button>
+                                            -->
                                         @elseif(($r->bnd_doc_oblig_entregados == 1 or $validaEntregaDocs3Meses) and $dentroPeriodoExamenes > 0 or $check_excepcion)
                                             <button type="button" class="btn btn-primary btn-xs btn-guardar_caificacion"
                                                 data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
