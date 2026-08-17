@@ -1451,9 +1451,15 @@ Agregar nuevo registro
     $('#fecha-field').val(currentDate);
     
     $('.procesar').on('click', '.procesarAdeudos', function() {
+        contador_conceptos=0;
         var cb = [];
             $.each($('.adeudos_tomados:checked'), function() {
-            cb.push($(this).val()); 
+            cb.push($(this).val());
+            contador_conceptos++;
+            if(contador_conceptos>1){
+                alert('Solo se puede cobrar un concepto a la vez');
+                process.exit(0);
+            }
         });
         //console.log(cb);
         $.ajax({

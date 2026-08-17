@@ -77,7 +77,7 @@ class ProcesoActivoABajas2 extends Command
                     (select month(fecha_pago) AS month_fecha_inicio from adeudos as adeu where adeu.cliente_id=adeudos.cliente_id limit 1)
                     ) AS year_month_fecha_inicio,
                 */
-
+                //if ($paso->id == 1) {
                 $resultado->select(DB::raw('p.razon,adeudos.cliente_id,
                     stc.name as estatus,
                     sum(caj_con.bnd_mensualidad) as mensualidades, 
@@ -94,13 +94,14 @@ class ProcesoActivoABajas2 extends Command
                     ->where('cc.nivel_id', '>', 0)
                     ->where('cc.grado_id', '>', 0)
                     ->where('cc.turno_id', '>', 0)
-                    ->whereRaw('concat(year(adeudos.fecha_pago),month(adeudos.fecha_pago))<>' . Date('Yn') .
-                        ' or 
-                    (concat(year(adeudos.fecha_pago),month(adeudos.fecha_pago))<>CONCAT(
-                    (select year(fecha_pago) AS year_fecha_inicio from adeudos as adeu where adeu.cliente_id=adeudos.cliente_id limit 1),
-                    (select month(fecha_pago) AS month_fecha_inicio from adeudos as adeu where adeu.cliente_id=adeudos.cliente_id limit 1)
-                    ))')
-                    ->whereIn('c.id', array(115583))
+                    ->whereRaw(
+                        '(concat(year(adeudos.fecha_pago),month(adeudos.fecha_pago))<>' . Date('Yn') . ' or
+                        (concat(year(adeudos.fecha_pago),month(adeudos.fecha_pago))<>CONCAT(
+                        (select year(fecha_pago) from adeudos as adeu where adeu.cliente_id=adeudos.cliente_id limit 1),
+                        (select month(fecha_pago) from adeudos as adeu where adeu.cliente_id=adeudos.cliente_id limit 1)
+                        )))'
+                    )
+                    //->whereIn('c.id', array(115583))
                     ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
                     ->where('adeudos.fecha_pago', '<', $fechaActual->toDateString())
                     ->where('adeudos.pagado_bnd', 0)
@@ -113,8 +114,98 @@ class ProcesoActivoABajas2 extends Command
                     ->groupBy('adeudos.cliente_id')
                     ->groupBy('stc.name')
                     ->having('adeudos_cantidad', $paso->simbolo_cantidad_adeudos, $paso->cantidad_adeudos);
-                $registros = $resultado->orderBy('cliente_i')->get();
-                dd($registros->toArray());
+                $registros = $resultado->orderBy('cliente_id')->get();
+                //echo $registros;
+                /*} elseif ($paso->id == 2) {
+                    $resultado->select(DB::raw('p.razon,adeudos.cliente_id,
+                    stc.name as estatus,
+                    sum(caj_con.bnd_mensualidad) as mensualidades, 
+                    count(adeudos.cliente_id) as adeudos_cantidad'))
+                        ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
+                        ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
+                        ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+                        ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+                        ->join('caja_conceptos as caj_con', 'caj_con.id', '=', 'adeudos.caja_concepto_id')
+                        ->join('seguimientos as ss', 'ss.cliente_id', '=', 'c.id')
+                        ->whereIn('ss.st_seguimiento_id', array(2, 6))
+                        ->where('cc.plantel_id', '>', 0)
+                        ->where('cc.especialidad_id', '>', 0)
+                        ->where('cc.nivel_id', '>', 0)
+                        ->where('cc.grado_id', '>', 0)
+                        ->where('cc.turno_id', '>', 0)
+                        ->whereRaw('((concat(year(adeudos.fecha_pago),month(adeudos.fecha_pago))<>' . Date('Yn') . ' and
+                    (concat(year(adeudos.fecha_pago),month(adeudos.fecha_pago))=CONCAT(
+                    (select year(fecha_pago) from adeudos as adeu where adeu.cliente_id=adeudos.cliente_id limit 1),
+                    (select month(fecha_pago) from adeudos as adeu where adeu.cliente_id=adeudos.cliente_id limit 1)
+                    ))) or 
+                    (concat(year(adeudos.fecha_pago),month(adeudos.fecha_pago))<>' . Date('Yn') . ' and
+                    (concat(year(adeudos.fecha_pago),month(adeudos.fecha_pago))<>CONCAT(
+                    (select year(fecha_pago) from adeudos as adeu where adeu.cliente_id=adeudos.cliente_id limit 1),
+                    (select month(fecha_pago) from adeudos as adeu where adeu.cliente_id=adeudos.cliente_id limit 1)
+                    ))))')
+                        //->whereIn('c.id', array(115583))
+                        ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
+                        ->where('adeudos.fecha_pago', '<', $fechaActual->toDateString())
+                        ->where('adeudos.pagado_bnd', 0)
+                        ->whereNotIn('c.plantel_id', array(54))
+                        ->whereNull('cc.deleted_at')
+                        ->whereNull('c.deleted_at')
+                        ->whereNull('adeudos.deleted_at')
+                        ->whereNotIn('c.st_cliente_id', $excepcionEstatusArray)
+                        ->groupBy('p.razon')
+                        ->groupBy('adeudos.cliente_id')
+                        ->groupBy('stc.name')
+                        ->having('adeudos_cantidad', $paso->simbolo_cantidad_adeudos, $paso->cantidad_adeudos);
+                    $registros = $resultado->orderBy('cliente_id')->get();
+                } elseif ($paso->id == 3 or $paso->id == 4) {
+                    $resultado->select(DB::raw('p.razon,adeudos.cliente_id,
+                    stc.name as estatus,
+                    sum(caj_con.bnd_mensualidad) as mensualidades, 
+                    count(adeudos.cliente_id) as adeudos_cantidad'))
+                        ->join('clientes as c', 'c.id', '=', 'adeudos.cliente_id')
+                        ->join('combinacion_clientes as cc', 'cc.cliente_id', '=', 'c.id')
+                        ->join('plantels as p', 'p.id', '=', 'c.plantel_id')
+                        ->join('st_clientes as stc', 'stc.id', '=', 'c.st_cliente_id')
+                        ->join('caja_conceptos as caj_con', 'caj_con.id', '=', 'adeudos.caja_concepto_id')
+                        ->join('seguimientos as ss', 'ss.cliente_id', '=', 'c.id')
+                        ->whereIn('ss.st_seguimiento_id', array(2, 6))
+                        ->where('cc.plantel_id', '>', 0)
+                        ->where('cc.especialidad_id', '>', 0)
+                        ->where('cc.nivel_id', '>', 0)
+                        ->where('cc.grado_id', '>', 0)
+                        ->where('cc.turno_id', '>', 0)
+                        ->whereRaw('((concat(year(adeudos.fecha_pago),month(adeudos.fecha_pago))<>' . Date('Yn') . ' and
+                    (concat(year(adeudos.fecha_pago),month(adeudos.fecha_pago))=CONCAT(
+                    (select year(fecha_pago) from adeudos as adeu where adeu.cliente_id=adeudos.cliente_id limit 1),
+                    (select month(fecha_pago) from adeudos as adeu where adeu.cliente_id=adeudos.cliente_id limit 1)
+                    ))) or 
+                    (concat(year(adeudos.fecha_pago),month(adeudos.fecha_pago))=' . Date('Yn') . ' and
+                    (concat(year(adeudos.fecha_pago),month(adeudos.fecha_pago))<>CONCAT(
+                    (select year(fecha_pago) from adeudos as adeu where adeu.cliente_id=adeudos.cliente_id limit 1),
+                    (select month(fecha_pago) from adeudos as adeu where adeu.cliente_id=adeudos.cliente_id limit 1)
+                    ))) or  
+                    (concat(year(adeudos.fecha_pago),month(adeudos.fecha_pago))<>' . Date('Yn') . ' and
+                    (concat(year(adeudos.fecha_pago),month(adeudos.fecha_pago))<>CONCAT(
+                    (select year(fecha_pago) from adeudos as adeu where adeu.cliente_id=adeudos.cliente_id limit 1),
+                    (select month(fecha_pago) from adeudos as adeu where adeu.cliente_id=adeudos.cliente_id limit 1)
+                    ))))')
+                        //->whereIn('c.id', array(115583))
+                        ->whereColumn('adeudos.combinacion_cliente_id', 'cc.id')
+                        ->where('adeudos.fecha_pago', '<', $fechaActual->toDateString())
+                        ->where('adeudos.pagado_bnd', 0)
+                        ->whereNotIn('c.plantel_id', array(54))
+                        ->whereNull('cc.deleted_at')
+                        ->whereNull('c.deleted_at')
+                        ->whereNull('adeudos.deleted_at')
+                        ->whereNotIn('c.st_cliente_id', $excepcionEstatusArray)
+                        ->groupBy('p.razon')
+                        ->groupBy('adeudos.cliente_id')
+                        ->groupBy('stc.name')
+                        ->having('adeudos_cantidad', $paso->simbolo_cantidad_adeudos, $paso->cantidad_adeudos);
+                    $registros = $resultado->orderBy('cliente_id')->get();
+                }*/
+
+                //dd($registros->toArray());
                 foreach ($registros as $registro) {
                     echo $registro->cliente_id . "-";
 

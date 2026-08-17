@@ -332,11 +332,11 @@
                                     @if ($param_bloqueoXdoc == 1)
 					
                                         @if (($r->bnd_doc_oblig_entregados == 1 or $validaEntregaDocs3Meses) and $dentroPeriodoExamenes>0 or $dentroCalendarioAsignacion)
-                                            <!--
+                                            
                                             <button type="button" class="btn btn-primary btn-xs btn-guardar_caificacion"
                                                 data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
                                                 data-cliente_id="{{ $r->id }}">Actualizar</button>
-                                            -->
+                                            
                                         @elseif(($r->bnd_doc_oblig_entregados == 1 or $validaEntregaDocs3Meses) and $dentroPeriodoExamenes > 0 or $check_excepcion)
                                             <button type="button" class="btn btn-primary btn-xs btn-guardar_caificacion"
                                                 data-calificacion_ponderacion_id="{{ $r->calificacion_ponderacion_id }}"
