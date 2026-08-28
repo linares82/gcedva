@@ -1497,8 +1497,14 @@ Agregar nuevo registro
                 //console.log(data);
 
                 if(typeof data.msj === 'undefined'){
+                    /*
+                        $('#calendario_extras').html(
+                            `<div class="">Lectivo Calendario: <span class="badge">
+                            ${data[1].lectivo_inscripcion} </span></div>`
+                        );    */    
+                    
                 $('#calendario_extras').html(
-                    `<div class="">Calendario examenes extras del: <span class="badge">
+                    `<div class="">Calendario: <span class="badge">
                     ${data.fec_inicio} </span> al <span class="badge">
                     ${data.fec_fin} </span></div>`
                 );
@@ -2096,12 +2102,20 @@ Agregar nuevo registro
 
     $('#comentario-adeudo').val($(this).data('comentario'));
     
-    
-    if($(this).data('caja_concepto')==1 ||
+    @php
+        $conceptos_inscripcion_e_iniciales=App\Param::where('llave', 'caja_inscripcion_e_iniciales')->first();
+        $conceptos_inscripcion_e_iniciales_array=array_map('intval',explode(',', $conceptos_inscripcion_e_iniciales->valor));
+    @endphp
+    /*if($(this).data('caja_concepto')==1 ||
     $(this).data('caja_concepto')==22 || 
     $(this).data('caja_concepto')==23 || 
     $(this).data('caja_concepto')==25 ||
-    $(this).data('caja_concepto')==438){
+    $(this).data('caja_concepto')==438)*/
+    conceptos_inscripcion=@php echo json_encode($conceptos_inscripcion_e_iniciales_array); @endphp;
+    //console.log(conceptos_inscripcion);
+    //console.log($(this).data('caja_concepto'));
+    if(conceptos_inscripcion.includes($(this).data('caja_concepto')))
+    {
         $('#descuento_inscripcion').show();
         $('#porcentaje-adeudo').val($(this).data('porcentaje'));
         $('#autorizado_por-adeudo').val($(this).data('autorizado_por')).change();

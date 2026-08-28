@@ -133,6 +133,7 @@ class PeriodoEstudiosController extends Controller
     {
         $input = $request->except('materia_id-field');
         $materias = $request->get('materia_id-field');
+        //dd($materias);
 
         $input['usu_mod_id'] = Auth::user()->id;
         if (!isset($input['bnd_activo']) and Auth::user()->can('periodoEstudios.bnd_activo')) {
@@ -142,9 +143,13 @@ class PeriodoEstudiosController extends Controller
         //update data
         $periodoEstudio = $periodoEstudio->find($id);
         $periodoEstudio->update($input);
+
         if ($request->has('materia_id-field')) {
             foreach ($materias as $m) {
-                $periodoEstudio->materias()->attach($m);
+                //dd($periodoEstudio->materias->where('id', $m)->count());
+                if ($periodoEstudio->materias->where('id', $m)->count() == 0) {
+                    $periodoEstudio->materias()->attach($m);
+                }
             }
             /*
             foreach($periodoEstudio->materias as $materia){

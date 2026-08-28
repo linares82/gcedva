@@ -874,8 +874,9 @@ class HacademicasController extends Controller
                 ->where('hacademicas.materium_id', '=', $asignacionAcademica->materium_id)
                 ->where('c.tpo_examen_id', '=', $data['tpo_examen_id'])
                 ->where('cp.carga_ponderacion_id', '=', $data['carga_ponderacion_id'])
-                ->WhereRaw('((hacademicas.st_materium_id = ? and cli.st_cliente_id=?) or 
-                            (hacademicas.st_materium_id = ? and cli.st_cliente_id=?))', [2, 3, 2, 4])
+                ->WhereRaw('((hacademicas.st_materium_id = ? and cli.st_cliente_id=?) or
+                            (hacademicas.st_materium_id = ? and cli.st_cliente_id=?) or 
+                            (hacademicas.st_materium_id = ? and cli.st_cliente_id=?))', [2, 3, 2, 4, 2, 31])
                 ->orderBy('cli.ape_paterno')
                 ->orderBy('cli.ape_materno')
                 ->orderBy('cli.nombre')
@@ -1730,9 +1731,10 @@ class HacademicasController extends Controller
         $conteo_extras_materia_actual = null;
         $limite_extras = null;
         $conteo_extras = null;
+        $inscripcion = null;
         if (isset($datos['hacademica_id'])) {
             $hacademica = Hacademica::find($datos['hacademica_id']);
-            //$inscripcion = Inscripcion::where('id', $hacademica->inscripcion_id)->first();
+            $inscripcion = Inscripcion::where('id', $hacademica->inscripcion_id)->first();
 
             $calendario_extras = CalendarioExaExtra:: //where('plantel_id', $hacademica->plantel_id)
                 where('duracion_periodo_id', $hacademica->grado->duracion_periodo_id)
@@ -1825,7 +1827,7 @@ class HacademicasController extends Controller
             'conteo_extras_materia_actual',
             'limite_extras',
             'conteo_extras',
-            //'inscripcion'
+            'inscripcion'
         ))
             ->with('list', Hacademica::getListFromAllRelationApps());
     }

@@ -323,15 +323,32 @@ class GruposController extends Controller
 			'm.id as materia_id',
 			'm.name AS materia',
 			'ponde.id AS ponderacion_id',
-			'ponde.name AS ponderacion'
+			'ponde.name AS ponderacion',
+			'm.orden',
+			'm.abreviatura',
+			'm.codigo',
+			'm.creditos',
+			'm.seriada_bnd',
+			'm.bnd_activo',
+			'm.bnd_oficial',
+			'm.bnd_tiene_nombre_oficial',
+			'm.nombre_oficial',
+			'm.id_asignatura_certificado',
+			'm.serie_anterior',
+			'm.name as modulo',
+			'cc.name as caja_concepto',
+			'seriada.name as serie_anterior'
 		)
 			->join('grupos as g', 'g.plantel_id', 'plantels.id')
 			->join('grupo_periodo_estudios as gpe', 'gpe.grupo_id', 'g.id')
-			->join('periodo_estudios as pe', 'pe.id', 'gpe.periodo_estudio_id')
-			->join('plan_estudios as plan', 'plan.id', 'pe.plan_estudio_id')
+			->leftJoin('periodo_estudios as pe', 'pe.id', 'gpe.periodo_estudio_id')
+			->leftJoin('plan_estudios as plan', 'plan.id', 'pe.plan_estudio_id')
 			->join('materium_periodos as mp', 'mp.periodo_estudio_id', 'pe.id')
 			->join('materia as m', 'm.id', 'mp.materium_id')
-			->join('ponderacions as ponde', 'ponde.id', 'm.ponderacion_id')
+			->leftJoin('ponderacions as ponde', 'ponde.id', 'm.ponderacion_id')
+			->leftJoin('modulos as mod', 'mod.id', 'm.modulo_id')
+			->leftJoin('caja_conceptos as cc', 'cc.id', 'm.caja_concepto_id')
+			->leftJoin('materia as seriada', 'seriada.id', 'm.serie_anterior')
 			->whereIn('plantels.id', $request->input('plantel'))
 			//->whereNull('asignacion_academicas.deleted_at')
 			->get();

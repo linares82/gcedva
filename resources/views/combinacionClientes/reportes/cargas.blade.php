@@ -308,23 +308,41 @@
         @if(isset($lista))
         <table class="table table-condensed table-striped">
             <thead>
+                <th>No.</th>
                 <th>Plantel Id</th><th>Plantel</th>
                 <th>Grupo Id</th><th>Grupo</th>
                 <th>Periodo Estudio Id</th><th>Periodo Estudio</th>
                 <th>Plan Estudio Id</th><th>Plan Estudio</th>
                 <th>Materia Id</th><th>Materia</th>
                 <th>Ponderacion Id</th><th>Ponderacion</th>
+                <th>Orden</th><th>Abreviatura</th>
+                <th>Codigo</th><th>Creditos</th>
+                <th>Seriada</th><th>Activo</th>
+                <th>Oficial</th><th>Tiene Nombre Operativo</th>
+                <th>Nombre Operativo</th><th>Id Asignatura Certificado</th>
+                <th>Serie Anterior</th>
+                <th>Modulo</th><th>Caja Concepto Cobrar Extraordinario</th>
             </thead>
             <tbody>
+                @php
+                    $i=0;
+                @endphp
                 @foreach($lista as $item)
                 <tr>
+                    <td>{{++$i}}</td>
                     <td>{{ $item->plantel_id }}</td><td>{{ $item->razon }}</td>
                     <td>{{ $item->grupo_id }}</td><td>{{ $item->grupo }}</td>
                     <td>{{ $item->periodo_estudio_id }}</td><td>{{ $item->periodo_estudio }}</td>
                     <td>{{ $item->plan_estudio_id }}</td><td>{{ $item->plan_estudio }}</td>
                     <td>{{ $item->materia_id }}</td><td>{{ $item->materia }}</td>
                     <td>{{ $item->ponderacion_id }}</td><td>{{ $item->ponderacion }}</td>
-                    
+                    <td>{{ $item->orden }}</td><td>{{ $item->abreviatura }}</td>
+                    <td>{{ $item->codigo }}</td><td>{{ $item->creditos }}</td>
+                    <td>@if($item->seriada_bnd==1) SI @else No @endif</td><td>@if($item->bnd_activo==1) SI @else No @endif</td>
+                    <td>@if($item->bnd_oficial==1) SI @else No @endif</td><td>@if($item->bnd_tiene_nombre_oficial==1) SI @else No @endif</td>
+                    <td>{{ $item->nombre_oficial }}</td><td>{{ $item->id_asignatura_certificado }}</td>
+                    <td>{{$item->serie_anterior}}</td>
+                    <td>{{ $item->modulo }}</td><td>{{ $item->caja_concepto }}</td>
                 </tr>
                 @endforeach
                 

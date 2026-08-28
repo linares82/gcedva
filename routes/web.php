@@ -207,6 +207,15 @@ Route::get(
         'uses' => 'LectivosController@lectivoXplantelXasignacion'
     )
 )->middleware('auth');
+
+Route::get(
+    '/lectivos/getLectivoInscripcion',
+    array(
+        'as' => 'lectivos.getLectivoInscripcion',
+        //'middleware' => 'permission:lectivos.duplicate',
+        'uses' => 'LectivosController@getLectivoInscripcion'
+    )
+)->middleware('auth');
 Route::get(
     '/lectivos/lectivoOXplantelXasignacion',
     array(
@@ -5723,6 +5732,7 @@ Route::get(
         'uses' => 'AsignacionAcademicasController@getCmbLectivo'
     )
 )->middleware('auth');
+
 Route::get(
     '/asignacionAcademica/getCmbInstructor',
     array(

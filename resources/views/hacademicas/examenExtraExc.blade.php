@@ -65,7 +65,7 @@
 
                     <div class="form-group col-md-4 @if($errors->has('lectivo_id')) has-error @endif">
                         <label for="lectivo_id-field">Lectivo</label>
-                        {!! Form::select("lectivo_id", $lectivos, isset($inscripcion) ? $inscripcion->lectivo_id : null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
+                        {!! Form::select("lectivo_id", $lectivos, !is_null($inscripcion) ? $inscripcion->lectivo_id : null, array("class" => "form-control select_seguridad", "id" => "lectivo_id-field")) !!}
                         @if($errors->has("lectivo_id"))
                          <span class="help-block">{{ $errors->first("lectivo_id") }}</span>
                         @endif
@@ -254,6 +254,7 @@
 
       $('#cliente_id-field').focusout(function() {
         CmbGrado();
+        getCmbLectivos();
         $.ajax({
                   url: '{{ route("clientes.plantelXCliente") }}',
                   type: 'GET',
@@ -306,9 +307,11 @@
         //var $example = $("#especialidad_id-field").select2();
         //url: '{{ route("lectivos.lectivoOXplantelXasignacion") }}',
         $.ajax({
-            url: '{{ route("lectivos.lectivoXplantelXasignacion") }}',
+            url: '{{ route("lectivos.getLectivoInscripcion") }}',
             type: 'GET',
-            data: "plantel_id=" + $('#plantel_id-field').val() + "&lectivo_id=" + $('#lectivo_id-field option:selected').val() + "",
+            data: {
+                cliente_id: $('#cliente_id-field').val()
+            },
             dataType: 'json',
             beforeSend: function () {
                 $("#loading").show();

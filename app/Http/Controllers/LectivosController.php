@@ -6,6 +6,7 @@ use App\DiaNoHabil;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\createLectivo;
 use App\Http\Requests\updateLectivo;
+use App\Inscripcion;
 use App\Lectivo;
 use App\PeriodoExamen;
 use Auth;
@@ -439,6 +440,20 @@ class LectivosController extends Controller
             } else {
                 return $r;
             }
+        }
+    }
+
+    public function getLectivoInscripcion(Request $request)
+    {
+        if ($request->ajax()) {
+            $datos = $request->all();
+
+            $lectivos = Lectivo::join('inscripcions as i', 'i.lectivo_id', 'lectivos.id')
+                ->whereNull('i.deleted_at')
+                ->where('i.cliente_id', $datos['cliente_id'])
+                ->select('lectivos.id', 'lectivos.name')
+                ->get();
+            return json_encode($lectivos->toArray());
         }
     }
 }

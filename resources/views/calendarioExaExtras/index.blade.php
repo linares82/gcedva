@@ -59,11 +59,18 @@
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['plantels.razon_lt']) ?: '' }}" name="q[plantels.razon_lt]" id="q_plantels.razon_lt" />
                                 </div>
                             </div>
-                            -->
+                            
                             <div class="form-group col-md-4">
                                 <label class="control-label" for="q_plantels.razon_cont">PLANTEL</label>
                                 <div class="">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['plantels.razon_cont']) ?: '' }}" name="q[plantels.razon_cont]" id="q_plantels.razon_cont" />
+                                </div>
+                            </div>
+                            -->    
+                            <div class="form-group col-md-4">
+                                <label class="control-label" for="q_lectivos.name_cont">LECTIVO</label>
+                                <div class="">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['lectivos.name_cont']) ?: '' }}" name="q[lectivos.name_cont]" id="q_lectivos.name_cont" />
                                 </div>
                             </div>
                                                     <!--
