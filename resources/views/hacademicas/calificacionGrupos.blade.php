@@ -378,6 +378,13 @@
                                                     class="btn btn-warning btn-xs" target="_blank">Incidencia Extra
                                                     {{ $r->cont_inci }}</a>
                                             @endpermission
+                                        @elseif($r->st_materium_id == 1)
+                                            @permission('incidenciasCalificacions.createIncidenciaExtraAprobada')
+                                                <a target="_blank"
+                                                    href="{{ route('incidenciasCalificacions.create', ['calificacion_ponderacion_id' => $r->calificacion_ponderacion_id]) }}"
+                                                    class="btn btn-warning btn-xs" target="_blank">Incidencia Extra Cambio Calif.
+                                                    {{ $r->cont_inci }}</a>
+                                            @endpermission
                                         @endif
                                     @endif
                                 @endif

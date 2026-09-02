@@ -195,7 +195,7 @@ class CalendarioExaExtrasController extends Controller
 		//dd($combinacion->toArray());
 		$calendarios = CalendarioExaExtra:: //where('plantel_id', $datos['plantel_id'])
 			where('duracion_periodo_id', $datos['duracion_id'])
-			->where('lectivo_id', $inscripcion->lectivo_id)
+			//->where('lectivo_id', $inscripcion->lectivo_id)
 			->orderBy('id', 'DESC')
 			->whereDate('fec_inicio', '<=', date('Y-m-d'))
 			->whereDate('fec_fin', '>=', date('Y-m-d'))

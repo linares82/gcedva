@@ -3665,7 +3665,8 @@ class InscripcionsController extends Controller
                 'm.creditos',
                 'l.name as lectivo',
                 'hacademicas.id',
-                'hacademicas.cliente_id'
+                'hacademicas.cliente_id',
+                'hacademicas.materium_id'
                 //'c.calificacion',
                 //'te.id',
                 //'te.name as tipo_examen'
@@ -3697,7 +3698,8 @@ class InscripcionsController extends Controller
                 'm.creditos',
                 'l.name as lectivo',
                 'hacademicas.id',
-                'hacademicas.cliente_id'
+                'hacademicas.cliente_id',
+                'hacademicas.materium_id'
                 //'c.calificacion',
                 //'te.id',
                 //'te.name as tipo_examen'
@@ -3721,6 +3723,7 @@ class InscripcionsController extends Controller
         }
         //dd($hacademicas->toArray());
         foreach ($hacademicas as $hacademica) {
+
             $tpo_examen_max = Calificacion::where('hacademica_id', $hacademica->id)->max('tpo_examen_id');
             $calificacion = Calificacion::select('calificacions.calificacion', 'te.name as tipo_examen')
                 ->join('tpo_examens as te', 'te.id', 'calificacions.tpo_examen_id')
@@ -3737,6 +3740,9 @@ class InscripcionsController extends Controller
                 'calificacion' => $calificacion->calificacion,
                 'tipo_examen' => $calificacion->tipo_examen,
             );
+            if ($hacademica->materia == "Entorno Social de la IngenierÃ­a Automotriz") {
+                //dd($calificacion);
+            }
             //dd($resultado);
             array_push($resultados, $resultado);
         }
