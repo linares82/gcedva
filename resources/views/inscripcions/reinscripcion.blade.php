@@ -86,10 +86,10 @@
                             <td><input type="checkbox" id="select-all" /> Todos<br/></td>
                             <td>Cliente-Estatus</td><td></td><td>Periodo Estudios(Duracion)</td>
                             <td>Aprobadas</td><td>No Aprobadas</td>
-                            <td>Tiene Materias No aprobadas en 2 o mas lectivos</td>
+                            <!--<td>Tiene Materias No aprobadas en 2 o mas lectivos</td>-->
                             <td>M. Seriadas No Aprobadas O.</td>
                             <td>M. Seriadas No Aprobadas No O.</td>
-                            <td>No Aprobadas Sin Extra 2 Lectivos</td>
+                            <td>No Aprobadas mas alla de 2 Lectivos</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -97,8 +97,11 @@
                         @foreach($resultados as $c)
                         <tr>
                             <td>
+                                @php
+                                    //echo count($c['no_aprobadas_sin_extra_varios_lectivos']);
+                                @endphp
                                 @if(!is_null($c['bloqueo_cantidad_reprobadas']))
-                                    @if($c['no_aprobadas']<$c['bloqueo_cantidad_reprobadas'] and $c['no_aprobadas_diferentes_lectivos']<2)
+                                    @if($c['no_aprobadas']<$c['bloqueo_cantidad_reprobadas'] and count($c['no_aprobadas_sin_extra_varios_lectivos'])==0 /*and $c['no_aprobadas_diferentes_lectivos']<2*/)
                                         {{ Form::checkbox("id[]", $c['id']) }}
                                     @endif
                                 @elseif($c['no_aprobadas']<$bloqueo_materias_desaprobadas->valor)
@@ -133,6 +136,7 @@
                                     <span class="badge bg-red">{{ $c['no_aprobadas'] }}</span>
                                 @endif
                             </td>
+                            <!--
                             <td>
                                 @if($c['no_aprobadas_diferentes_lectivos']>=2)
                                 <span class="badge bg-red">SI</span>
@@ -141,9 +145,17 @@
                                 @endif
                                 ({{ $c['no_aprobadas_diferentes_lectivos'] }} Lectivos)
                             </td>
+                        -->
                             <td>{{ $c['no_aprobadas_seriadas_oficiales'] }}</td>
                             <td>{{ $c['no_aprobadas_seriadas_no_oficiales'] }}</td>
-                            <td>{{ count($c['no_aprobadas_sin_extra_varios_lectivos']) }}</td>
+                            <td>
+                                @if(count($c['no_aprobadas_sin_extra_varios_lectivos']) > 0)
+                                    <span class="badge bg-red">{{ count($c['no_aprobadas_sin_extra_varios_lectivos']) }}</span>
+                                @else
+                                    <span class="badge bg-green"> </span>
+                                @endif
+                                
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -370,9 +382,9 @@
                       $('#periodo_estudios_to-field').append($('<option></option>').text('Seleccionar').val('0'));
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          if(data[i].bnd_activo==1){
+                          //if(data[i].bnd_activo==1){
                             $('#periodo_estudios_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
-                          }
+                          //}
                           
                           
                       });
@@ -399,9 +411,9 @@
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          if(data[i].bnd_activo==1){
+                          //if(data[i].bnd_activo==1){
                             $('#grupo_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
-                          }
+                          //}
                           
                       });
                       //$example.select2();
@@ -427,9 +439,9 @@
                       $('#grupo_to-field').append($('<option></option>').text('Seleccionar').val('0'));
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          if(data[i].bnd_activo==1){
+                          //if(data[i].bnd_activo==1){
                             $('#grupo_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
-                          }
+                          //}
                           //$('#grupo_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
@@ -459,9 +471,9 @@
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          if(data[i].bnd_activo==1){
+                          //if(data[i].bnd_activo==1){
                             $('#especialidad_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
-                          }
+                          //}
                           //$('#especialidad_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
@@ -487,9 +499,9 @@
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          if(data[i].bnd_activo==1){
+                          //if(data[i].bnd_activo==1){
                             $('#especialidad_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
-                          }
+                          //}
                           //$('#especialidad_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
@@ -518,9 +530,9 @@
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          if(data[i].bnd_activo==1){
+                          //if(data[i].bnd_activo==1){
                             $('#nivel_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
-                          }
+                          //}
                           //$('#nivel_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
@@ -549,9 +561,9 @@
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          if(data[i].bnd_activo==1){
+                          //if(data[i].bnd_activo==1){
                             $('#nivel_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
-                          }
+                          //}
                           //$('#nivel_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
@@ -581,9 +593,9 @@
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          if(data[i].bnd_activo==1){
+                          //if(data[i].bnd_activo==1){
                             $('#grado_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
-                          }
+                          //}
                           //$('#grado_id-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();
@@ -614,9 +626,9 @@
                       
                       $.each(data, function(i) {
                           //alert(data[i].name);
-                          if(data[i].bnd_activo==1){
+                          //if(data[i].bnd_activo==1){
                             $('#grado_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");  
-                          }
+                          //}
                           //$('#grado_to-field').append("<option "+data[i].selectec+" value=\""+data[i].id+"\">"+data[i].name+"<\/option>");
                       });
                       //$example.select2();

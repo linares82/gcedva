@@ -219,7 +219,7 @@
                                     @endpermission
                                     @permission('hacademicas.calificacionIncidencia')
                                     @php
-                                        $calendarioIncidencias=$asignacionAcademica->lectivo->calendarioIncidenciaCals;
+                                        $calendarioIncidencias=optional($asignacionAcademica->lectivo)->calendarioIncidenciaCals;
                                         
                                         $dentroCalendarioIncidencias=false;
                                         foreach($calendarioIncidencias as $calendario){

@@ -317,6 +317,7 @@ class AutorizacionBecasController extends Controller
 				->join('st_becas as stb', 'stb.id', '=', 'autorizacion_becas.st_beca_id')
 				//->whereColumn('autorizacion_becas.lectivo_id', 'i.lectivo_id')
 				->where('p.id', $datos['plantel_f'])
+				->whereColumn('i.lectivo_id', 'autorizacion_becas.lectivo_id')
 				->whereIn('autorizacion_becas.st_beca_id', $datos['estatus_f'])
 				//->where('n.id', $datos['nivel_f'])
 				//->where('e.id', $datos['especialidad_f'])

@@ -317,6 +317,7 @@ class AdeudosController extends Controller
         $cliente = Cliente::find($data['cliente']);
         $plantel = Plantel::find($cliente->plantel_id);
         $combinacion = CombinacionCliente::find($data['combinacion']);
+        $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
 
         if ($combinacion->cuenta_ticket_pago == 0) {
             foreach ($combinacion->planPago->Lineas as $adeudo) {
@@ -341,7 +342,6 @@ class AdeudosController extends Controller
         $combinacion->save();
 
         if ($combinacion->cuenta_ticket_pago == 1 and is_null($cliente->st_cliente_id)) {
-            $seguimiento = Seguimiento::where('cliente_id', $cliente->id)->first();
             $seguimiento->st_seguimiento_id = 5;
             $seguimiento->save();
 

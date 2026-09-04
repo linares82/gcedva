@@ -590,7 +590,8 @@ class InscripcionsController extends Controller
                 $no_aprobadas_sin_extra_varios_lectivos = array();
                 foreach ($no_aprobadas_diferentes_lectivos as $no_aprobada_llave => $no_aprobada_valor) {
                     //descartar materias ya recursadas y aprobadas
-                    $recursada_aprobada = $this->revisarNoAprobadaRecursadaAprobada($c->cliente, $no_aprobada_valor->materia_id);
+                    $recursada_aprobada = $this->revisarNoAprobadaRecursadaAprobada($c->cliente, $no_aprobada_valor->materia_id/*, $no_aprobada_valor->lectivo_id*/);
+                    //dd($recursada_aprobada);
                     if ($recursada_aprobada > 0) {
                         $no_aprobadas_diferentes_lectivos->forget($no_aprobada_llave);
                     }
@@ -600,10 +601,29 @@ class InscripcionsController extends Controller
                     $extraordinario_existente = Calificacion::where('hacademica_id', $no_aprobada_valor->hacademica_id)
                         ->where('tpo_examen_id', 2)
                         ->count();
+                    //dd($no_aprobada_valor);
                     if ($extraordinario_existente == 0) {
-                        $conteo_lectivos_transcurridos = $this->recursiva_revisar_lectivos_transcurridos($no_aprobada_valor->lectivo_id, 1);
+                        //dd($c->cliente);
+                        $lista_lectivos = Hacademica::select('lectivo_id')
+                            ->distinct()
+                            ->where('cliente_id', $c->cliente)
+                            ->orderBy('lectivo_id', 'desc')
+                            ->pluck('lectivo_id')
+                            ->toArray();
+                        //dd($lista_lectivos);
+
+                        array_shift($lista_lectivos);
+                        array_shift($lista_lectivos);
+                        //dd($lista_lectivos);
+                        if (in_array($no_aprobada_valor->lectivo_id, $lista_lectivos)) {
+                            $conteo_lectivos_transcurridos = 2; //Siempre que aparezca el lectivo en la lista
+                        }
+
+
+                        //$conteo_lectivos_transcurridos = $this->recursiva_revisar_lectivos_transcurridos($no_aprobada_valor->lectivo_id, 1);
                     }
                     //dd($no_aprobada_valor);
+                    //dd($conteo_lectivos_transcurridos);
                     if ($conteo_lectivos_transcurridos >= 2) {
                         array_push($no_aprobadas_sin_extra_varios_lectivos, [
                             'hacademica_id' => $no_aprobada_valor->hacademicaa_id,
@@ -634,7 +654,7 @@ class InscripcionsController extends Controller
                 $no_aprobadas_seriadas_oficiales = "";
                 foreach ($no_aprobadas_modulo as $no_aprobada) {
                     if ($no_aprobada->seriada_bnd == 1 and $no_aprobada->bnd_oficial == 1) {
-                        if ($this->revisarNoAprobadaRecursadaAprobada($c->cliente, $no_aprobada->id) == 0) {
+                        if ($this->revisarNoAprobadaRecursadaAprobada($c->cliente, $no_aprobada->id/*, $no_aprobada_valor->lectivo_id*/) == 0) {
                             $no_aprobadas_seriadas_oficiales = $no_aprobadas_seriadas_oficiales . "-" . $no_aprobada->materia;
                         }
                     }
@@ -643,7 +663,7 @@ class InscripcionsController extends Controller
                 $no_aprobadas_seriadas_no_oficiales = "";
                 foreach ($no_aprobadas_modulo as $no_aprobada) {
                     if ($no_aprobada->seriada_bnd == 1 and $no_aprobada->bnd_oficial <> 1) {
-                        if ($this->revisarNoAprobadaRecursadaAprobada($c->cliente, $no_aprobada->id) == 0) {
+                        if ($this->revisarNoAprobadaRecursadaAprobada($c->cliente, $no_aprobada->id/*, $no_aprobada_valor->lectivo_id*/) == 0) {
                             $no_aprobadas_seriadas_no_oficiales = $no_aprobadas_seriadas_no_oficiales . "-" . $no_aprobada->materia;
                         }
                     }
@@ -665,7 +685,8 @@ class InscripcionsController extends Controller
                     'no_aprobadas' => $contar_materias_no_aprobadas,
                     'aprobadas_modulo' => $aprobadas_modulo,
                     'no_aprobadas_modulo' => $no_aprobadas_modulo,
-                    'no_aprobadas_diferentes_lectivos' => count($no_aprobadas_diferentes_lectivos->unique('lectivo_id')),
+                    //'no_aprobadas_diferentes_lectivos' => count($no_aprobadas_diferentes_lectivos->unique('lectivo_id')),
+                    'no_aprobadas_diferentes_lectivos' => 0,
                     'no_aprobadas_seriadas_oficiales' => $no_aprobadas_seriadas_oficiales,
                     'no_aprobadas_seriadas_no_oficiales' => $no_aprobadas_seriadas_no_oficiales,
                     'no_aprobadas_sin_extra_varios_lectivos' => $no_aprobadas_sin_extra_varios_lectivos
@@ -688,11 +709,12 @@ class InscripcionsController extends Controller
      */
     }
 
-    public function revisarNoAprobadaRecursadaAprobada($cliente_id, $no_aprobada)
+    public function revisarNoAprobadaRecursadaAprobada($cliente_id, $no_aprobada/*, $lectivo_id*/)
     {
         return $buscarEnHistoria = Hacademica::where('cliente_id', $cliente_id)
             ->where('materium_id', $no_aprobada)
             ->where('st_materium_id', 1)
+            //->where('lectivo_id', '<>', $lectivo_id)
             ->count();
     }
 

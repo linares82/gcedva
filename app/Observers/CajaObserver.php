@@ -122,6 +122,8 @@ class CajaObserver
                     if ($inscripcions->isEmpty()) {
                         $cliente->st_cliente_id = 22;
                         $cliente->save();
+                        $seguimiento->st_seguimiento_id = 2; //100%
+                        $seguimiento->save();
                     }
                     if ($adeudos == 0 and !$inscripcions->isEmpty()) {
 
