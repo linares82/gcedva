@@ -95,7 +95,12 @@ class AsistenciaRsController extends Controller
 			$hoy = strtotime(date('Y-m-d'));
 			$hoyCarbon = Carbon::createFromFormat('Y-m-d', $input['fecha']);
 			//dd($hoyCarbon->dayOfWeekIso);
-			if ((strtotime($input['fecha']) == $hoy && strtotime($as->fec_inicio) <= strtotime($input['fecha']) && strtotime($as->fec_fin) >= strtotime($input['fecha']))
+			if ((strtotime($input['fecha']) == $hoy &&
+					strtotime($as->fec_inicio) <= strtotime($input['fecha']) &&
+					strtotime($as->fec_fin) >= strtotime(
+						$input['fecha']
+					)
+				)
 				or isset($input['excepcion'])
 			) {
 

@@ -1504,7 +1504,10 @@ Agregar nuevo registro
                         );    */    
                     
                 $('#calendario_extras').html(
-                    `<div class="">Calendario: <span class="badge">
+                    `<div class="">
+                        Inscripcion Lectivo: ${data[1].lectivo_inscripcion}
+                        <br/>
+                        Calendario: <span class="badge">
                     ${data.fec_inicio} </span> al <span class="badge">
                     ${data.fec_fin} </span></div>`
                 );

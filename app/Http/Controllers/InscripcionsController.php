@@ -612,7 +612,7 @@ class InscripcionsController extends Controller
                             ->toArray();
                         //dd($lista_lectivos);
 
-                        array_shift($lista_lectivos);
+                        array_shift($lista_lectivos); //eliminar 2 lectivos recientes
                         array_shift($lista_lectivos);
                         //dd($lista_lectivos);
                         if (in_array($no_aprobada_valor->lectivo_id, $lista_lectivos)) {
@@ -624,6 +624,7 @@ class InscripcionsController extends Controller
                     }
                     //dd($no_aprobada_valor);
                     //dd($conteo_lectivos_transcurridos);
+                    //se integra una lista de materias no aprobadas
                     if ($conteo_lectivos_transcurridos >= 2) {
                         array_push($no_aprobadas_sin_extra_varios_lectivos, [
                             'hacademica_id' => $no_aprobada_valor->hacademicaa_id,

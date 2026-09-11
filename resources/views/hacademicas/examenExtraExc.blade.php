@@ -254,7 +254,7 @@
 
       $('#cliente_id-field').focusout(function() {
         CmbGrado();
-        getCmbLectivos();
+        //getCmbLectivos();
         $.ajax({
                   url: '{{ route("clientes.plantelXCliente") }}',
                   type: 'GET',
