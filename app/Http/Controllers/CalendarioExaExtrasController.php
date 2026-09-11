@@ -191,6 +191,7 @@ class CalendarioExaExtrasController extends Controller
 		$datos = $request->all();
 
 		$inscripcion = Inscripcion::where('cliente_id', $datos['cliente_id'])->first();
+		//dd($inscripcion);
 		$combinacion = CombinacionCliente::where('cliente_id', $datos['cliente_id'])->with('grado.duracionPeriodo')->first();
 		//dd($combinacion->toArray());
 		$calendarios = CalendarioExaExtra:: //where('plantel_id', $datos['plantel_id'])
@@ -199,13 +200,14 @@ class CalendarioExaExtrasController extends Controller
 			->orderBy('id', 'DESC')
 			->whereDate('fec_inicio', '<=', date('Y-m-d'))
 			->whereDate('fec_fin', '>=', date('Y-m-d'))
-			->where('bnd_extra_sin_caja', '<>', 1)
+			//->where('bnd_extra_sin_caja', '<>', 1)
 			->get();
 		//dd($calendario);
 		if (count($calendarios) == 0) {
 			return json_encode(array('msj' => 'No hay calendario de exámenes extras para este periodo'));
 		}
 
+		$detalle = array();
 		if (count($calendarios) > 0) {
 			foreach ($calendarios as $calendario) {
 				$consulta_extras = Calificacion::select(
@@ -221,14 +223,16 @@ class CalendarioExaExtrasController extends Controller
 					DB::raw('(select count(c.id) from cajas as c inner join caja_lns as cl on cl.caja_id=c.id inner join calificacions as calif on calif.id=cl.calificacion_id inner join hacademicas as h2 on h2.id=calif.hacademica_id where c.st_caja_id=1 and date(c.fecha)>="' . $calendario->fec_inicio . '" and date(c.fecha)<="' . $calendario->fec_fin . '" and cl.caja_concepto_id=m.caja_concepto_id and h2.materium_id=h.materium_id and c.cliente_id=h.cliente_id and cl.deleted_at is null) as cajas_existentes')
 				)
 					->join('hacademicas as h', 'h.id', 'calificacions.hacademica_id')
+					->join('inscripcions as i', 'i.id', 'h.inscripcion_id')
 					->join('grados as g', 'g.id', 'h.grado_id')
 					->join('duracion_periodos as dp', 'dp.id', 'g.duracion_periodo_id')
 					->join('lectivos as l', 'l.id', 'calificacions.lectivo_id')
 					->join('materia as m', 'm.id', 'h.materium_id')
 					->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
+					->whereNull('bnd_extra_sin_caja')
 					//->where('h.materium_id', $hacademica->materium_id)
 					->where('h.cliente_id', $datos['cliente_id'])
-					->where('calificacions.lectivo_id', $calendario->lectivo_id)
+					->where('i.lectivo_id', $calendario->lectivo_id)
 					->whereDate('calificacions.fecha', '>=', $calendario->fec_inicio)
 					->whereDate('calificacions.fecha', '<=', $calendario->fec_fin)
 					->where('tpo_examen_id', 2)
@@ -240,6 +244,7 @@ class CalendarioExaExtrasController extends Controller
 					array_push($detalle, $consulta_extras->toArray());
 				}
 			}
+			//dd($detalle);
 			array_push($detalle, array('lectivo_inscripcion' => $inscripcion->lectivo->name));
 			//dd($detalle);
 		}
