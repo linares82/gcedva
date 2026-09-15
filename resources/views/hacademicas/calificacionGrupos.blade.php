@@ -389,7 +389,7 @@
                                     @endif
                                 @elseif ($calendarioExtras == 0)
                                     @if ($r->tpo_examen_id == 2 and $r->bnd_extra_sin_caja==1)            
-                                        @permission('incidenciasCalificacions.create')
+                                        @permission('incidenciasCalificacions.createIncidenciaExtraAprobada')
                                             <a target="_blank"
                                                 href="{{ route('incidenciasCalificacions.create', ['calificacion_ponderacion_id' => $r->calificacion_ponderacion_id]) }}"
                                                 class="btn btn-warning btn-xs" target="_blank">Incidencia Extra

@@ -1680,6 +1680,23 @@ Route::post(
 )->middleware('auth');
 
 Route::get(
+    '/clientes/cambiosMatricula/',
+    array(
+        'as' => 'clientes.cambiosMatricula',
+        'middleware' => 'permission:clientes.cambiosMatricula',
+        'uses' => 'ClientesController@cambiosMatricula'
+    )
+)->middleware('auth');
+Route::post(
+    '/clientes/cambiosMatriculaR/',
+    array(
+        'as' => 'clientes.cambiosMatriculaR',
+        'middleware' => 'permission:clientes.cambiosMatricula',
+        'uses' => 'ClientesController@cambiosMatriculaR'
+    )
+)->middleware('auth');
+
+Route::get(
     '/clientes/concretadosComisiones/',
     array(
         'as' => 'clientes.concretadosComisiones',

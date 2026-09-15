@@ -4403,4 +4403,57 @@ class ClientesController extends Controller
             )
         );
     }
+
+    public function cambiosMatricula()
+    {
+        $e = Empleado::where('user_id', Auth::user()->id)->first();
+        $plantels = array();
+        foreach ($e->plantels as $p) {
+            array_push($plantels, $p->id);
+        }
+        $planteles = Plantel::whereIn('id', $plantels)->pluck('razon', 'id');
+        return view('clientes.reportes.cambiosMatricula', compact('planteles'))
+            ->with('list', Cliente::getListFromAllRelationApps());
+    }
+
+    public function cambiosMatriculaR(Request $request)
+    {
+        $datos = $request->all();
+        //dd($datos);
+
+        $resultados = Cliente::select(
+            'p.razon as plantel',
+            'clientes.id as cliente_id',
+            'clientes.nombre',
+            'clientes.nombre2',
+            'clientes.ape_paterno',
+            'clientes.ape_materno',
+            'r.old_value as matricula_anterior',
+            'r.new_value as matricula_nueva',
+            'r.created_at as fecha_cambio',
+            'u.name as responsable'
+        )
+            ->join('plantels as p', 'p.id', '=', 'clientes.plantel_id')
+            //->join('revisions as r', 'clientes.id', '=', 'r.revisionable_id')
+            ->join('revisions as r', 'r.revisionable_id', '=', 'clientes.id')
+            ->join('users as u', 'u.id', 'r.user_id')
+            //->where('r.revisionable_type', 'App\Models\Cliente')
+            ->whereIn('clientes.plantel_id', $datos['plantel_f'])
+            ->where('clientes.matricula', 'like', $datos['inicio_matricula'] . "%")
+            ->where('r.key', 'matricula')
+            ->orderBy('clientes.id')
+            ->get();
+        //dd($resultados);
+
+        //$plantels = Plantel::whereIn('id', $datos['plantel_f'])->with(['clientes'])->get();
+        //dd($plantels);
+        /*foreach ($plantels as $plantel) {
+            $clientes = $plantel->clientes()
+                //->whereIn('id', array('102704', '104252', '104288'))
+                ->where('matricula', 'like', $datos['inicio_matricula'] . "%")
+                ->get();
+        }*/
+
+        return view('clientes.reportes.cambiosMatriculaR', compact('resultados'));
+    }
 }
