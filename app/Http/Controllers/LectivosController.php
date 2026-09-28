@@ -419,7 +419,8 @@ class LectivosController extends Controller
                 ->get();
 
             //dd($r);
-            $r->prepend("Seleccionar opción", "0");
+            //$r->prepend("Seleccionar opciÃ³n", "0"); //Se quita por el reporte de inscripcion reinscripcon por q susutituye un valor inicial
+
             if (isset($lectivo) and $lectivo != 0) {
                 foreach ($r as $r1) {
                     if ($r1->id == $lectivo) {

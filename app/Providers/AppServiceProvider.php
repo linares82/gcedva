@@ -3,58 +3,58 @@
 namespace App\Providers;
 
 
-use Auth;
-use App\Caja;
-use App\Lead;
-use App\Pago;
-use App\Aviso;
 use App\Adeudo;
 use App\Alumno;
-use App\Egreso;
-use App\Mueble;
-use App\Cliente;
-use App\Empleado;
-use App\Prospecto;
-use App\AsistenciaR;
-use App\Inscripcion;
-use App\Seguimiento;
-use App\Transference;
-use App\ProspectoAviso;
-use Studio\Totem\Totem;
 use App\AsignacionTarea;
-use App\CuentasEfectivo;
-use App\HistoriaCliente;
-use App\HCalifPonderacion;
-use App\PeticionMultipago;
-use App\ProspectoSeguimiento;
-use App\Observers\CajaObserver;
-use App\Observers\LeadObserver;
-use App\Observers\PagoObserver;
+use App\AsistenciaR;
+use App\Aviso;
+use App\Caja;
 use App\CalificacionPonderacion;
-use App\Observers\AvisoObserver;
+use App\Cliente;
+use App\CuentasEfectivo;
+use App\Egreso;
+use App\Empleado;
+use App\HCalifPonderacion;
+use App\HistoriaCliente;
+use App\Inscripcion;
+use App\Lead;
+use App\Mueble;
 use App\Observers\AdeudoObserver;
 use App\Observers\AlumnoObserver;
-use App\Observers\EgresoObserver;
-use App\Observers\MuebleObserver;
-use App\ProspectoAsignacionTarea;
-use App\Observers\ClienteObserver;
-use Illuminate\Support\Collection;
-use App\Observers\EmpleadoObserver;
-use App\Observers\ProspectoObserver;
+use App\Observers\AsignacionTareaObserver;
 use App\Observers\AsistenciaRObserver;
+use App\Observers\AvisoObserver;
+use App\Observers\CajaObserver;
+use App\Observers\CalificacionPonderacionObserver;
+use App\Observers\ClienteObserver;
+use App\Observers\CuentasEfectivoObserver;
+use App\Observers\EgresoObserver;
+use App\Observers\EmpleadoObserver;
+use App\Observers\HistoriaClienteObserver;
 use App\Observers\InscripcionObserver;
+use App\Observers\LeadObserver;
+use App\Observers\MuebleObserver;
+use App\Observers\PagoObserver;
+use App\Observers\PeticionMultipagoObserver;
+use App\Observers\ProspectoAsignacionTareaObserver;
+use App\Observers\ProspectoAvisoObserver;
+use App\Observers\ProspectoObserver;
+use App\Observers\ProspectoSeguimientoObserver;
 use App\Observers\SeguimientoObserver;
 use App\Observers\TransferenceObserver;
-use Illuminate\Support\ServiceProvider;
-use App\Observers\ProspectoAvisoObserver;
-use App\Observers\AsignacionTareaObserver;
-use App\Observers\CuentasEfectivoObserver;
-use App\Observers\HistoriaClienteObserver;
-use App\Observers\PeticionMultipagoObserver;
-use App\Observers\ProspectoSeguimientoObserver;
+use App\Pago;
+use App\PeticionMultipago;
+use App\Prospecto;
+use App\ProspectoAsignacionTarea;
+use App\ProspectoAviso;
+use App\ProspectoSeguimiento;
+use App\Seguimiento;
+use App\Transference;
+use Auth;
 use Illuminate\Pagination\LengthAwarePaginator;
-use App\Observers\CalificacionPonderacionObserver;
-use App\Observers\ProspectoAsignacionTareaObserver;
+use Illuminate\Support\Collection;
+use Illuminate\Support\ServiceProvider;
+use Studio\Totem\Totem;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -65,6 +65,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
         //
         Alumno::observe(AlumnoObserver::class);
         AsistenciaR::observe(AsistenciaRObserver::class);

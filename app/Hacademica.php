@@ -2,15 +2,17 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Traits\GetAllDataTrait;
 use App\Traits\RelationManagerTrait;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 class Hacademica extends Model
 {
 	use RelationManagerTrait, GetAllDataTrait;
 	use SoftDeletes;
+	use RevisionableTrait;
 
 	public function __construct(array $attributes = array())
 	{
@@ -27,7 +29,7 @@ class Hacademica extends Model
 	}
 
 	//Mass Assignment
-	protected $fillable = ['inscripcion_id', 'cliente_id', 'plantel_id', 'especialidad_id', 'nivel_id', 'grado_id', 'grupo_id', 'materium_id', 'st_materium_id', 'lectivo_id', 'usu_alta_id', 'usu_mod_id','fec_inscripcion','turno_id','periodo_estudio_id'];
+	protected $fillable = ['inscripcion_id', 'cliente_id', 'plantel_id', 'especialidad_id', 'nivel_id', 'grado_id', 'grupo_id', 'materium_id', 'st_materium_id', 'lectivo_id', 'usu_alta_id', 'usu_mod_id', 'fec_inscripcion', 'turno_id', 'periodo_estudio_id'];
 
 	public function usu_alta()
 	{
