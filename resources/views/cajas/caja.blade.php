@@ -786,6 +786,7 @@
                             ">
                             
                             <td>
+                                
                                 @if($adeudo->pagado_bnd==0)
                                 @if($adeudo->inicial_bnd==1)
                                     <?php 
@@ -814,12 +815,19 @@
                                     ->where('bnd_reinscripcion', 1)->first();
                                     //dd($reinscripcion_no_pagada);
 
-                                    $materias_no_aprobadas = \App\Hacademica::select('m.name as materia', 'l.name as lectivo', 'hacademicas.st_materium_id')
+                                    $inscripcion=\App\Inscripcion::where('cliente_id', $adeudo->cliente_id)->first();
+                                    //dd($inscripcion->lectivo->fin<date('Y-m-d'));
+
+                                    $materias_no_aprobadas_aux = \App\Hacademica::select('m.name as materia', 'l.name as lectivo', 'hacademicas.st_materium_id')
                                     ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
                                     ->where('hacademicas.cliente_id', $adeudo->cliente_id)
-                                    ->where('hacademicas.st_materium_id', 2)
+                                    ->where('hacademicas.st_materium_id', 2);
+                                
+                                    if($inscripcion->lectivo->fin>date('Y-m-d')){
+                                        $materias_no_aprobadas_aux->where('hacademicas.lectivo_id', '<', $inscripcion->lectivo_id);
+                                    }
                                     //->whereColumn('hacademicas.lectivo_id', '<', 'i.lectivo_id') // se quita validacion de lectivo
-                                    ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
+                                    $materias_no_aprobadas=$materias_no_aprobadas_aux->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
                                     ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
                                     ->whereNull('hacademicas.deleted_at')
                                     ->count();
@@ -830,7 +838,7 @@
                                     $bloqueo_cantidad_reprobadas = isset($adeudo->combinacionCliente->grado->duracionPeriodo->bloqueo_cantidad_reprobadas) ? $adeudo->combinacionCliente->grado->duracionPeriodo->bloqueo_cantidad_reprobadas : 100;
                                     //dd($bloqueo_cantidad_reprobadas);
                                     $mostrar_check=1;
-                                    //dd($adeudo->id==$reinscripcion_no_pagada->id);
+                                    //dd($materias_no_aprobadas);
                                     if(
                                     !is_null($reinscripcion_no_pagada) and 
                                     ($materias_no_aprobadas>=$bloqueo_cantidad_reprobadas) and 
@@ -1569,7 +1577,7 @@ Agregar nuevo registro
             //beforeSend : function(){$("#loading3").show(); },
             //complete : function(){$("#loading3").hide(); },
             success: function(data) {
-                console.log(data);
+                //console.log(data);
                 if(data.excepcion_activa==1){
                     $('#materias_no_aprobadas').html(
                     `<div><span class="badge bg-green">Excepcion Activa</span></div>`);

@@ -1697,13 +1697,20 @@ class HacademicasController extends Controller
         if (in_array($datos['cliente_id'], $clientes_excepcion)) {
             $excepcion_activa = 1;
         }
-        $materias_no_aprobadas = Hacademica::select('m.name as materia', 'l.name as lectivo', 'hacademicas.st_materium_id')
+
+        $inscripcion = \App\Inscripcion::where('cliente_id', $datos['cliente_id'])->first();
+        $materias_no_aprobadas_aux = Hacademica::select('m.name as materia', 'l.name as lectivo', 'hacademicas.st_materium_id')
             ->join('inscripcions as i', 'i.id', '=', 'hacademicas.inscripcion_id')
             ->join('materia as m', 'm.id', '=', 'hacademicas.materium_id')
-            ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id')
-            ->where('hacademicas.cliente_id', $datos['cliente_id'])
+            ->join('lectivos as l', 'l.id', '=', 'hacademicas.lectivo_id');
+
+        if ($inscripcion->lectivo->fin > date('Y-m-d')) {
+            $materias_no_aprobadas_aux->where('hacademicas.lectivo_id', '<', $inscripcion->lectivo_id);
+        }
+
+        $materias_no_aprobadas = $materias_no_aprobadas_aux->where('hacademicas.cliente_id', $datos['cliente_id'])
             ->where('hacademicas.st_materium_id', 2)
-            ->whereColumn('hacademicas.lectivo_id', '<', 'i.lectivo_id')
+            //->whereColumn('hacademicas.lectivo_id', '<', 'i.lectivo_id')
             ->whereNull('hacademicas.deleted_at')
             ->get();
 
