@@ -191,6 +191,9 @@ class CalendarioExaExtrasController extends Controller
 		$datos = $request->all();
 
 		$inscripcion = Inscripcion::where('cliente_id', $datos['cliente_id'])->first();
+		if (is_null($inscripcion)) {
+			return json_encode([]);
+		}
 		//dd($inscripcion);
 		$combinacion = CombinacionCliente::where('cliente_id', $datos['cliente_id'])->with('grado.duracionPeriodo')->first();
 		//dd($combinacion->toArray());
@@ -220,6 +223,7 @@ class CalendarioExaExtrasController extends Controller
 					'calificacions.id as calificacion_id',
 					'h.cliente_id',
 					'dp.bloqueo_cantidad_reprobadas',
+					'calificacions.bnd_extra_sin_caja',
 					DB::raw('(select count(c.id) from cajas as c inner join caja_lns as cl on cl.caja_id=c.id inner join calificacions as calif on calif.id=cl.calificacion_id inner join hacademicas as h2 on h2.id=calif.hacademica_id where c.st_caja_id=1 and date(c.fecha)>="' . $calendario->fec_inicio . '" and date(c.fecha)<="' . $calendario->fec_fin . '" and cl.caja_concepto_id=m.caja_concepto_id and h2.materium_id=h.materium_id and c.cliente_id=h.cliente_id and cl.deleted_at is null) as cajas_existentes')
 				)
 					->join('hacademicas as h', 'h.id', 'calificacions.hacademica_id')
@@ -229,7 +233,7 @@ class CalendarioExaExtrasController extends Controller
 					->join('lectivos as l', 'l.id', 'calificacions.lectivo_id')
 					->join('materia as m', 'm.id', 'h.materium_id')
 					->join('tpo_examens as te', 'te.id', '=', 'calificacions.tpo_examen_id')
-					->whereNull('bnd_extra_sin_caja')
+					//->whereNull('bnd_extra_sin_caja')
 					//->where('h.materium_id', $hacademica->materium_id)
 					->where('h.cliente_id', $datos['cliente_id'])
 					->where('i.lectivo_id', $calendario->lectivo_id)

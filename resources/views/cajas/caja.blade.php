@@ -823,7 +823,7 @@
                                     ->where('hacademicas.cliente_id', $adeudo->cliente_id)
                                     ->where('hacademicas.st_materium_id', 2);
                                 
-                                    if($inscripcion->lectivo->fin>date('Y-m-d')){
+                                    if(!is_null($inscripcion) and $inscripcion->lectivo->fin>date('Y-m-d')){
                                         $materias_no_aprobadas_aux->where('hacademicas.lectivo_id', '<', $inscripcion->lectivo_id);
                                     }
                                     //->whereColumn('hacademicas.lectivo_id', '<', 'i.lectivo_id') // se quita validacion de lectivo
@@ -1545,6 +1545,7 @@ Agregar nuevo registro
                             $('#calendario_extras_detalle tbody').append(
                         `<tr>
                             <td>
+                                <span class="badge bg-blue">${item.bnd_extra_sin_caja==1 ? 'Opc.' : ''}</span>
                                 @if(isset($caja))
                                 <a href="{{route('cajas.guardarExaExtra', ['caja'=> $caja->id, 'cliente_id'=> $cliente->id])}}&caja_concepto_id=${item.caja_concepto_id}&calificacion_id=${item.calificacion_id}">
                                     <span><i class="glyphicon glyphicon-plus-sign"></i></span>
