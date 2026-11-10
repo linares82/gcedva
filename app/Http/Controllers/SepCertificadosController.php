@@ -6,6 +6,7 @@ use DB;
 use Log;
 use Auth;
 
+use App\AsignacionAcademica;
 use App\Cliente;
 use App\Empleado;
 use App\SepCargo;
@@ -116,19 +117,26 @@ class SepCertificadosController extends Controller
 
 	public function crearLineas(SepCertificado $sepCertificado)
 	{
-
-		$consultarInscripciones = Inscripcion::where('plantel_id', $sepCertificado->plantel_id)
-			//->left('titulacions as t', 't.cliente_id', 'inscripcions.cliente_id')
-			//->left('procedencia_alumnos as pa', 'pa.cliente_id', 'inscripcions.cliente_id')
+		$clientes = Hacademica::select(
+			'cliente_id'
+		)
+			->where('plantel_id', $sepCertificado->plantel_id)
 			->where('especialidad_id', $sepCertificado->especialidad_id)
 			->where('nivel_id', $sepCertificado->nivel_id)
 			->where('grado_id', $sepCertificado->grado_id)
 			->where('lectivo_id', $sepCertificado->lectivo_id)
 			->where('grupo_id', $sepCertificado->grupo_id)
-			//->with('lectivo')
-			//->with('grado')	
-			//->with('plantel')
-			//	->orderBy('cliente_id')
+			->distinct()
+			->pluck('cliente_id');
+		//dd($asignaciones);
+
+		$consultarInscripciones = Inscripcion::whereIn('cliente_id', $clientes)
+			/*where('plantel_id', $sepCertificado->plantel_id)
+			->where('especialidad_id', $sepCertificado->especialidad_id)
+			->where('nivel_id', $sepCertificado->nivel_id)
+			->where('grado_id', $sepCertificado->grado_id)
+			->where('lectivo_id', $sepCertificado->lectivo_id)
+			->where('grupo_id', $sepCertificado->grupo_id)*/
 			->get();
 		//dd($consultarInscripciones);
 		$hacademicas_existentes = SepCertificadoL::where('sep_certificado_id', $sepCertificado->id)->pluck('hacademica_id');

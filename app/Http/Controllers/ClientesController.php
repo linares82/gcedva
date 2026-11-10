@@ -2449,9 +2449,11 @@ class ClientesController extends Controller
             'clientes.dir_madre',
             'clientes.nombre_acudiente',
             'clientes.tel_acudiente',
-            'clientes.dir_acudiente'
+            'clientes.dir_acudiente',
+            'stc.name as estatus',
         )
             ->join('inscripcions as i', 'i.cliente_id', '=', 'clientes.id')
+            ->join('st_clientes as stc', 'stc.id', '=', 'clientes.st_cliente_id')
             ->where('clientes.plantel_id', $datos['plantel_f'])
             ->where('i.lectivo_id', $datos['lectivo_f'])
             ->where('i.grupo_id', $datos['grupo_f'])

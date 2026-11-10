@@ -608,59 +608,7 @@
         @foreach ($registros_ordenados as $seccion)
           
           @foreach($seccion as $registro)
-          <!--
-          @permission('reportesCedva.activosSinDinero')
-          @if($plantel<>"" and $ciclo<>"" and $concepto<>"")
-              @if($concepto<>$registro['concepto'])
-              <tr>
-                <td>Totales Concepto</td><td colspan='12'>
-                </td><td>{{ number_format($planeado_suma,2) }}</td>
-                <td colspan='3'></td>
-                <td>{{ number_format($caja_suma,2) }}</td>
-                <td></td>
-                <td>{{ number_format($adeudo_suma,2) }}</td>
-              </tr>
-              @php
-                  $planeado_suma=0;
-                  $caja_suma=0;
-                  $adeudo_suma=0;
-              @endphp
-              @endif
-              @if($ciclo<>$registro['ciclo'])
-              <tr>
-                <td>Totales Ciclo</td><td colspan='12'>
-                </td><td>{{ number_format($ciclo_planeado_suma,2) }}</td>
-                <td colspan='3'></td>
-                <td>{{ number_format($ciclo_caja_suma,2) }}</td>
-                <td></td>
-                <td>{{ number_format($ciclo_adeudo_suma,2) }}</td>
-              </tr>
-              @php
-                  $ciclo_planeado_suma=0;
-                  $ciclo_caja_suma=0;
-                  $ciclo_adeudo_suma=0;
-              @endphp
-              @endif
-              @if($plantel<>$registro['razon'])
-              <tr>
-                <td>Totales Plantel</td><td colspan='12'>
-                </td><td>{{ number_format($plantel_planeado_suma,2) }}</td>
-                <td colspan='3'></td>
-                <td>{{ number_format($plantel_caja_suma,2) }}</td>
-                <td></td>
-                <td>{{ number_format($plantel_adeudo_suma,2) }}</td>
-              </tr>
-              @php
-                  $plantel_planeado_suma=0;
-                  $plantel_caja_suma=0;
-                  $plantel_adeudo_suma=0;
-                  
-              @endphp
-              @endif
-              
-          @endif
-          @endpermission
--->
+  
           <tr>
             <td>{{ ++$csc }}</td><td>{{ $registro['razon'] }}</td><td>{{ $registro['ciclo'] }}</td><td>{{ $registro['cliente'] }}</td><td>{{ $registro['matricula'] }}</td><td>{{ $registro['seccion'] }}</td>
             <td>{{ $registro['ape_paterno'] }} </td><td>{{ $registro['ape_materno'] }}</td><td>{{ $registro['nombre'] }} {{ $registro['nombre2'] }}</td>
@@ -691,9 +639,13 @@
                   $descuento_promocion=0;
                   //Log::info($registro['adeudo_id']);
                   if($registro['adeudo_id']>0 and $registro['consecutivo']>0){
-                    $adeudo=\App\Adeudo::find($registro['adeudo_id']);
-                    $adeudo->load(['planPagoLn','planPagoLn.promoPlanLns']);
-                    foreach($adeudo->planPagoLn->promoPlanLns as $ppp){
+                    $promos=DB::table('adeudos')->select('promo.*')
+                    ->join('plan_pago_lns as ppl', 'ppl.id', '=', 'adeudos.plan_pago_ln_id')
+                    ->join('promo_plan_lns as promo', 'promo.plan_pago_ln_id', '=', 'ppl.id')
+                    ->where('adeudos.id', $registro['adeudo_id'])
+                    ->get();
+                    //$adeudo->load(['planPagoLn','planPagoLn.promoPlanLns']);
+                    foreach($promos as $ppp){
                       $inicio= new Datetime($ppp->fec_inicio);
                       $fin= new Datetime($ppp->fec_fin);
                       $fecha_caja= new Datetime($registro['fecha_caja']);
@@ -703,9 +655,14 @@
                       }
                     }
                   }elseif($registro['adeudo_id']>0 and $registro['consecutivo']==0){
-                    $adeudo=\App\Adeudo::find($registro['adeudo_id']);
-                    $adeudo->load(['planPagoLn','planPagoLn.promoPlanLns']);
-                    foreach($adeudo->planPagoLn->promoPlanLns as $ppp){
+                    //$adeudo=\App\Adeudo::find($registro['adeudo_id']);
+                    //$adeudo->load(['planPagoLn','planPagoLn.promoPlanLns']);
+                    $promos=DB::table('adeudos')->select('promo.*')
+                    ->join('plan_pago_lns as ppl', 'ppl.id', '=', 'adeudos.plan_pago_ln_id')
+                    ->join('promo_plan_lns as promo', 'promo.plan_pago_ln_id', '=', 'ppl.id')
+                    ->where('adeudos.id', $registro['adeudo_id'])
+                    ->get();
+                    foreach($promos as $ppp){
                       $inicio= new Datetime($ppp->fec_inicio);
                       $fin= new Datetime($ppp->fec_fin);
                       $fecha_caja= new Datetime(date('Y-m-d'));
@@ -723,17 +680,24 @@
             </td>
             <td>
               @php
-                $becas=App\AutorizacionBeca::where('cliente_id', $registro['cliente'])->get();
-                $descuento_beca=0;
-
                 $fecha_caja_hoy= new Datetime(date('Y-m-d'));
                 $fecha_caja= new Datetime($registro['fecha_pago']);
+
+                //$becas=App\AutorizacionBeca::where('cliente_id', $registro['cliente'])->with('lectivo')->get();
+                $becas=DB::table('autorizacion_becas')
+                ->select('monto_mensualidad', 'inicio_vigencia', 'vigencia', 'l.inicio', 'l.fin', 'l.id as lectivo_id')
+                ->join('lectivos as l', 'l.id', '=', 'autorizacion_becas.lectivo_id')
+                ->where('cliente_id', $registro['cliente'])
+                ->get();
+                $descuento_beca=0;
+
+                
                 
                 if(count($becas)>0){
                   foreach($becas as $beca){
                     if(!is_null($beca->lectivo_id)){
-            		    $inicio= new Datetime($beca->lectivo->inicio);
-                    $fin= new Datetime($beca->lectivo->fin);
+            		    $inicio= new Datetime($beca->inicio);
+                    $fin= new Datetime($beca->fin);
 
 		    	
                     if($inicio<$fecha_caja_hoy and 
@@ -805,12 +769,6 @@
               
               @if($registro['pagado_bnd']==0)
               {{ number_format($registro['monto'],2) }}
-              @php
-                $adeudo_suma=$adeudo_suma+$registro['monto'];    
-                $ciclo_adeudo_suma=$ciclo_adeudo_suma+$registro['monto'];    
-                $plantel_adeudo_suma=$plantel_adeudo_suma+$registro['monto'];    
-              @endphp
-
               
               @else
                 0
@@ -822,50 +780,17 @@
         @php
             //$especialidad=$registro->especialidad;
             $cantidad=$cantidad+1;
-            $suma_planeada=$suma_planeada+$registro['monto'];
-            $suma_caja=$suma_caja+$registro['total_caja'];
-            if($registro['pagado_bnd']==0){
-              $suma_adeudos=$suma_adeudos+$registro['monto'];
-            }
+            
             $plantel=$registro['razon'];
-            $planeado_suma=$planeado_suma+$registro['monto'];
-            $ciclo_planeado_suma=$ciclo_planeado_suma+$registro['monto'];
-            $plantel_planeado_suma=$plantel_planeado_suma+$registro['monto'];
+            
             $ciclo=$registro['ciclo'];
-            $caja_suma=$caja_suma+$registro['total_caja'];
-            $ciclo_caja_suma=$ciclo_caja_suma+$registro['total_caja'];
-            $plantel_caja_suma=$plantel_caja_suma+$registro['total_caja'];
-            $concepto=$registro['concepto'];
+           
             
             
         @endphp
         @endforeach
         @endforeach
-        <!--
-        @permission('reportesCedva.activosSinDinero')
-        <tr><td>Totales Concepto</td><td colspan='12'>
-          </td><td>{{ number_format($planeado_suma,2) }}</td>
-          <td colspan='3'></td>
-          <td>{{ number_format($caja_suma,2) }}</td>
-          <td></td>
-          <td>{{ number_format($adeudo_suma,2) }}</td>
-        </tr>
-        <tr><td>Totales Ciclo</td><td colspan='12'>
-          </td><td>{{ number_format($ciclo_planeado_suma,2) }}</td>
-          <td colspan='3'></td>
-          <td>{{ number_format($ciclo_caja_suma,2) }}</td>
-          <td></td>
-          <td>{{ number_format($ciclo_adeudo_suma,2) }}</td>
-        </tr>
-        <tr><td>Totales Plantel</td><td colspan='12'>
-          </td><td>{{ number_format($plantel_planeado_suma,2) }}</td>
-          <td colspan='3'></td>
-          <td>{{ number_format($plantel_caja_suma,2) }}</td>
-          <td></td>
-          <td>{{ number_format($plantel_adeudo_suma,2) }}</td>
-        </tr>
-        @endpermission  
-          -->
+        
             </tbody>
         </table>
     </div>

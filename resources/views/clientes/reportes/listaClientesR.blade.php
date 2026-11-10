@@ -18,12 +18,13 @@
         <table class="table table-condensed table-striped">
             <thead>
                 <th>No.</th><th>Id</th>
-                <th>Nombre(s)</th><th>Apellido Paterno</th><th>Apellido Materno</th><th>Matricula</th><th>Género</th><th>Fecha Nacimiento</th>
-                <th>Correo Electronico</th><th>Tel. Fijo</th><th>Tel. Celular</th><th>CURP</th><th>Nombre Padre o Tutor</th><th>Tel.</th><th>Dirección</th>
+                <th>Nombre(s)</th><th>Apellido Paterno</th><th>Apellido Materno</th><th>Matricula</th><th>GÃ©nero</th><th>Fecha Nacimiento</th>
+                <th>Correo Electronico</th><th>Tel. Fijo</th><th>Tel. Celular</th><th>CURP</th><th>Nombre Padre o Tutor</th><th>Tel.</th><th>DirecciÃ³n</th>
             </thead>
             <tbody>
                 @php
                     $i=1;
+		    //dd($registros->items);
                 @endphp
                 @foreach($registros as $resultado)
                 <tr>
@@ -31,11 +32,11 @@
                     <td>{{ $resultado->nombre }} {{ $resultado->nombre2 }}</td><td>{{$resultado->ape_paterno}}</td><td>{{$resultado->ape_materno}}</td>
                     <td>{{$resultado->matricula}}</td><td>{{$resultado->genero}}</td><td>{{$resultado->fec_nacimiento}}</td>
                     <td>{{$resultado->mail}}</td><td>{{$resultado->tel_fijo}}</td><td>{{$resultado->tel_cel}}</td><td>{{$resultado->curp}}</td>
-                    @if($resultados->nombre_padre)
+                    @if($resultado->nombre_padre)
                     <td>{{$resultado->nombre_padre}}</td><td>{{$resultado->tel_padre}}</td><td>{{$resultado->dir_padre}}</td>
-                    @elseif($resultados->nombre_madre)
+                    @elseif($resultado->nombre_madre)
                     <td>{{$resultado->nombre_madre}}</td><td>{{$resultado->tel_madre}}</td><td>{{$resultado->dir_madre}}</td>
-                    @elseif($resultados->nombre_acudiente)
+                    @elseif($resultado->nombre_acudiente)
                     <td>{{$resultado->nombre_acudiente}}</td><td>{{$resultado->tel_acudiente}}</td><td>{{$resultado->dir_acudiente}}</td>
                     @else
                     <td></td><td></td><td></td>

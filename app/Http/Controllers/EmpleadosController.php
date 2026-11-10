@@ -110,6 +110,13 @@ class EmpleadosController extends Controller
             $input['extranjero_bnd'] = 1;
         }
 
+        if (!isset($input['extranjero_bnd'])) {
+            $input['extranjero_bnd'] = 0;
+        }
+        if (!isset($input['bnd_autorizar_dev'])) {
+            $input['bnd_autorizar_dev'] = 0;
+        }
+
         //dd($input);
         $e = Empleado::create($input);
 
@@ -359,6 +366,9 @@ class EmpleadosController extends Controller
         if (!is_null($input['abreviatura_estado'])) {
             $estado = Estado::where('abreviatura', $input['abreviatura_estado'])->first();
             $input['estado_nacimiento_id'] = $estado->id;
+        }
+        if (!isset($input['bnd_autorizar_dev'])) {
+            $input['bnd_autorizar_dev'] = 0;
         }
         //dd($input);
         $empleado = $empleado->find($id);

@@ -526,6 +526,7 @@
                         @else
                         <a href="{{route('pagos.imprimirTodosNoFiscal', array('caja'=>$caja->id))}}" data-toggle="tooltip" title="Imprimir" class="btn btn-info btn-xs " target="_blank"><i class="fa fa-print"></i></a>
                         @endif
+                        <a href="{{route('devolucionesCajas.create', array('caja'=>$caja->id))}}" data-toggle="tooltip" title="Crear Devolucion" class="btn btn-default btn-xs " target="_blank"><i class="fa fa-reply">Devolución</i></a>
                         @endif
                         
                         <div class="box-tools pull-right">

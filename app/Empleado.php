@@ -94,7 +94,8 @@ class Empleado extends Model
 		'fec_inicio_contrato1',
 		'fec_inicio_contrato2',
 		'fec_inicio_contrato3',
-		'fec_curp_validacion'
+		'fec_curp_validacion',
+		'bnd_autorizar_dev'
 	];
 
 	public function usu_alta()

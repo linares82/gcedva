@@ -205,7 +205,7 @@ class CalendarioExaExtrasController extends Controller
 			->whereDate('fec_fin', '>=', date('Y-m-d'))
 			//->where('bnd_extra_sin_caja', '<>', 1)
 			->get();
-		//dd($calendario);
+		//dd($calendarios);
 		if (count($calendarios) == 0) {
 			return json_encode(array('msj' => 'No hay calendario de exámenes extras para este periodo'));
 		}

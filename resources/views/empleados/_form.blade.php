@@ -318,7 +318,14 @@
                           @if($errors->has("alimenticia_bnd"))
                             <span class="help-block">{{ $errors->first("alimenticia_bnd") }}</span>
                           @endif
-                        </div>  
+                        </div>
+                        <div class="form-group col-md-2 @if($errors->has('bnd_autorizar_dev')) has-error @endif">
+                          <label for="bnd_autorizar_dev-field">Autorizar Devolución</label>
+                          {!! Form::checkbox("bnd_autorizar_dev", 1, null, [ "id" => "bnd_autorizar_dev-field"]) !!}
+                          @if($errors->has("bnd_autorizar_dev"))
+                            <span class="help-block">{{ $errors->first("bnd_autorizar_dev") }}</span>
+                          @endif
+                        </div>    
                       </div>
                     </div>
                     @endpermission

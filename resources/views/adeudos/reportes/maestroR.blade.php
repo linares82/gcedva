@@ -209,7 +209,8 @@
                     </td>
                     
                     <td>{{$detalle['consecutivo']}}</td>
-                    @if(!is_null($beca)) 
+                    @if(!is_null($beca) and !is_null($beca->lectivo_id))
+                    
                     <!--@@if($fecha_adeudo->greaterThanOrEqualTo($fecha_inicio) and $fecha_adeudo->lessThanOrEqualTo($fecha_fin))-->
                     @if(
                         (($beca->lectivo->inicio <= $adeudo->fecha_pago and $beca->lectivo->fin >= $adeudo->fecha_pago) or
