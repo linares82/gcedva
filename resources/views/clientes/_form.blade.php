@@ -616,12 +616,21 @@
                             @if(isset($cliente))
                             <table class="table table-condensed table-striped">
                                 <thead>
-                                    <th>Incidencia</th><th>Detalle</th><th>Fecha</th><th></th>
+                                    <th>Incidencia</th><th>Detalle</th><th>Devolucion</th><th>Fecha</th><th></th>
                                 </thead>
                                 <tbody>
                                     @foreach($cliente->incidencesClientes as $incidencia)
                                     <tr>
-                                        <td>{{ $incidencia->incidenceCliente->name }}</td><td>{{ $incidencia->detalle }}</td><td>{{ $incidencia->fecha }}</td>
+                                        <td>{{ $incidencia->incidenceCliente->name }}</td>
+                                        <td>{{ $incidencia->detalle }}</td>
+                                        <td>
+                                            @if(!is_null($incidencia->devoluciones_caja_id))
+                                            <a href="{{ route('devolucionesCajas.show', $incidencia->devoluciones_caja_id) }}" target="_blank">
+                                            {{ $incidencia->devoluciones_caja_id ?? 'N/A' }}
+                                            </a>
+                                            @endif
+                                        </td>
+                                        <td>{{ $incidencia->fecha }}</td>
                                         <td>
                                             @permission('incidenceClientes.destroy')
                                             

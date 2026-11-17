@@ -3,8 +3,9 @@
 namespace App\Observers;
 
 use App\Empleado;
-use Mail;
+use App\IncidencesCliente;
 use Log;
+use Mail;
 
 class DevolucionCajaObserver
 {
@@ -39,5 +40,25 @@ class DevolucionCajaObserver
     public function updating($model)
     {
         $model->usu_mod_id = \Auth::user()->id;
+    }
+
+    public function updated($model)
+    {
+
+        if ($model->st_dev_caja_id <> 1) {
+            $incidences_cliente = IncidencesCliente::where('devoluciones_caja_id', $model->id)
+                ->first();
+
+            if (is_null($incidences_cliente)) {
+                $input['cliente_id'] = $model->cliente_id;
+                $input['incidence_cliente_id'] = 7;
+                $input['detalle'] = "Devolucion: " . $model->id . ' - Caja: ' . $model->caja->consecutivo . ' - Monto: ' . $model->monto;
+                $input['fecha'] = date('Y-m-d');
+                $input['usu_alta_id'] = $model->usu_alta_id;
+                $input['usu_mod_id'] = $model->usu_mod_id;
+                $input['devoluciones_caja_id'] = $model->id;
+                IncidencesCliente::create($input);
+            }
+        }
     }
 }

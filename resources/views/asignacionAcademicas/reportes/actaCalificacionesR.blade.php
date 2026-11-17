@@ -102,6 +102,7 @@
                         {{ $encabezado->grado->cct }}
                         No. Acta: 
                         @permission("actaFinals.store")
+                        
                         @if(is_null($actaFinal))
                             <a class="btn btn-success" href="#" id="generarActa">Generar Acta</a>
                         @else

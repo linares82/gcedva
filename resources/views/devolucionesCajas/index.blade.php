@@ -61,7 +61,13 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_cajas.consecutivo_cont">CAJA_CONSECUTIVO</label>
+                                <label class="col-sm-2 control-label" for="q_id_cont">ID</label>
+                                <div class=" col-sm-9">
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['id_cont']) ?: '' }}" name="q[id_cont]" id="q_id_cont" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="q_cajas.consecutivo_cont">CAJA CONSECUTIVO</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['cajas.consecutivo_cont']) ?: '' }}" name="q[cajas.consecutivo_cont]" id="q_cajas.consecutivo_cont" />
                                 </div>
@@ -79,7 +85,7 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_clientes.nombre_cont">CLIENTE_NOMBRE</label>
+                                <label class="col-sm-2 control-label" for="q_clientes.nombre_cont">CLIENTE</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.nombre_cont']) ?: '' }}" name="q[clientes.nombre_cont]" id="q_clientes.nombre_cont" />
                                 </div>
@@ -97,7 +103,7 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_plantels.razon_cont">PLANTEL_RAZON</label>
+                                <label class="col-sm-2 control-label" for="q_plantels.razon_cont">PLANTEL</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['plantels.razon_cont']) ?: '' }}" name="q[plantels.razon_cont]" id="q_plantels.razon_cont" />
                                 </div>
@@ -133,7 +139,7 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_caja_conceptos.name_cont">CAJA_CONCEPTO_NAME</label>
+                                <label class="col-sm-2 control-label" for="q_caja_conceptos.name_cont">CONCEPTO</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['caja_conceptos.name_cont']) ?: '' }}" name="q[caja_conceptos.name_cont]" id="q_caja_conceptos.name_cont" />
                                 </div>
@@ -151,7 +157,7 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_grados.name_cont">GRADO_NAME</label>
+                                <label class="col-sm-2 control-label" for="q_grados.name_cont">GRADO</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['grados.name_cont']) ?: '' }}" name="q[grados.name_cont]" id="q_grados.name_cont" />
                                 </div>
@@ -169,7 +175,7 @@
                             </div>
                             -->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_motivos_dev_cajas.name_cont">MOTIVOS_DEV_CAJA_NAME</label>
+                                <label class="col-sm-2 control-label" for="q_motivos_dev_cajas.name_cont">MOTIVO</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['motivos_dev_cajas.name_cont']) ?: '' }}" name="q[motivos_dev_cajas.name_cont]" id="q_motivos_dev_cajas.name_cont" />
                                 </div>
@@ -186,62 +192,9 @@
                                 </div>
                             </div>
                             -->
+                            
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_vobo_cont">VOBO</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['vobo_cont']) ?: '' }}" name="q[vobo_cont]" id="q_vobo_cont" />
-                                </div>
-                            </div>
-                                                    <!--
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_obs_gt">OBS</label>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['obs_gt']) ?: '' }}" name="q[obs_gt]" id="q_obs_gt" />
-                                </div>
-                                <div class=" col-sm-1 text-center"> - </div>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['obs_lt']) ?: '' }}" name="q[obs_lt]" id="q_obs_lt" />
-                                </div>
-                            </div>
-                            -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_obs_cont">OBS</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['obs_cont']) ?: '' }}" name="q[obs_cont]" id="q_obs_cont" />
-                                </div>
-                            </div>
-                                                    <!--
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_alta_id_gt">USU_ALTA_ID</label>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_alta_id_gt']) ?: '' }}" name="q[usu_alta_id_gt]" id="q_usu_alta_id_gt" />
-                                </div>
-                                <div class=" col-sm-1 text-center"> - </div>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_alta_id_lt']) ?: '' }}" name="q[usu_alta_id_lt]" id="q_usu_alta_id_lt" />
-                                </div>
-                            </div>
-                            -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_alta_id_cont">USU_ALTA_ID</label>
-                                <div class=" col-sm-9">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_alta_id_cont']) ?: '' }}" name="q[usu_alta_id_cont]" id="q_usu_alta_id_cont" />
-                                </div>
-                            </div>
-                                                    <!--
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_mod_id_gt">USU_MOD_ID</label>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_gt']) ?: '' }}" name="q[usu_mod_id_gt]" id="q_usu_mod_id_gt" />
-                                </div>
-                                <div class=" col-sm-1 text-center"> - </div>
-                                <div class=" col-sm-4">
-                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_lt']) ?: '' }}" name="q[usu_mod_id_lt]" id="q_usu_mod_id_lt" />
-                                </div>
-                            </div>
-                            -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_mod_id_cont">USU_MOD_ID</label>
+                                <label class="col-sm-2 control-label" for="q_usu_mod_id_cont">USU_MOD</label>
                                 <div class=" col-sm-9">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_cont']) ?: '' }}" name="q[usu_mod_id_cont]" id="q_usu_mod_id_cont" />
                                 </div>
@@ -304,7 +257,9 @@
                                 <td class="text-right">
                                     
                                     @permission('devolucionesCajas.edit')
+                                    @if($devolucionesCaja->st_dev_caja_id==1)
                                     <a class="btn btn-xs btn-warning" href="{{ route('devolucionesCajas.edit', $devolucionesCaja->id) }}"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                                    @endif
                                     @endpermission
                                     @permission('devolucionesCajas.destroy')
                                     {!! Form::model($devolucionesCaja, array('route' => array('devolucionesCajas.destroy', $devolucionesCaja->id),'method' => 'delete', 'style' => 'display: inline;', 'onsubmit'=> "if(confirm('¿Borrar? ¿Esta seguro?')) { return true } else {return false };")) !!}

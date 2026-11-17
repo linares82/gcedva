@@ -35,6 +35,7 @@
                         <span class="help-block">{{ $errors->first("motivos_dev_caja_id") }}</span>
                        @endif
                     </div>
+                    @permission('devolucionesCajas.aprobar')
                     <div class="form-group col-md-4 @if($errors->has('vobo')) has-error @endif">
                        <label for="vobo-field">Vobo</label>
                        {!! Form::text("vobo", null, array("class" => "form-control", "id" => "vobo-field")) !!}
@@ -42,6 +43,7 @@
                         <span class="help-block">{{ $errors->first("vobo") }}</span>
                        @endif
                     </div>
+                    @endif
                     <div class="form-group col-md-4 @if($errors->has('obs')) has-error @endif">
                        <label for="obs-field">Obs</label>
                        {!! Form::text("obs", null, array("class" => "form-control", "id" => "obs-field")) !!}

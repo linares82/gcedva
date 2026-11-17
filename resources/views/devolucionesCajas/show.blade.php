@@ -80,14 +80,23 @@
                      <label for="usu_alta_id">U. ALTA</label>
                      <p class="form-control-static">{{$devolucionesCaja->usu_alta->name}}</p>
                 </div>
+                <div class="form-group col-sm-4">
+                     <label for="usu_alta_id">F. U. ALTA</label>
+                     <p class="form-control-static">{{$devolucionesCaja->created_at}}</p>
+                </div>
                     <div class="form-group col-sm-4">
                      <label for="usu_mod_id">U. MODIFICACION</label>
                      <p class="form-control-static">{{$devolucionesCaja->usu_mod->name}}</p>
                 </div>
                 <div class="form-group col-sm-4">
+                     <label for="usu_mod_id">F. U. MODIFICACION</label>
+                     <p class="form-control-static">{{$devolucionesCaja->updated_at}}</p>
+                </div>
+                <div class="form-group col-sm-4">
                      <label for="usu_mod_id">ESTATUS</label>
                      <p class="form-control-static">{{$devolucionesCaja->stDevCaja->name}}</p>
                 </div>
+                
             </form>
 
             <div class="row">
