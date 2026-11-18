@@ -29,7 +29,7 @@ use App\Observers\CajaObserver;
 use App\Observers\CalificacionPonderacionObserver;
 use App\Observers\ClienteObserver;
 use App\Observers\CuentasEfectivoObserver;
-use App\Observers\DevolucionCajaObserver;
+use App\Observers\DevolucionesCajaObserver;
 use App\Observers\EgresoObserver;
 use App\Observers\EmpleadoObserver;
 use App\Observers\HistoriaClienteObserver;
@@ -78,7 +78,7 @@ class AppServiceProvider extends ServiceProvider
         CalificacionPonderacion::observe(CalificacionPonderacionObserver::class);
         Caja::observe(CajaObserver::class);
         Cliente::observe(ClienteObserver::class);
-        DevolucionesCaja::observe(DevolucionCajaObserver::class);
+        DevolucionesCaja::observe(DevolucionesCajaObserver::class);
         Empleado::observe(EmpleadoObserver::class);
         Egreso::observe(EgresoObserver::class);
         HistoriaCliente::observe(HistoriaClienteObserver::class);
@@ -89,7 +89,7 @@ class AppServiceProvider extends ServiceProvider
         Mueble::observe(MuebleObserver::class);
         Seguimiento::observe(SeguimientoObserver::class);
         Transference::observe(TransferenceObserver::class);
-        ProspectoAsignacionTarea::observe(ProspectoAsignaciontareaObserver::class);
+        ProspectoAsignacionTarea::observe(ProspectoAsignacionTareaObserver::class);
         ProspectoAviso::observe(ProspectoAvisoObserver::class);
         ProspectoSeguimiento::observe(ProspectoSeguimientoObserver::class);
         Lead::observe(LeadObserver::class);

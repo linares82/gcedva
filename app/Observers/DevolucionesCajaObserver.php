@@ -4,12 +4,13 @@ namespace App\Observers;
 
 use App\Empleado;
 use App\IncidencesCliente;
+use App\DevolucionesCaja;
 use Log;
 use Mail;
 
-class DevolucionCajaObserver
+class DevolucionesCajaObserver
 {
-    public function created($devolucionCaja)
+    public function created(DevolucionesCaja $devolucionCaja)
     {
         //dd($devolucionCaja->stDevCaja);
         $empleado = Empleado::where('bnd_autorizar_dev', 1)->first();
@@ -37,16 +38,17 @@ class DevolucionCajaObserver
         Log::info('enviado mail');
     }
 
-    public function updating($model)
+    public function updating(DevolucionesCaja $model)
     {
         $model->usu_mod_id = \Auth::user()->id;
     }
 
-    public function updated($model)
+    public function updated(DevolucionesCaja $model)
     {
-
+        //dd($model);
         if ($model->st_dev_caja_id == 2) {
             $incidences_cliente = IncidencesCliente::where('devoluciones_caja_id', $model->id)
+                ->whereNull('deleted_at')
                 ->first();
 
             if (is_null($incidences_cliente)) {
