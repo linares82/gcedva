@@ -45,7 +45,7 @@ class DevolucionCajaObserver
     public function updated($model)
     {
 
-        if ($model->st_dev_caja_id <> 1) {
+        if ($model->st_dev_caja_id == 2) {
             $incidences_cliente = IncidencesCliente::where('devoluciones_caja_id', $model->id)
                 ->first();
 

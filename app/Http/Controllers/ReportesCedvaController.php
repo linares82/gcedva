@@ -587,7 +587,7 @@ class ReportesCedvaController extends Controller
                         'pag.created_at as fecha_pago_creado',
                         'pag.id as pago_id',
                         DB::raw('0 as adeudo_id'),
-                        DB::raw('0 as fecha_pago'),
+                        DB::raw('null as fecha_pago'),
                         //'ad.fecha_pago',
                         DB::raw('0 as monto'),
                         //'ad.monto',
