@@ -49,7 +49,13 @@
                 
                     <div class="form-group col-sm-4">
                      <label for="cliente_nombre">CLIENTE</label>
-                     <p class="form-control-static">{{$devolucionesCaja->cliente->nombre}}</p>
+                     <p class="form-control-static">
+                        {{$devolucionesCaja->cliente_id}} - 
+                        {{$devolucionesCaja->cliente->nombre}}
+                        {{$devolucionesCaja->cliente->nombre2}}
+                        {{$devolucionesCaja->cliente->ape_paterno}}
+                        {{$devolucionesCaja->cliente->ape_materno}}
+                     </p>
                 </div>
                 <div class="form-group col-sm-4">
                      <label for="caja_concepto_name">CONCEPTO</label>

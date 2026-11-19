@@ -245,7 +245,11 @@
                                 <td><a href="{{ route('devolucionesCajas.show', $devolucionesCaja->id) }}">{{$devolucionesCaja->id}}</a></td>
                                 <td>{{$devolucionesCaja->caja->consecutivo}}</td>
                                 <td>{{$devolucionesCaja->plantel->razon}}</td>
-                                <td>{{$devolucionesCaja->cliente_id}}-{{$devolucionesCaja->cliente->nombre}} {{$devolucionesCaja->cliente->nombre2}} {{$devolucionesCaja->cliente->ape_paterno}} {{$devolucionesCaja->cliente->ape_materno}}</td>
+                                <td>
+                                    <a href="{{ route('clientes.edit', optional($devolucionesCaja->cliente)->id) }}" class="btn btn-link btn-xs"
+                                    {{$devolucionesCaja->cliente_id}}
+                                    </a>
+                                    -{{$devolucionesCaja->cliente->nombre}} {{$devolucionesCaja->cliente->nombre2}} {{$devolucionesCaja->cliente->ape_paterno}} {{$devolucionesCaja->cliente->ape_materno}}</td>
                                 <td>{{$devolucionesCaja->grado->seccion}}-{{$devolucionesCaja->grado->name}}</td>
                                 <td>{{$devolucionesCaja->cajaConcepto->name}}</td>
                     <td>{{$devolucionesCaja->monto}}</td>
