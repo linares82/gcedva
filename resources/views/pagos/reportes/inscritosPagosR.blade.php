@@ -61,14 +61,14 @@
                 
                 @if(($concepto<>$registro->caja_concepto_id and $concepto_suma>0) or ($forma_pago<>$registro->forma_pago_id and $total_forma_pago>0))
                         <tr>
-                          <td colspan="7"><strong>Total Concepto </strong></td><td style="text-align:right;"><strong>{{number_format($concepto_suma,2)}}</strong></td><td></td>
+                          <td colspan="9"><strong>Total Concepto </strong></td><td style="text-align:right;"><strong>{{number_format($concepto_suma,2)}}</strong></td><td colspan="2"></td>
                       </tr>
                       <?php $concepto_suma=0; ?>
                 @endif    
                     
                 @if($forma_pago<>$registro->forma_pago_id and $total_forma_pago>0)
                     <tr>
-                        <td colspan="7"><strong>Total Forma de Pago  </strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago,2)}}</strong></td><td></td><td></td>
+                        <td colspan="9"><strong>Total Forma de Pago  </strong></td><td style="text-align:right;"><strong>{{number_format($total_forma_pago,2)}}</strong></td><td></td><td></td>
                     </tr>
                     @php $total_forma_pago=0; @endphp
                 @endif
@@ -252,6 +252,33 @@
                 </tr>
             </tbody>
         </table>
+        <h3>Devoluciones</h3>
+        <table>
+            <thead>
+            <th>Id</th><th>Plantel</th><th>Caja</th><th>Cliente</th><th>Grado</th><th>Concepto</th><th>Monto</th><th>Estatus</th><th>Creado</th>
+            </thead>
+            <tbody>
+                @php
+                  $total_devoluciones=0;
+                @endphp
+                @foreach($devoluciones as $devolucion)
+                <tr>
+                    <td>{{$devolucion->id}}</td><td>{{$devolucion->plantel}}</td>
+                    <td>{{$devolucion->consecutivo}}</td><td>{{$devolucion->nombre}}</td>
+                    <td>{{$devolucion->grado}}</td><td>{{$devolucion->concepto}}</td>
+                    <td style="text-align:right;">(% {{ $devolucion->porcentaje*100 }}) {{number_format($devolucion->monto,2)}}</td>
+                    <td>{{$devolucion->estatus}}</td><td>{{$devolucion->created_at}}</td>
+                </tr>
+                @php
+                  $total_devoluciones=$total_devoluciones+$devolucion->monto;
+                @endphp
+                @endforeach
+                <tr>
+                    <td colspan="6"><strong>Total</strong></td><td style="text-align:right;"><strong>{{number_format($total_devoluciones,2)}}</strong></td><td colspan="2"></td>
+                </tr>
+            </tbody>
+        </table>
+
         <h3>Pagos menos Egresos</h3>
         <table>
             <thead>

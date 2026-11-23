@@ -330,6 +330,7 @@ return array(
     'AddPlantelInventarioToInventariosTable' => $baseDir . '/database/migrations/2022_11_07_093948_add_plantel_inventario_to_inventarios_table.php',
     'AddPlantelToEmpresasVinculacionsTable' => $baseDir . '/database/migrations/2022_05_17_083331_add_plantel_to_empresas_vinculacions_table.php',
     'AddPorcPermitidoToCalendarioIncidenciaCalsTable' => $baseDir . '/database/migrations/2026_07_24_135453_add_porc_permitido_to_calendario_incidencia_cals_table.php',
+    'AddPorcentajeToDevolucionesCajasTable' => $baseDir . '/database/migrations/2026_11_20_141228_add_porcentaje_to_devoluciones_cajas_table.php',
     'AddPrecioMovimientosTable' => $baseDir . '/database/migrations/2019_10_07_093218_add_precio_movimientos_table.php',
     'AddPrecioMueblesTable' => $baseDir . '/database/migrations/2019_10_07_093232_add_precio_muebles_table.php',
     'AddPrecioOnlineGradosTable' => $baseDir . '/database/migrations/2018_12_14_113731_add_precio_online_grados_table.php',

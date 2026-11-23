@@ -46,11 +46,11 @@
                 <div class="panel-body">
                     <form class="DevolucionesCaja_search" id="search" action="{{ route('devolucionesCajas.index') }}" accept-charset="UTF-8" method="get">
                         <input type="hidden" name="q[s]" value="{{ @(Request::input('q')['s']) ?: '' }}" />
-                        <div class="form-horizontal">
+                        <div class="row">
 
                             <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_cajas.consecutivo_gt">CAJA_CONSECUTIVO</label>
+                                <label  for="q_cajas.consecutivo_gt">CAJA_CONSECUTIVO</label>
                                 <div class=" col-sm-4">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['cajas.consecutivo_gt']) ?: '' }}" name="q[cajas.consecutivo_gt]" id="q_cajas.consecutivo_gt" />
                                 </div>
@@ -60,21 +60,21 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_id_cont">ID</label>
-                                <div class=" col-sm-9">
+                            <div class="col-md-4">
+                                <label  for="q_id_cont">ID</label>
+                                
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['id_cont']) ?: '' }}" name="q[id_cont]" id="q_id_cont" />
-                                </div>
+                                
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_cajas.consecutivo_cont">CAJA CONSECUTIVO</label>
-                                <div class=" col-sm-9">
+                            <div class="col-md-4">
+                                <label  for="q_cajas.consecutivo_cont">CAJA CONSECUTIVO</label>
+                                
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['cajas.consecutivo_cont']) ?: '' }}" name="q[cajas.consecutivo_cont]" id="q_cajas.consecutivo_cont" />
-                                </div>
+                                
                             </div>
                                                     <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_clientes.nombre_gt">CLIENTE_NOMBRE</label>
+                                <label  for="q_clientes.nombre_gt">CLIENTE_NOMBRE</label>
                                 <div class=" col-sm-4">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.nombre_gt']) ?: '' }}" name="q[clientes.nombre_gt]" id="q_clientes.nombre_gt" />
                                 </div>
@@ -84,15 +84,15 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_clientes.nombre_cont">CLIENTE</label>
-                                <div class=" col-sm-9">
+                            <div class="col-md-4">
+                                <label  for="q_clientes.nombre_cont">CLIENTE</label>
+                                
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['clientes.nombre_cont']) ?: '' }}" name="q[clientes.nombre_cont]" id="q_clientes.nombre_cont" />
-                                </div>
+                                
                             </div>
                                                     <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_plantels.razon_gt">PLANTEL_RAZON</label>
+                                <label  for="q_plantels.razon_gt">PLANTEL_RAZON</label>
                                 <div class=" col-sm-4">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['plantels.razon_gt']) ?: '' }}" name="q[plantels.razon_gt]" id="q_plantels.razon_gt" />
                                 </div>
@@ -102,15 +102,15 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_plantels.razon_cont">PLANTEL</label>
-                                <div class=" col-sm-9">
+                            <div class="col-md-4">
+                                <label  for="q_plantels.razon_cont">PLANTEL</label>
+                                
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['plantels.razon_cont']) ?: '' }}" name="q[plantels.razon_cont]" id="q_plantels.razon_cont" />
-                                </div>
+                                
                             </div>
                                                     <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_monto_gt">MONTO</label>
+                                <label  for="q_monto_gt">MONTO</label>
                                 <div class=" col-sm-4">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['monto_gt']) ?: '' }}" name="q[monto_gt]" id="q_monto_gt" />
                                 </div>
@@ -120,15 +120,15 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_monto_cont">MONTO</label>
-                                <div class=" col-sm-9">
+                            <div class="col-md-4">
+                                <label  for="q_monto_cont">MONTO</label>
+                                
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['monto_cont']) ?: '' }}" name="q[monto_cont]" id="q_monto_cont" />
-                                </div>
+                                
                             </div>
                                                     <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_caja_conceptos.name_gt">CAJA_CONCEPTO_NAME</label>
+                                <label  for="q_caja_conceptos.name_gt">CAJA_CONCEPTO_NAME</label>
                                 <div class=" col-sm-4">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['caja_conceptos.name_gt']) ?: '' }}" name="q[caja_conceptos.name_gt]" id="q_caja_conceptos.name_gt" />
                                 </div>
@@ -138,15 +138,15 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_caja_conceptos.name_cont">CONCEPTO</label>
-                                <div class=" col-sm-9">
+                            <div class="col-md-4">
+                                <label  for="q_caja_conceptos.name_cont">CONCEPTO</label>
+                                
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['caja_conceptos.name_cont']) ?: '' }}" name="q[caja_conceptos.name_cont]" id="q_caja_conceptos.name_cont" />
-                                </div>
+                                
                             </div>
                                                     <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_grados.name_gt">GRADO_NAME</label>
+                                <label  for="q_grados.name_gt">GRADO_NAME</label>
                                 <div class=" col-sm-4">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['grados.name_gt']) ?: '' }}" name="q[grados.name_gt]" id="q_grados.name_gt" />
                                 </div>
@@ -156,15 +156,15 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_grados.name_cont">GRADO</label>
-                                <div class=" col-sm-9">
+                            <div class="col-md-4">
+                                <label  for="q_grados.name_cont">GRADO</label>
+                                
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['grados.name_cont']) ?: '' }}" name="q[grados.name_cont]" id="q_grados.name_cont" />
-                                </div>
+                                
                             </div>
                                                     <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_motivos_dev_cajas.name_gt">MOTIVOS_DEV_CAJA_NAME</label>
+                                <label  for="q_motivos_dev_cajas.name_gt">MOTIVOS_DEV_CAJA_NAME</label>
                                 <div class=" col-sm-4">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['motivos_dev_cajas.name_gt']) ?: '' }}" name="q[motivos_dev_cajas.name_gt]" id="q_motivos_dev_cajas.name_gt" />
                                 </div>
@@ -174,15 +174,15 @@
                                 </div>
                             </div>
                             -->
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_motivos_dev_cajas.name_cont">MOTIVO</label>
-                                <div class=" col-sm-9">
+                            <div class="col-md-4">
+                                <label  for="q_motivos_dev_cajas.name_cont">MOTIVO</label>
+                                
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['motivos_dev_cajas.name_cont']) ?: '' }}" name="q[motivos_dev_cajas.name_cont]" id="q_motivos_dev_cajas.name_cont" />
-                                </div>
+                                
                             </div>
                                                     <!--
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_vobo_gt">VOBO</label>
+                                <label  for="q_vobo_gt">VOBO</label>
                                 <div class=" col-sm-4">
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['vobo_gt']) ?: '' }}" name="q[vobo_gt]" id="q_vobo_gt" />
                                 </div>
@@ -193,11 +193,18 @@
                             </div>
                             -->
                             
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="q_usu_mod_id_cont">USU_MOD</label>
-                                <div class=" col-sm-9">
+                            <div class="col-md-4">
+                                <label  for="q_usu_mod_id_cont">USU_MOD</label>
+                                
                                     <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['usu_mod_id_cont']) ?: '' }}" name="q[usu_mod_id_cont]" id="q_usu_mod_id_cont" />
-                                </div>
+                                
+                            </div>
+
+                            <div class="col-md-4">
+                                <label  for="q_st_dev_cajas.name_cont">ESTATUS</label>
+                                
+                                    <input class="form-control input-sm" type="search" value="{{ @(Request::input('q')['st_dev_cajas.name_cont']) ?: '' }}" name="q[st_dev_cajas.name_cont]" id="q_st_dev_cajas.name_cont" />
+                                
                             </div>
 
                             <div class="form-group">
@@ -222,7 +229,7 @@
                     <thead>
                         <tr>
                             <th>@include('plantillas.getOrderLink', ['column' => 'id', 'title' => 'ID'])</th>
-                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cajas.consecutivo', 'title' => 'CAJA CONSECUTIVO'])</th>
+                            <th>@include('CrudDscaffold::getOrderlink', ['column' => 'cajas.consecutivo', 'title' => 'CAJA CONSECUTIVO (MONTO)'])</th>
                             <th>@include('CrudDscaffold::getOrderlink', ['column' => 'plantels.razon', 'title' => 'PLANTEL'])</th>
                         <th>@include('CrudDscaffold::getOrderlink', ['column' => 'clientes.nombre', 'title' => 'CLIENTE NOMBRE'])</th>
                         
@@ -243,20 +250,26 @@
                         @foreach($devolucionesCajas as $devolucionesCaja)
                             <tr>
                                 <td><a href="{{ route('devolucionesCajas.show', $devolucionesCaja->id) }}">{{$devolucionesCaja->id}}</a></td>
-                                <td>{{$devolucionesCaja->caja->consecutivo}}</td>
+                                <td>
+                                    <a href="{{ route('cajas.show', $devolucionesCaja->caja_id) }}" target="_blank">
+                                    {{$devolucionesCaja->caja->consecutivo}} 
+                                    </a>
+                                    ({{ number_format((float) $devolucionesCaja->caja->total, 2, '.', '') }})
+                                    
+                                </td>
                                 <td>{{$devolucionesCaja->plantel->razon}}</td>
                                 <td>
-                                    <a href="{{ route('clientes.edit', optional($devolucionesCaja->cliente)->id) }}" class="btn btn-link btn-xs"
+                                    <a target="_blank" href="{{ route('clientes.edit', optional($devolucionesCaja->cliente)->id) }}">
                                     {{$devolucionesCaja->cliente_id}}
                                     </a>
                                     -{{$devolucionesCaja->cliente->nombre}} {{$devolucionesCaja->cliente->nombre2}} {{$devolucionesCaja->cliente->ape_paterno}} {{$devolucionesCaja->cliente->ape_materno}}</td>
                                 <td>{{$devolucionesCaja->grado->seccion}}-{{$devolucionesCaja->grado->name}}</td>
                                 <td>{{$devolucionesCaja->cajaConcepto->name}}</td>
-                    <td>{{$devolucionesCaja->monto}}</td>
+                    <td>(%{{$devolucionesCaja->porcentaje}}) {{number_format((float) $devolucionesCaja->monto, 2, '.', '')}}</td>
                     <td>{{$devolucionesCaja->motivosDevCaja->name}}</td>
                     <td>{{$devolucionesCaja->vobo}}</td>
                     <td>{{$devolucionesCaja->obs}}</td>
-                    <td>{{$devolucionesCaja->usu_alta->name}}</td>
+                    <td>{{$devolucionesCaja->created_at}} {{$devolucionesCaja->usu_alta->name}}</td>
                     <td>{{$devolucionesCaja->stDevCaja->name}}</td>
                                 <td class="text-right">
                                     

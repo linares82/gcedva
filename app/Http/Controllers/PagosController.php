@@ -2,46 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
 use App\Adeudo;
-
 use App\Caja;
 use App\CajaConcepto;
-use App\CuentasEfectivo;
-use App\Cliente;
 use App\CajaLn;
+use App\Cliente;
 use App\CombinacionCliente;
-use App\Empleado;
+use App\CuentasEfectivo;
+use App\DevolucionesCaja;
 use App\Egreso;
-use App\Mese;
+use App\Empleado;
 use App\Exports\PagosExport;
-use App\FormaPago;
-use App\Inscripcion;
-use App\Pago;
-use App\PeticionMultipago;
-use App\Param;
-use App\Plantel;
-use App\SuccessMultipago;
 use App\FailMultipago;
-use Illuminate\Http\Request;
-use Auth;
-use App\Http\Requests\updatePago;
+use App\FormaPago;
+use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Http\Requests\createPago;
-use GuzzleHttp\Client;
-use GuzzleHttp\RequestOptions;
+use App\Http\Requests\updatePago;
 use App\ImpresionTicket;
 use App\IngresoEgreso;
+use App\Inscripcion;
+use App\Mese;
+use App\Pago;
+use App\Param;
+use App\PeticionMultipago;
+use App\Plantel;
 use App\SerieFolioSimplificado;
+use App\SuccessMultipago;
 use App\Transference;
+use Auth;
+use Carbon\Carbon;
 use DB;
-use Maatwebsite\Excel\Concerns\FromView;
-use Maatwebsite\Excel\Facades\Excel;
+use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
+use Illuminate\Http\Request;
 use Log;
 use Luecano\NumeroALetras\NumeroALetras;
-
-use Carbon\Carbon;
+use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PagosController extends Controller
 {
@@ -1197,7 +1195,35 @@ class PagosController extends Controller
         }
         //dd($ingresosMenosEgresos);
         //dd($registros_parciales->toArray());
-
+        $devoluciones = DevolucionesCaja::select(
+            'c.consecutivo',
+            'cl.id as cliente_id',
+            'cl.nombre',
+            'cl.nombre2',
+            'cl.ape_paterno',
+            'cl.ape_materno',
+            'p.razon as plantel',
+            'cc.name as concepto',
+            'g.name as grado',
+            'm.name as motivo',
+            'sdc.name as estatus',
+            'devoluciones_cajas.monto',
+            'devoluciones_cajas.created_at',
+            'devoluciones_cajas.porcentaje',
+            'devoluciones_cajas.id'
+        )
+            ->join('cajas as c', 'c.id', '=', 'devoluciones_cajas.caja_id')
+            ->join('clientes as cl', 'cl.id', '=', 'devoluciones_cajas.cliente_id')
+            ->join('plantels as p', 'p.id', '=', 'devoluciones_cajas.plantel_id')
+            ->join('caja_conceptos as cc', 'cc.id', '=', 'devoluciones_cajas.caja_concepto_id')
+            ->join('grados as g', 'g.id', '=', 'devoluciones_cajas.grado_id')
+            ->join('motivos_dev_cajas as m', 'm.id', '=', 'devoluciones_cajas.motivos_dev_caja_id')
+            ->join('st_dev_cajas as sdc', 'sdc.id', '=', 'devoluciones_cajas.st_dev_caja_id')
+            ->where('devoluciones_cajas.st_dev_caja_id', '=', 2)
+            ->where('c.plantel_id', '=', $data['plantel_f'])
+            ->where('devoluciones_cajas.created_at', '>=', $data['fecha_f'])
+            ->where('devoluciones_cajas.created_at', '<=', $data['fecha_t'])
+            ->get();
 
         /*
                 PDF::setOptions(['defaultFont' => 'arial']);
@@ -1215,7 +1241,8 @@ class PagosController extends Controller
             'data' => $data,
             'egresos' => $egresos,
             'ingresosMenosEgresos' => $ingresosMenosEgresos,
-            'formasPago' => $formasPago
+            'formasPago' => $formasPago,
+            'devoluciones' => $devoluciones
         ));
     }
 

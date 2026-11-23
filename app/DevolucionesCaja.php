@@ -31,6 +31,7 @@ class DevolucionesCaja extends Model
 		'cliente_id',
 		'plantel_id',
 		'monto',
+		'porcentaje',
 		'caja_concepto_id',
 		'grado_id',
 		'motivos_dev_caja_id',

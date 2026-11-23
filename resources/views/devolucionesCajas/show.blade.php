@@ -64,10 +64,17 @@
                 <div class="form-group col-sm-4">
                      <label for="grado_name">GRADO</label>
                      <p class="form-control-static">{{$devolucionesCaja->grado->name}}</p>
+                </div>
+                    
+                    <div class="form-group col-sm-4">
+                     <label for="monto">MONTO CAJA</label>
+                     <p class="form-control-static">
+                        {{number_format((float) $devolucionesCaja->caja->total, 2, '.', '')}}
+                    </p>
                 </div>    
                     <div class="form-group col-sm-4">
-                     <label for="monto">MONTO</label>
-                     <p class="form-control-static">{{$devolucionesCaja->monto}}</p>
+                     <label for="monto">MONTO DEVOLUCION</label>
+                     <p class="form-control-static">(%{{$devolucionesCaja->porcentaje}}) {{$devolucionesCaja->monto}}</p>
                 </div>
                     
                     <div class="form-group col-sm-4">

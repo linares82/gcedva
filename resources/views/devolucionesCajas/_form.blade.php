@@ -21,11 +21,11 @@
                        <label for="caja_concepto_id-field">Concepto: </label> {{ isset($devolucionesCaja) ? $devolucionesCaja->cajaConcepto->name : $caja->cajaLn->cajaConcepto->name }}
                        {!! Form::hidden("caja_concepto_id", isset($devolucionesCaja) ? $devolucionesCaja->caja_concepto_id : $caja->cajaLn->caja_concepto_id, array("class" => "form-control", "id" => "caja_concepto_id-field")) !!}
                     </div>
-                    <div class="form-group col-md-4 @if($errors->has('monto')) has-error @endif">
-                       <label for="monto-field">Monto</label>
-                       {!! Form::text("monto", isset($devolucionesCaja) ? $devolucionesCaja->monto : $caja->total, array("class" => "form-control", "id" => "monto-field")) !!}
-                       @if($errors->has("monto"))
-                        <span class="help-block">{{ $errors->first("monto") }}</span>
+                    <div class="form-group col-md-4 @if($errors->has('porcentaje')) has-error @endif">
+                       <label for="porcentaje-field">Porcentaje(expesion en decimales 0.10)</label>
+                       {!! Form::text("porcentaje", null, array("class" => "form-control", "id" => "porcentaje-field")) !!}
+                       @if($errors->has("porcentaje"))
+                        <span class="help-block">{{ $errors->first("porcentaje") }}</span>
                        @endif
                     </div>
                     <div class="form-group col-md-4 @if($errors->has('motivos_dev_caja_id')) has-error @endif">

@@ -10,6 +10,7 @@ use Mail;
 
 class DevolucionesCajaObserver
 {
+    /*
     public function created(DevolucionesCaja $devolucionCaja)
     {
         //dd($devolucionCaja->stDevCaja);
@@ -42,7 +43,7 @@ class DevolucionesCajaObserver
     {
         $model->usu_mod_id = \Auth::user()->id;
     }
-
+*/
     public function updated(DevolucionesCaja $model)
     {
         //dd($model);

@@ -48,6 +48,8 @@ class DevolucionesCajasController extends Controller
 	{
 
 		$input = $request->all();
+		$caja = Caja::find($input['caja_id']);
+		$input['monto'] = $input['porcentaje'] * $caja->total;
 		$input['usu_alta_id'] = Auth::user()->id;
 		$input['usu_mod_id'] = Auth::user()->id;
 		$input['st_dev_caja_id'] = 1;
@@ -108,6 +110,8 @@ class DevolucionesCajasController extends Controller
 	{
 		$input = $request->all();
 		$input['usu_mod_id'] = Auth::user()->id;
+		$caja = Caja::find($input['caja_id']);
+		$input['monto'] = $input['porcentaje'] * $caja->total;
 		//update data
 		$devolucionesCaja = $devolucionesCaja->find($id);
 		$devolucionesCaja->update($input);
